@@ -1,20 +1,14 @@
-import { useState, type FormEvent } from 'react';
+"use client";
+
+import { useActionState } from 'react';
 import { motion } from 'motion/react';
 import { Plus, Check, Loader2 } from 'lucide-react';
+import { submitContactForm } from '@/shared/actions/contact';
 
 export function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [state, formAction, isPending] = useActionState(submitContactForm, null);
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
-    }, 1500);
-  };
+  const isSuccess = state?.success === true;
 
   return (
     <section className="py-32 bg-white">
@@ -36,35 +30,49 @@ export function ContactForm() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            onSubmit={handleSubmit}
+            action={formAction}
             className="space-y-12"
         >
             <div className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="group">
-                        <label className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Name</label>
-                        <input 
-                            type="text" 
+                        <label htmlFor="name" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Name</label>
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
                             required
                             className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
                             placeholder="이름을 입력하세요"
                         />
+                        {state?.errors?.name && (
+                            <p className="text-red-500 text-xs mt-1">{state.errors.name[0]}</p>
+                        )}
                     </div>
                     <div className="group">
-                        <label className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Phone</label>
-                        <input 
-                            type="tel" 
+                        <label htmlFor="phone" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Phone</label>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
                             required
                             className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
                             placeholder="010-0000-0000"
                         />
+                        {state?.errors?.phone && (
+                            <p className="text-red-500 text-xs mt-1">{state.errors.phone[0]}</p>
+                        )}
                     </div>
                 </div>
 
                 <div className="group">
-                    <label className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Service Type</label>
+                    <label htmlFor="serviceType" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Service Type</label>
                     <div className="relative">
-                         <select className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light appearance-none rounded-none cursor-pointer">
+                         <select
+                            id="serviceType"
+                            name="serviceType"
+                            className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light appearance-none rounded-none cursor-pointer"
+                        >
                             <option>입주 청소</option>
                             <option>이사 청소</option>
                             <option>거주 청소</option>
@@ -76,11 +84,16 @@ export function ContactForm() {
                             <ArrowDown size={16} className="text-slate-400" />
                         </div>
                     </div>
+                    {state?.errors?.serviceType && (
+                        <p className="text-red-500 text-xs mt-1">{state.errors.serviceType[0]}</p>
+                    )}
                 </div>
 
                 <div className="group">
-                    <label className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Message</label>
-                    <textarea 
+                    <label htmlFor="message" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">Message</label>
+                    <textarea
+                        id="message"
+                        name="message"
                         rows={1}
                         className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none overflow-hidden"
                         placeholder="문의 내용을 자유롭게 작성해주세요"
@@ -89,6 +102,9 @@ export function ContactForm() {
                             e.currentTarget.style.height = e.currentTarget.scrollHeight + 'px';
                         }}
                     ></textarea>
+                    {state?.errors?.message && (
+                        <p className="text-red-500 text-xs mt-1">{state.errors.message[0]}</p>
+                    )}
                     
                     {/* Minimalist File Attachment */}
                     <div className="mt-8">
@@ -106,12 +122,12 @@ export function ContactForm() {
             </div>
 
             <div className="text-center pt-8">
-                <button 
+                <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isPending}
                     className="px-12 py-4 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                    {isSubmitting ? (
+                    {isPending ? (
                         <span className="flex items-center gap-2 justify-center">
                             <Loader2 className="animate-spin w-4 h-4" /> SENDING...
                         </span>
@@ -123,6 +139,9 @@ export function ContactForm() {
                         'SEND MESSAGE'
                     )}
                 </button>
+                {state?.message && (
+                    <p className="text-green-600 text-sm mt-4">{state.message}</p>
+                )}
             </div>
         </motion.form>
       </div>

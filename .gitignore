@@ -42,7 +42,6 @@ next-env.d.ts
 
 # ai agents
 .claude/
-.codex/
 .agents/
 
 # ide
@@ -51,7 +50,9 @@ next-env.d.ts
 
 # ai agent design docs (project-specific)
 AGENTS.md
-DEV.md
-claude-code-ai.md
+CLAUDE.md
+
+
+agents-system.md
 research.md
 legacy

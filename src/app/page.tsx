@@ -1,5 +1,3 @@
-"use client";
-
 import { BlogReviews } from "@/components/BlogReviews";
 import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";

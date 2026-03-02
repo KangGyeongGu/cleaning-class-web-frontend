@@ -25,7 +25,6 @@ src/
     layout.tsx                  # 앱 공통 레이아웃과 루트 메타데이터를 정의
     page.tsx                    # 홈 페이지를 조립하는 라우트 엔트리
     globals.css                 # 전역 스타일과 토큰/테마 CSS 변수를 관리
-    favicon.ico                 # 브라우저 탭 아이콘 리소스
   components/
     Navbar.tsx                  # 상단 네비게이션 및 모바일 메뉴를 렌더링
     Hero.tsx                    # 첫 화면 히어로 메시지와 핵심 CTA를 렌더링
@@ -33,8 +32,10 @@ src/
     BlogReviews.tsx             # 후기 카드 슬라이더 섹션을 렌더링
     ContactForm.tsx             # 문의 입력 폼 섹션을 렌더링
     Footer.tsx                  # 하단 연락처/브랜드 정보 섹션을 렌더링
-    figma/
-      ImageWithFallback.tsx     # 이미지 로드 실패 시 폴백 UI를 제공
+public/
+  images/
+    services/                   # 서비스 섹션 이미지 (residential.webp, move-in.webp 등)
+    reviews/                    # 후기 섹션 이미지 (review-01.webp ~ review-06.webp)
 ```
 
 ## 컨벤션

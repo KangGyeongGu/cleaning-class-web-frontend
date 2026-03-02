@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from 'motion/react';
 
 export function Hero() {
@@ -50,7 +52,7 @@ export function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.0, duration: 0.8 }}
         >
-            <button className="group relative px-10 py-4 bg-transparent border border-slate-900 text-slate-900 text-lg font-bold overflow-hidden transition-all hover:text-white">
+            <button type="button" className="group relative px-10 py-4 bg-transparent border border-slate-900 text-slate-900 text-lg font-bold overflow-hidden transition-all hover:text-white">
                 <span className="absolute inset-0 w-full h-full bg-slate-900 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
                 <span className="relative z-10">무료 견적 받기</span>
             </button>

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "@/app/globals.css";
+import { generateLocalBusinessJsonLd } from "@/shared/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "청소클라쓰",
-  description: "Design promotional website migrated to Next.js",
+  title: {
+    default: "청소클라쓰",
+    template: "%s | 청소클라쓰",
+  },
+  description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
 };
 
 export default function RootLayout({
@@ -13,9 +15,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = generateLocalBusinessJsonLd();
+
   return (
     <html lang="ko">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
