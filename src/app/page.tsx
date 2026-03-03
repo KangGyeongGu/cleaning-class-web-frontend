@@ -2,6 +2,7 @@ import { BlogReviews } from "@/components/BlogReviews";
 import { ContactForm } from "@/components/ContactForm";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { Navbar } from "@/components/Navbar";
 import { Services } from "@/components/Services";
 import { createClient } from "@/shared/lib/supabase/server";
@@ -32,11 +33,12 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
       <Navbar businessName={siteConfig?.business_name} />
-      <Hero businessName={siteConfig?.business_name} />
+      <Hero businessName={siteConfig?.business_name} phone={siteConfig?.phone} />
       <Services />
       <BlogReviews reviews={reviews} blogUrl={siteConfig?.blog_url ?? ''} />
       <ContactForm />
       <Footer siteConfig={siteConfig} />
+      {siteConfig?.phone && <MobilePhoneButton phone={siteConfig.phone} />}
     </main>
   );
 }

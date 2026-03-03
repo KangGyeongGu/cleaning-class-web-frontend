@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from 'motion/react';
+import { Phone } from 'lucide-react';
 
 interface HeroProps {
   businessName?: string;
+  phone?: string;
 }
 
-export function Hero({ businessName }: HeroProps) {
+export function Hero({ businessName, phone }: HeroProps) {
   const displayName = businessName ?? '청소클라쓰';
   return (
     <section className="relative h-screen w-full overflow-hidden bg-white text-slate-900 flex flex-col items-center justify-center">
@@ -57,11 +59,33 @@ export function Hero({ businessName }: HeroProps) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1.0, duration: 0.8 }}
         >
-            <button type="button" className="group relative px-10 py-4 bg-transparent border border-slate-900 text-slate-900 text-lg font-bold overflow-hidden transition-all hover:text-white">
+            <button
+              type="button"
+              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              className="group relative px-10 py-4 bg-transparent border border-slate-900 text-slate-900 text-lg font-bold overflow-hidden transition-all hover:text-white"
+            >
                 <span className="absolute inset-0 w-full h-full bg-slate-900 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out"></span>
                 <span className="relative z-10">무료 견적 받기</span>
             </button>
         </motion.div>
+
+        {phone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
+            className="mt-6 flex items-center justify-center gap-2 text-sm font-light text-slate-500"
+          >
+            <span>또는 전화 상담</span>
+            <a
+              href={`tel:${phone}`}
+              className="inline-flex items-center gap-1 font-medium text-slate-700 hover:text-slate-900 transition-colors"
+            >
+              <Phone size={14} />
+              {phone}
+            </a>
+          </motion.div>
+        )}
       </div>
     </section>
   );
