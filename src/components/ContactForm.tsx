@@ -73,11 +73,11 @@ export function ContactForm() {
                             name="serviceType"
                             className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light appearance-none rounded-none cursor-pointer"
                         >
-                            <option>입주 청소</option>
-                            <option>이사 청소</option>
-                            <option>거주 청소</option>
-                            <option>사무실/상가 청소</option>
-                            <option>에어컨/가전 청소</option>
+                            <option>거주청소</option>
+                            <option>정기청소</option>
+                            <option>특수청소</option>
+                            <option>쓰레기집청소</option>
+                            <option>상가청소</option>
                             <option>기타 문의</option>
                         </select>
                         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 pointer-events-none">
@@ -141,6 +141,9 @@ export function ContactForm() {
                 </button>
                 {state?.message && (
                     <p className="text-green-600 text-sm mt-4">{state.message}</p>
+                )}
+                {state?.error && (
+                    <p className="text-red-600 text-sm mt-4">{state.error}</p>
                 )}
             </div>
         </motion.form>

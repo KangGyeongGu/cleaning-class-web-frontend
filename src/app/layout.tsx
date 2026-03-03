@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { generateLocalBusinessJsonLd } from "@/shared/lib/json-ld";
+import { createClient } from "@/shared/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: {
@@ -10,12 +11,18 @@ export const metadata: Metadata = {
   description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const jsonLd = generateLocalBusinessJsonLd();
+  const supabase = await createClient();
+  const { data: siteConfig } = await supabase
+    .from('site_config')
+    .select('*')
+    .single();
+
+  const jsonLd = generateLocalBusinessJsonLd(siteConfig);
 
   return (
     <html lang="ko">

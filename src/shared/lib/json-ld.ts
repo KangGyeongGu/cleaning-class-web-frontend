@@ -4,6 +4,8 @@
  * @see https://schema.org/CleaningService
  */
 
+import type { SiteConfig } from '@/shared/types/database';
+
 interface LocalBusinessJsonLd {
   "@context": "https://schema.org";
   "@type": "LocalBusiness";
@@ -24,24 +26,24 @@ interface LocalBusinessJsonLd {
   priceRange: string;
 }
 
-export function generateLocalBusinessJsonLd(): LocalBusinessJsonLd {
+export function generateLocalBusinessJsonLd(siteConfig?: SiteConfig | null): LocalBusinessJsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "청소클라쓰",
-    description: "전북 전주 지역 전문 청소 서비스 - 입주청소, 이사청소, 사무실청소, 거주청소",
-    url: "https://www.cleaningclass.co.kr",
+    name: siteConfig?.business_name ?? "청소클라쓰",
+    description: siteConfig?.description ?? "전북 전주 지역 전문 청소 서비스 - 거주청소, 정기청소, 특수청소, 쓰레기집, 상가청소",
+    url: siteConfig?.site_url ?? "https://www.cleaningclass.co.kr",
     address: {
       "@type": "PostalAddress",
-      addressRegion: "전라북도",
-      addressLocality: "전주시",
+      addressRegion: siteConfig?.address_region ?? "전라북도",
+      addressLocality: siteConfig?.address_locality ?? "전주시",
       addressCountry: "KR",
     },
     areaServed: {
       "@type": "Place",
-      name: "전북 전주",
+      name: `${siteConfig?.address_region ?? "전북"} ${siteConfig?.address_locality ?? "전주"}`,
     },
-    serviceType: ["입주청소", "이사청소", "사무실청소", "거주청소"],
+    serviceType: ["거주청소", "정기청소", "특수청소", "쓰레기집청소", "상가청소"],
     priceRange: "$$",
   };
 }

@@ -2,171 +2,124 @@
 
 전주 청소업체 **청소클라쓰** 웹사이트 프론트엔드 프로젝트입니다.
 
-## 프로젝트 전제
-- 브로셔/마케팅 사이트 성격의 정적 페이지 중심 프로젝트
-- 기능 확장을 고려하되 과잉 아키텍처(FSD 풀세트, Atomic 풀계층) 지양
-- 품질 우선순위는 SEO 안정성, 이미지 로딩 성능(LCP/CLS), 구조 일관성
-
 ## 기술 스택
-| 기술스택 | 설명 |
-| --- | --- |
-| Next.js 16 (App Router) | 라우팅, 서버 렌더링/정적 생성, 메타데이터 처리 등을 담당하는 React 프레임워크 |
-| React 19 | UI 컴포넌트 기반 화면 구성과 상태 기반 렌더링을 담당하는 라이브러리 |
-| TypeScript 5 | 정적 타입 검사를 통해 런타임 오류를 줄이고 코드 안정성을 높이는 언어 |
-| Tailwind CSS v4 | 유틸리티 클래스와 토큰 기반 스타일링을 제공하는 CSS 프레임워크 |
-| motion | 페이지/섹션 전환 및 인터랙션 애니메이션을 구현하는 모션 라이브러리 |
-| react-slick | 후기 카드 캐러셀(슬라이더) UI를 구현하는 React 슬라이더 라이브러리 |
-| slick-carousel | `react-slick`에서 사용하는 기본 슬라이더 스타일 리소스(CSS) |
+
+| 분류 | 기술 | 설명 |
+|------|------|------|
+| 프레임워크 | Next.js 16 (App Router) | SSR/ISR/정적 생성, 라우팅 |
+| UI | React 19 | 컴포넌트 기반 화면 구성 |
+| 언어 | TypeScript 5 | 정적 타입 검사 |
+| 스타일링 | Tailwind CSS v4 | 유틸리티 기반 CSS, `@theme` 토큰 |
+| 검증 | Zod 3 | 폼 입력 검증 (클라이언트/서버 공용) |
+| 애니메이션 | motion 12 | 섹션 전환 및 인터랙션 |
+| 슬라이더 | react-slick | 후기 카드 캐러셀 |
+| 아이콘 | lucide-react | SVG 아이콘 라이브러리 |
+| 데이터베이스 | Supabase PostgreSQL | 업체 정보, 리뷰, 문의 데이터 (서울 리전) |
+| 파일 저장소 | Supabase Storage | 리뷰 썸네일 이미지 |
+| 인증 | Supabase Auth | 관리자 이메일/비밀번호 인증 |
+| 호스팅 | AWS LightSail | 프로덕션 배포 |
+
+## 제공 기능
+
+| 사용자 | 기능 | 설명 |
+|--------|------|------|
+| 방문자 | 히어로 | 업체 소개 메시지 및 문의 CTA |
+| 방문자 | 서비스 소개 | 5개 청소 서비스 카드 (거주, 정기, 특수, 쓰레기집, 상가) |
+| 방문자 | 시공 후기 | 리뷰 카드 캐러셀 슬라이더, 네이버 블로그 연결 |
+| 방문자 | 문의 폼 | 이름, 연락처, 서비스 유형, 메시지 입력 (Zod 검증 + Server Action) |
+| 방문자 | SEO | robots.ts, sitemap.ts, Schema.org JSON-LD (LocalBusiness) |
+| 관리자 | 업체 정보 수정 | 전화번호, 이메일, 블로그/인스타그램 URL 등 |
+| 관리자 | 리뷰 CRUD | 썸네일 이미지, 제목, 소개글, 서비스 분류 태그 |
+| 관리자 | 문의 조회 | 방문자 문의 목록, 읽음/안읽음 관리 |
 
 ## 디렉토리 구조
+
 ```text
 src/
-  app/
-    layout.tsx                  # 앱 공통 레이아웃과 루트 메타데이터를 정의
-    page.tsx                    # 홈 페이지를 조립하는 라우트 엔트리
-    globals.css                 # 전역 스타일과 토큰/테마 CSS 변수를 관리
-  components/
-    Navbar.tsx                  # 상단 네비게이션 및 모바일 메뉴를 렌더링
-    Hero.tsx                    # 첫 화면 히어로 메시지와 핵심 CTA를 렌더링
-    Services.tsx                # 서비스 소개 카드 섹션을 렌더링
-    BlogReviews.tsx             # 후기 카드 슬라이더 섹션을 렌더링
-    ContactForm.tsx             # 문의 입력 폼 섹션을 렌더링
-    Footer.tsx                  # 하단 연락처/브랜드 정보 섹션을 렌더링
+├── app/
+│   ├── layout.tsx                  # 루트 레이아웃, 메타데이터, JSON-LD 주입
+│   ├── page.tsx                    # 메인 페이지 (DB 데이터 패칭, ISR)
+│   ├── globals.css                 # 전역 스타일, Tailwind @theme 토큰
+│   ├── robots.ts                   # 검색엔진 크롤링 정책
+│   ├── sitemap.ts                  # 사이트맵 생성
+│   ├── error.tsx                   # 에러 바운더리 페이지
+│   ├── not-found.tsx               # 404 페이지
+│   │
+│   ├── admin/                      # 관리자 영역
+│   │   ├── layout.tsx              # 관리자 레이아웃 (사이드바, 한국어 UI)
+│   │   ├── page.tsx                # 대시보드 (문의 요약, 리뷰 수)
+│   │   ├── login/
+│   │   │   └── page.tsx            # 로그인 페이지
+│   │   ├── reviews/
+│   │   │   ├── page.tsx            # 리뷰 목록 (Server Component)
+│   │   │   ├── ReviewListClient.tsx  # 리뷰 목록 Client Component (드래그앤드롭)
+│   │   │   ├── new/
+│   │   │   │   └── page.tsx        # 리뷰 등록
+│   │   │   └── [id]/
+│   │   │       └── edit/
+│   │   │           ├── page.tsx    # 리뷰 수정 (Server Component)
+│   │   │           └── EditReviewForm.tsx  # 리뷰 수정 Client Component
+│   │   └── config/
+│   │       ├── page.tsx            # 업체 정보 수정 (Server Component)
+│   │       └── SiteConfigForm.tsx  # 업체 정보 Client Component
+│   │
+│   └── auth/
+│       └── callback/
+│           └── route.ts            # Supabase Auth 콜백
+│
+├── components/
+│   ├── Navbar.tsx                  # 상단 네비게이션, 모바일 메뉴
+│   ├── Hero.tsx                    # 히어로 섹션
+│   ├── Services.tsx                # 서비스 소개 카드 섹션
+│   ├── BlogReviews.tsx             # 후기 캐러셀 슬라이더 섹션
+│   ├── ContactForm.tsx             # 문의 폼 섹션
+│   └── Footer.tsx                  # 푸터 섹션
+│
+├── shared/
+│   ├── actions/
+│   │   ├── contact.ts              # 문의 폼 Server Action
+│   │   ├── review.ts               # 리뷰 CRUD Server Actions
+│   │   ├── site-config.ts          # 업체 정보 수정 Server Action
+│   │   └── auth.ts                 # 로그인/로그아웃 Server Actions
+│   ├── lib/
+│   │   ├── json-ld.ts              # Schema.org JSON-LD 생성
+│   │   ├── schema.ts               # Zod 검증 스키마
+│   │   ├── mail.ts                 # 이메일 전송 유틸리티
+│   │   └── supabase/
+│   │       ├── server.ts           # Server Component/Action용 클라이언트
+│   │       ├── client.ts           # Client Component용 클라이언트
+│   │       ├── middleware.ts       # 미들웨어 전용 클라이언트
+│   │       └── storage.ts          # Supabase Storage 유틸리티
+│   └── types/
+│       └── database.ts             # Supabase DB 타입 정의
+│
+├── middleware.ts                    # /admin 경로 인증 보호
+│
+└── __tests__/
+    ├── architecture/               # 의존성 방향 구조 테스트
+    ├── seo/                        # 헤딩 계층 구조 테스트
+    └── image/                      # next/image 정책 테스트
+
 public/
-  images/
-    services/                   # 서비스 섹션 이미지 (residential.webp, move-in.webp 등)
-    reviews/                    # 후기 섹션 이미지 (review-01.webp ~ review-06.webp)
+└── images/
+    ├── services/                   # 서비스 섹션 이미지
+    └── reviews/                    # 후기 섹션 이미지
 ```
 
-## 컨벤션
+## 실행 방법
 
-### 아키텍처 컨벤션
+```bash
+npm install        # 의존성 설치
+npm run dev        # 개발 서버
+npm run build      # 프로덕션 빌드
+npm start          # 프로덕션 서버
+```
 
-#### 라우트/컴포넌트 경계
-> 라우트 책임과 상호작용 책임을 분리해 렌더링 비용과 유지보수성을 관리하기 위한 기준
+## 검증 명령
 
-- `app/*`는 라우팅과 페이지 조립 중심으로 유지합니다.
-- `page.tsx`에는 대량 데이터/복잡 로직을 직접 넣지 않습니다.
-- 상태/이벤트/브라우저 API가 필요한 최소 단위에만 `"use client"`를 적용합니다.
-- 클라이언트 전용 파일은 `*.client.tsx` 네이밍을 권장합니다.
-
-#### 데이터/카피 소유권
-> 화면 콘텐츠의 변경 위치를 고정해 수정 범위를 예측 가능하게 유지하기 위한 기준
-
-- 섹션 전용 데이터는 섹션 단위 파일에서 관리합니다.
-- 두 곳 이상에서 재사용되기 전에는 공용 영역으로 승격하지 않습니다.
-- 페이지 파일에 대량 하드코딩 데이터를 직접 배치하지 않습니다.
-
-#### 공유 코드 승격 기준
-> 재사용 시점에만 공용화를 허용해 과도한 추상화와 결합도 증가를 막기 위한 기준
-
-- 1곳 사용 코드는 로컬 유지, 2곳 이상 재사용 시 공용으로 이동합니다.
-- 공용 레이어는 하위 화면 레이어를 참조하지 않습니다.
-
-### 타입스크립트 컨벤션
-
-#### 타입 안정성
-> 타입 오류를 개발 단계에서 차단해 런타임 장애 가능성을 낮추기 위한 기준
-
-- `strict`를 유지합니다.
-- `any`를 금지합니다.
-- props 타입을 명시합니다.
-- 이벤트 핸들러 타입(`FormEvent`, `ChangeEvent` 등)을 구체적으로 선언합니다.
-- 공용 상수 데이터는 `as const` 또는 명시 타입으로 고정합니다.
-
-### 스타일 컨벤션
-
-#### 토큰/테마 관리
-> 스타일 결정을 토큰으로 일원화해 화면 일관성과 변경 효율을 확보하기 위한 기준
-
-- `globals.css`의 CSS 변수 중심으로 토큰/테마를 관리합니다.
-- 임의 색상/간격 사용을 최소화하고 토큰 기반으로 통일합니다.
-- Tailwind v4 `@theme`를 기준으로 토큰 소스 통일을 권장합니다.
-
-#### 시맨틱 마크업
-> 문서 구조의 의미를 유지해 접근성과 SEO 해석 품질을 높이기 위한 기준
-
-- 섹션은 `section`, 하단은 `footer` 등 시맨틱 태그를 우선 사용합니다.
-- 헤딩과 본문 구조가 의미 순서에 맞도록 유지합니다.
-
-### 성능 컨벤션
-
-#### 이미지 로딩
-> LCP와 CLS를 안정적으로 관리하기 위해 이미지 로딩 동작을 명시적으로 제어하는 기준
-
-- 기본 원칙은 `next/image` 사용이며, `<img>`는 예외 케이스에서만 사용합니다.
-- 모든 `Image`는 `width/height` 또는 `fill` 중 하나를 반드시 사용합니다.
-- `fill` 사용 시 부모 컨테이너는 positioning context(예: `position: relative`)를 제공합니다.
-- `sizes`는 `fill` 사용 또는 CSS 반응형 크기 사용 시 반드시 명시합니다.
-- `sizes` 누락 시 `100vw` 가정으로 과대 다운로드가 발생할 수 있습니다.
-- LCP 이미지에 대해 Next.js 16 기준 `priority`는 사용하지 않고, 필요 시 `preload`를 검토합니다.
-- `preload`는 단일 LCP 후보에 제한해 사용합니다.
-- `loading` 또는 `fetchPriority`를 사용하는 경우 `preload`와 중복 사용하지 않습니다.
-- CLS 방지를 위해 이미지 영역 선점(`aspect-ratio` 또는 명시적 컨테이너 높이)을 적용합니다.
-
-#### next.config 이미지 정책
-> 원격 이미지 허용 범위를 통제해 성능 예측 가능성과 보안성을 함께 확보하기 위한 기준
-
-- `images.domains` 대신 `images.remotePatterns`를 사용합니다.
-- `remotePatterns`/`localPatterns`는 `pathname`, `search`까지 가능한 좁게 설정합니다.
-- `search` 생략 시 쿼리 허용 범위가 과도하게 넓어질 수 있으므로 명시를 우선합니다.
-- `images.qualities`는 allowlist로 관리합니다.
-- `formats: ['image/avif', 'image/webp']` 강제는 운영 환경/소스 특성 검토 후 적용합니다.
-
-#### 번들/렌더링 최적화
-> 초기 로딩 비용과 사용자 체감 성능을 균형 있게 유지하기 위한 기준
-
-- 슬라이더 등 무거운 의존성은 필요 시 동적 로딩을 검토합니다.
-- 무한 애니메이션은 최소화합니다.
-- 로딩 스켈레톤은 전체 강제가 아니라 실제 지연 구간에 한정 적용합니다.
-- 아이콘은 가능한 인라인 SVG/아이콘 라이브러리를 우선 사용합니다.
-
-### SEO 컨벤션
-
-#### 색인/크롤링 파일
-> 검색엔진이 사이트 구조를 안정적으로 수집하도록 진입 파일을 표준화하는 기준
-
-- `app/robots.ts`를 유지합니다.
-- `app/sitemap.ts`를 유지합니다.
-
-#### 구조화 데이터
-> 페이지 의미 정보를 기계가 해석 가능한 형태로 제공해 검색 노출 품질을 높이기 위한 기준
-
-- `shared/lib/json-ld.ts`에서 Schema.org JSON-LD를 생성합니다.
-- 페이지 또는 레이아웃에서 구조화 데이터를 주입합니다.
-
-#### 문서 구조
-> 제목 계층과 문서 흐름을 강제해 콘텐츠 이해도와 검색 신뢰도를 높이기 위한 기준
-
-- 페이지당 `h1`은 1개만 사용합니다.
-- `h1 -> h2 -> h3` 헤딩 계층을 유지합니다.
-- 헤딩 역할을 `div` 스타일로 대체하지 않습니다.
-
-### 폼/검증 컨벤션
-
-#### 폼 처리 전략
-> 입력 처리 책임을 서버 중심으로 두어 상태 복잡도와 오류 가능성을 줄이기 위한 기준
-
-- 폼은 서버 액션(서버 함수) 기반을 우선 고려합니다.
-- `useActionState`, `useOptimistic`는 필요할 때만 적용합니다.
-- 단순 전송/검증 폼에서 과한 낙관 업데이트를 지양합니다.
-
-#### 입력 검증
-> 외부 입력을 일관된 규칙으로 검증해 데이터 무결성과 보안을 보장하기 위한 기준
-
-- 문의 폼 등 외부 입력은 `schema.ts` 기반 검증을 적용합니다.
-- 런타임 검증 도구(Zod 등)를 사용해 클라이언트/서버 입력 기준을 일치시킵니다.
-
-### 운영 안정성 컨벤션
-
-#### 에러/404 처리
-> 실패 상황을 예측 가능한 화면으로 표준화해 사용자 이탈과 디버깅 비용을 줄이기 위한 기준
-
-- `app/error.tsx`를 유지합니다.
-- `app/not-found.tsx`를 유지합니다.
-
-#### 경로/의존성 규칙
-> import 규칙과 의존 방향을 고정해 구조 붕괴와 순환 참조를 예방하기 위한 기준
-
-- 경로 alias(`@/components`, `@/app`)를 우선 사용합니다.
-- 공용 레이어가 화면 레이어를 참조하지 않도록 의존 방향을 고정합니다.
+```bash
+npx tsc --noEmit       # 타입체크
+npx eslint .           # 린트
+npx vitest run         # 단위/구조 테스트
+npx playwright test    # E2E 테스트
+```

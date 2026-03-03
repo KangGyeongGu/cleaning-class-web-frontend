@@ -4,16 +4,39 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { Navbar } from "@/components/Navbar";
 import { Services } from "@/components/Services";
+import { createClient } from "@/shared/lib/supabase/server";
+import type { SiteConfig, Review } from "@/shared/types/database";
 
-export default function Home() {
+// ISR: 1시간마다 재검증
+export const revalidate = 3600;
+
+export default async function Home() {
+  const supabase = await createClient();
+
+  // 병렬 데이터 페칭
+  const siteConfigPromise = supabase.from('site_config').select('*').single();
+  const reviewsPromise = supabase
+    .from('reviews')
+    .select('*')
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true });
+
+  const [siteConfigResult, reviewsResult] = await Promise.all([
+    siteConfigPromise,
+    reviewsPromise
+  ]);
+
+  const siteConfig = siteConfigResult.data as SiteConfig | null;
+  const reviews = (reviewsResult.data as Review[] | null) ?? [];
+
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
-      <Navbar />
-      <Hero />
+      <Navbar businessName={siteConfig?.business_name} />
+      <Hero businessName={siteConfig?.business_name} />
       <Services />
-      <BlogReviews />
+      <BlogReviews reviews={reviews} blogUrl={siteConfig?.blog_url ?? ''} />
       <ContactForm />
-      <Footer />
+      <Footer siteConfig={siteConfig} />
     </main>
   );
 }

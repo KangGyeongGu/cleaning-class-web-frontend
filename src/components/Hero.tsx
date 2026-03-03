@@ -2,7 +2,12 @@
 
 import { motion } from 'motion/react';
 
-export function Hero() {
+interface HeroProps {
+  businessName?: string;
+}
+
+export function Hero({ businessName }: HeroProps) {
+  const displayName = businessName ?? '청소클라쓰';
   return (
     <section className="relative h-screen w-full overflow-hidden bg-white text-slate-900 flex flex-col items-center justify-center">
       {/* Background Abstract Elements - Extremely subtle for "restrained" look */}
@@ -27,13 +32,13 @@ export function Hero() {
 
       {/* Main Content */}
       <div className="z-10 text-center px-4 max-w-5xl mx-auto">
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
           className="text-6xl md:text-9xl font-black tracking-tighter mb-8 text-slate-900 leading-tight"
         >
-          청소클라쓰
+          {displayName}
         </motion.h1>
 
         <motion.p 

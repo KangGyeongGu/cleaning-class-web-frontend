@@ -5,34 +5,29 @@ import Image from 'next/image';
 
 const services = [
   {
-    title: '거주 청소',
+    title: '거주청소',
     desc: '머무는 공간, 쾌적함의 재발견.',
     img: '/images/services/residential.webp'
   },
   {
-    title: '입주 청소',
-    desc: '설레는 시작, 결점 없는 공간.',
-    img: '/images/services/move-in.webp'
-  },
-  {
-    title: '정기 청소',
+    title: '정기청소',
     desc: '비즈니스의 품격, 변함없는 관리.',
     img: '/images/services/regular.webp'
   },
   {
-    title: '원룸 청소',
-    desc: '나만의 공간, 작지만 완벽하게.',
-    img: '/images/services/studio.webp'
+    title: '특수청소',
+    desc: '특별한 공간, 전문적인 솔루션.',
+    img: '/images/services/special.webp'
   },
   {
-    title: '쓰레기집 청소',
+    title: '쓰레기집',
     desc: '혼돈에서 질서로, 완벽한 복원.',
     img: '/images/services/hoarding.webp'
   },
   {
-    title: '부분 청소',
-    desc: '필요한 곳만, 집중적인 케어.',
-    img: '/images/services/partial.webp'
+    title: '상가청소',
+    desc: '매장의 첫인상, 깨끗함의 시작.',
+    img: '/images/services/commercial.webp'
   }
 ];
 
@@ -49,14 +44,14 @@ export function Services() {
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">SERVICE</h2>
         </motion.div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8">
-          {services.map((service, index) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+          {services.map((service) => (
             <motion.div
-              key={index}
+              key={service.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05, duration: 0.6 }}
+              transition={{ duration: 0.6 }}
               className="group cursor-default"
             >
               <div className="aspect-[3/4] overflow-hidden mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">

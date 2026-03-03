@@ -1,6 +1,7 @@
 "use server";
 
 import { contactFormSchema } from "@/shared/lib/schema";
+import { sendContactEmail } from "@/shared/lib/mail";
 
 export async function submitContactForm(prevState: unknown, formData: FormData) {
   const rawData = {
@@ -19,11 +20,24 @@ export async function submitContactForm(prevState: unknown, formData: FormData) 
     };
   }
 
-  // Placeholder: 실제 백엔드 연동은 별도 구현
-  await new Promise((resolve) => setTimeout(resolve, 1500));
+  try {
+    // 이메일 전송
+    await sendContactEmail({
+      name: validationResult.data.name,
+      phone: validationResult.data.phone,
+      serviceType: validationResult.data.serviceType,
+      message: validationResult.data.message,
+    });
 
-  return {
-    success: true,
-    message: "문의가 성공적으로 접수되었습니다.",
-  };
+    return {
+      success: true,
+      message: "문의가 성공적으로 접수되었습니다.",
+    };
+  } catch (error) {
+    console.error("Contact email send error:", error);
+    return {
+      success: false,
+      error: "문의 접수에 실패했습니다. 전화로 연락해주세요.",
+    };
+  }
 }

@@ -4,14 +4,19 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 
-export function Navbar() {
+interface NavbarProps {
+  businessName?: string;
+}
+
+export function Navbar({ businessName }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const displayName = businessName ?? '청소클라쓰';
 
   return (
     <nav className="absolute top-0 left-0 right-0 z-50 py-8">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <button type="button" className="text-2xl font-black tracking-tighter text-slate-900 z-50 relative bg-transparent border-0 cursor-pointer" aria-label="홈으로 이동">
-          청소클라쓰
+          {displayName}
         </button>
 
         {/* Desktop Menu */}
