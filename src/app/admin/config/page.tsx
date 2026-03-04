@@ -4,11 +4,11 @@ import { SiteConfigForm } from '@/app/admin/config/SiteConfigForm';
 export default async function SiteConfigPage() {
   const supabase = await createClient();
 
-  // site_config 조회 (id=1 고정)
+  // site_config 조회 (단일 행)
   const { data: config, error } = await supabase
     .from('site_config')
     .select('*')
-    .eq('id', 1)
+    .limit(1)
     .single();
 
   if (error || !config) {

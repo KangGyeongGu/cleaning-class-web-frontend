@@ -12,16 +12,16 @@ interface ReviewListClientProps {
 }
 
 export function ReviewListClient({ reviews }: ReviewListClientProps) {
-  const [deletingId, setDeletingId] = useState<number | null>(null);
-  const [togglingId, setTogglingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  const handleDelete = async (reviewId: number) => {
+  const handleDelete = async (reviewId: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) {
       return;
     }
 
     setDeletingId(reviewId);
-    const result = await deleteReview(String(reviewId));
+    const result = await deleteReview(reviewId);
     setDeletingId(null);
 
     if (!result.success) {
@@ -29,9 +29,9 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
     }
   };
 
-  const handleTogglePublish = async (reviewId: number, currentStatus: boolean) => {
+  const handleTogglePublish = async (reviewId: string, currentStatus: boolean) => {
     setTogglingId(reviewId);
-    const result = await toggleReviewPublish(String(reviewId), !currentStatus);
+    const result = await toggleReviewPublish(reviewId, !currentStatus);
     setTogglingId(null);
 
     if (!result.success) {
@@ -78,8 +78,8 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
             {/* 태그 */}
             <div className="col-span-2">
               <div className="flex flex-wrap gap-1">
-                {review.tags.map((tag, idx) => (
-                  <span key={idx} className="text-xs text-slate-500 bg-slate-100 px-2 py-1">
+                {review.tags.map((tag) => (
+                  <span key={tag} className="text-xs text-slate-500 bg-slate-100 px-2 py-1">
                     {tag}
                   </span>
                 ))}

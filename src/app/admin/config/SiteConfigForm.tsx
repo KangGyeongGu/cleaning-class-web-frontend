@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { updateSiteConfig } from '@/shared/actions/site-config';
 import { Loader2 } from 'lucide-react';
+import { formatPhoneNumber } from '@/shared/lib/format';
 import type { SiteConfig } from '@/shared/types/database';
 
 interface SiteConfigFormProps {
@@ -44,6 +45,10 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           type="tel"
           required
           defaultValue={config.phone}
+          onInput={(e) => {
+            const input = e.currentTarget;
+            input.value = formatPhoneNumber(input.value);
+          }}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="010-0000-0000"
         />
@@ -107,24 +112,8 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 사이트 URL */}
-      <div>
-        <label htmlFor="site_url" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
-          사이트 URL
-        </label>
-        <input
-          id="site_url"
-          name="site_url"
-          type="url"
-          required
-          defaultValue={config.site_url}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
-          placeholder="https://example.com"
-        />
-        {state && 'errors' in state && state.errors?.site_url && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.site_url[0]}</p>
-        )}
-      </div>
+      {/* 사이트 URL (수정 불가, hidden으로 기존 값 유지) */}
+      <input type="hidden" name="site_url" value={config.site_url} />
 
       {/* 소개글 */}
       <div>
@@ -145,41 +134,25 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 지역 */}
-      <div>
-        <label htmlFor="address_region" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
-          지역
-        </label>
-        <input
-          id="address_region"
-          name="address_region"
-          type="text"
-          required
-          defaultValue={config.address_region}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
-          placeholder="서울특별시"
-        />
-        {state && 'errors' in state && state.errors?.address_region && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.address_region[0]}</p>
-        )}
-      </div>
+      {/* 기존 지역/시군구는 hidden으로 유지 (json-ld 호환) */}
+      <input type="hidden" name="address_region" value={config.address_region} />
+      <input type="hidden" name="address_locality" value={config.address_locality} />
 
-      {/* 도시 */}
+      {/* 주소 */}
       <div>
-        <label htmlFor="address_locality" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
-          시/군/구
+        <label htmlFor="address" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+          주소 (선택)
         </label>
         <input
-          id="address_locality"
-          name="address_locality"
+          id="address"
+          name="address"
           type="text"
-          required
-          defaultValue={config.address_locality}
+          defaultValue={config.address || ''}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
-          placeholder="강남구"
+          placeholder="전북특별자치도 전주시 완산구 ..."
         />
-        {state && 'errors' in state && state.errors?.address_locality && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.address_locality[0]}</p>
+        {state && 'errors' in state && state.errors?.address && (
+          <p className="text-red-500 text-xs mt-1">{state.errors.address[0]}</p>
         )}
       </div>
 

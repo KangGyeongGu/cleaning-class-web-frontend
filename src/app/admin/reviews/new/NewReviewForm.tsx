@@ -2,29 +2,19 @@
 
 import { useActionState, useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { updateReview } from '@/shared/actions/review';
+import { createReview } from '@/shared/actions/review';
 import { Loader2, X, Plus } from 'lucide-react';
 import Image from 'next/image';
-import type { Review } from '@/shared/types/database';
 
 const SERVICE_TYPES = ['거주청소', '정기청소', '특수청소', '쓰레기집청소', '상가청소'];
 
-interface EditReviewFormProps {
-  review: Review;
-  imageUrl: string;
-}
-
-export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
+export function NewReviewForm() {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(
-    updateReview.bind(null, String(review.id)),
-    null
-  );
+  const [state, formAction, isPending] = useActionState(createReview, null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [tags, setTags] = useState<string[]>(review.tags);
+  const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-  const existingService = review.tags.find(t => SERVICE_TYPES.includes(t));
-  const [selectedService, setSelectedService] = useState<string>(existingService || '');
+  const [selectedService, setSelectedService] = useState<string>('');
 
   // blob URL 메모리 누수 방지: ref로 최신 URL 추적
   const imagePreviewRef = useRef<string | null>(null);
@@ -76,8 +66,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
     return null;
   }
 
-  const displayImageUrl = imagePreview || imageUrl;
-
   return (
     <form action={handleSubmit} className="space-y-8">
       {/* 제목 */}
@@ -91,7 +79,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           type="text"
           required
           maxLength={100}
-          defaultValue={review.title}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="리뷰 제목을 입력하세요"
         />
@@ -111,7 +98,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           required
           maxLength={200}
           rows={3}
-          defaultValue={review.summary}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
           placeholder="리뷰 소개글을 입력하세요"
         ></textarea>
@@ -129,7 +115,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           id="link_url"
           name="link_url"
           type="url"
-          defaultValue={review.link_url || ''}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="https://blog.naver.com/..."
         />
@@ -221,6 +206,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           name="image"
           type="file"
           accept="image/*"
+          required
           onChange={handleImageChange}
           className="hidden"
         />
@@ -229,11 +215,13 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs"
         >
           <Plus size={16} />
-          {imagePreview ? '이미지 변경' : '새 이미지 선택'}
+          이미지 선택
         </label>
-        <div className="mt-4 relative w-full max-w-md h-64 border border-slate-200">
-          <Image src={displayImageUrl} alt="미리보기" fill className="object-cover" sizes="(max-width: 768px) 100vw, 448px" />
-        </div>
+        {imagePreview && (
+          <div className="mt-4 relative w-full max-w-md h-64 border border-slate-200">
+            <Image src={imagePreview} alt="미리보기" fill className="object-cover" sizes="(max-width: 768px) 100vw, 448px" />
+          </div>
+        )}
       </div>
 
       {/* 정렬 순서 */}
@@ -246,7 +234,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           name="sort_order"
           type="number"
           min="0"
-          defaultValue={review.sort_order}
+          defaultValue="0"
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
         />
         {state && 'errors' in state && state.errors?.sort_order && (
@@ -261,11 +249,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           name="is_published"
           type="checkbox"
           value="true"
-          defaultChecked={review.is_published}
           className="w-5 h-5"
         />
         <label htmlFor="is_published" className="text-sm font-bold text-slate-900">
-          게시
+          즉시 게시
         </label>
       </div>
 
@@ -283,10 +270,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         >
           {isPending ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="animate-spin w-4 h-4" /> 수정 중...
+              <Loader2 className="animate-spin w-4 h-4" /> 등록 중...
             </span>
           ) : (
-            '수정'
+            '등록'
           )}
         </button>
         <button
