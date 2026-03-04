@@ -1,10 +1,24 @@
+"use client";
+
+import { useState } from 'react';
+import { Copy, Check, Instagram } from 'lucide-react';
 import type { SiteConfig } from '@/shared/types/database';
+
+// 네이버블로그 아이콘 (lucide-react에 없으므로 직접 구현)
+function NaverBlogIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
+    </svg>
+  );
+}
 
 interface FooterProps {
   siteConfig: SiteConfig | null;
 }
 
 export function Footer({ siteConfig }: FooterProps) {
+  const [copied, setCopied] = useState(false);
   const businessName = siteConfig?.business_name ?? '청소클라쓰';
   const phone = siteConfig?.phone ?? '';
   const email = siteConfig?.email ?? '';
@@ -20,18 +34,47 @@ export function Footer({ siteConfig }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
             <p className="text-3xl font-black tracking-tighter mb-6">{businessName}</p>
-            <p className="text-slate-500 text-sm leading-relaxed max-w-sm font-light">
-              우리는 단순한 청소를 넘어 공간의 가치를 회복시킵니다.
-              보이지 않는 곳의 디테일이 완벽한 공간을 만듭니다.
-            </p>
+            {siteConfig?.description && (
+              <p className="text-slate-500 text-sm leading-relaxed max-w-sm font-light">
+                {siteConfig.description}
+              </p>
+            )}
           </div>
 
           <div>
             <p className="text-xs font-bold uppercase tracking-widest mb-6">Contact</p>
             <ul className="space-y-4 text-sm font-light text-slate-600">
-              {phone && <li>{phone}</li>}
-              {email && <li>{email}</li>}
-              <li>전북 전 지역 출장 가능</li>
+              {phone && (
+                <li>
+                  <a href={`tel:${phone}`} className="hover:text-slate-900 transition-colors">
+                    {phone}
+                  </a>
+                </li>
+              )}
+              {email && (
+                <li>
+                  <span className="inline-flex items-center gap-2">
+                    {email}
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(email);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className="text-slate-400 hover:text-slate-900 transition-colors"
+                      title="이메일 복사"
+                    >
+                      {copied ? <Check size={14} /> : <Copy size={14} />}
+                    </button>
+                  </span>
+                </li>
+              )}
+              {siteConfig?.address && (
+                <li>
+                  {siteConfig.address}
+                </li>
+              )}
             </ul>
           </div>
 
@@ -40,14 +83,16 @@ export function Footer({ siteConfig }: FooterProps) {
             <ul className="space-y-4 text-sm font-light text-slate-600">
               {hasBlogUrl && (
                 <li>
-                  <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
+                  <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors">
+                    <NaverBlogIcon size={14} />
                     Naver Blog
                   </a>
                 </li>
               )}
               {hasInstagramUrl && (
                 <li>
-                  <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 transition-colors">
+                  <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors">
+                    <Instagram size={15} />
                     Instagram
                   </a>
                 </li>
@@ -58,7 +103,6 @@ export function Footer({ siteConfig }: FooterProps) {
 
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 uppercase tracking-wider font-medium">
           <p>&copy; {new Date().getFullYear()} {businessName.toUpperCase()}. All rights reserved.</p>
-          <p className="mt-2 md:mt-0">Premium Cleaning Service</p>
         </div>
       </div>
     </footer>

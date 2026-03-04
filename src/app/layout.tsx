@@ -26,7 +26,13 @@ export default async function RootLayout({
 
   return (
     <html lang="ko">
-      <body className="antialiased">
+      <body className="antialiased font-sans">
+        {/*
+          JSON-LD 구조화 데이터 삽입.
+          dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
+          @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
+          jsonLd 객체는 서버에서 생성되며 사용자 입력을 포함하지 않으므로 XSS 위험 없음.
+        */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
