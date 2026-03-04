@@ -1,105 +1,186 @@
-// Supabase Database 타입 정의
+// Supabase Database 타입 정의 (supabase gen types 기반)
+
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[];
 
 export interface Database {
+  __InternalSupabase: {
+    PostgrestVersion: "14.4";
+  };
   public: {
     Tables: {
-      site_config: {
-        Row: SiteConfigRow;
-        Insert: SiteConfigInsert;
-        Update: SiteConfigUpdate;
-      };
       reviews: {
-        Row: ReviewRow;
-        Insert: ReviewInsert;
-        Update: ReviewUpdate;
+        Row: {
+          created_at: string;
+          id: string;
+          image_path: string;
+          is_published: boolean;
+          link_url: string;
+          sort_order: number;
+          summary: string;
+          tags: string[];
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          image_path?: string;
+          is_published?: boolean;
+          link_url?: string;
+          sort_order?: number;
+          summary: string;
+          tags?: string[];
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          image_path?: string;
+          is_published?: boolean;
+          link_url?: string;
+          sort_order?: number;
+          summary?: string;
+          tags?: string[];
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
+      services: {
+        Row: {
+          created_at: string;
+          description: string;
+          id: string;
+          image_after_focal_x: number;
+          image_after_focal_y: number;
+          image_after_path: string;
+          image_focal_x: number;
+          image_focal_y: number;
+          image_path: string;
+          is_published: boolean;
+          sort_order: number;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          description: string;
+          id?: string;
+          image_after_focal_x?: number;
+          image_after_focal_y?: number;
+          image_after_path?: string;
+          image_focal_x?: number;
+          image_focal_y?: number;
+          image_path?: string;
+          is_published?: boolean;
+          sort_order?: number;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string;
+          id?: string;
+          image_after_focal_x?: number;
+          image_after_focal_y?: number;
+          image_after_path?: string;
+          image_focal_x?: number;
+          image_focal_y?: number;
+          image_path?: string;
+          is_published?: boolean;
+          sort_order?: number;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      site_config: {
+        Row: {
+          address: string;
+          address_locality: string;
+          address_region: string;
+          blog_url: string;
+          business_name: string;
+          description: string;
+          email: string;
+          id: string;
+          instagram_url: string;
+          phone: string;
+          review_description: string | null;
+          service_description: string | null;
+          site_url: string;
+          updated_at: string;
+        };
+        Insert: {
+          address?: string;
+          address_locality?: string;
+          address_region?: string;
+          blog_url?: string;
+          business_name?: string;
+          description?: string;
+          email?: string;
+          id?: string;
+          instagram_url?: string;
+          phone?: string;
+          review_description?: string | null;
+          service_description?: string | null;
+          site_url?: string;
+          updated_at?: string;
+        };
+        Update: {
+          address?: string;
+          address_locality?: string;
+          address_region?: string;
+          blog_url?: string;
+          business_name?: string;
+          description?: string;
+          email?: string;
+          id?: string;
+          instagram_url?: string;
+          phone?: string;
+          review_description?: string | null;
+          service_description?: string | null;
+          site_url?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
     };
   };
 }
 
-// site_config 테이블 타입
-export interface SiteConfigRow {
-  id: number;
-  business_name: string;
-  phone: string;
-  email: string;
-  blog_url: string | null;
-  instagram_url: string | null;
-  site_url: string;
-  description: string | null;
-  address_region: string;
-  address_locality: string;
-  created_at: string;
-  updated_at: string;
-}
+// 편의 타입 별칭
+export type SiteConfigRow = Database["public"]["Tables"]["site_config"]["Row"];
+export type SiteConfigInsert = Database["public"]["Tables"]["site_config"]["Insert"];
+export type SiteConfigUpdate = Database["public"]["Tables"]["site_config"]["Update"];
 
-export interface SiteConfigInsert {
-  id?: number;
-  business_name: string;
-  phone: string;
-  email: string;
-  blog_url?: string | null;
-  instagram_url?: string | null;
-  site_url: string;
-  description?: string | null;
-  address_region: string;
-  address_locality: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type ReviewRow = Database["public"]["Tables"]["reviews"]["Row"];
+export type ReviewInsert = Database["public"]["Tables"]["reviews"]["Insert"];
+export type ReviewUpdate = Database["public"]["Tables"]["reviews"]["Update"];
 
-export interface SiteConfigUpdate {
-  id?: number;
-  business_name?: string;
-  phone?: string;
-  email?: string;
-  blog_url?: string | null;
-  instagram_url?: string | null;
-  site_url?: string;
-  description?: string | null;
-  address_region?: string;
-  address_locality?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+export type ServiceRow = Database["public"]["Tables"]["services"]["Row"];
+export type ServiceInsert = Database["public"]["Tables"]["services"]["Insert"];
+export type ServiceUpdate = Database["public"]["Tables"]["services"]["Update"];
 
-// reviews 테이블 타입
-export interface ReviewRow {
-  id: number;
-  title: string;
-  summary: string;
-  image_path: string;
-  tags: string[];
-  sort_order: number;
-  is_published: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface ReviewInsert {
-  id?: number;
-  title: string;
-  summary: string;
-  image_path: string;
-  tags: string[];
-  sort_order?: number;
-  is_published?: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface ReviewUpdate {
-  id?: number;
-  title?: string;
-  summary?: string;
-  image_path?: string;
-  tags?: string[];
-  sort_order?: number;
-  is_published?: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
-
-// Export 편의 타입
 export type SiteConfig = SiteConfigRow;
 export type Review = ReviewRow;
+export type Service = ServiceRow;
