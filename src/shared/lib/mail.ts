@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import type Mail from "nodemailer/lib/mailer";
 
 /**
  * Gmail SMTP 이메일 전송 유틸리티
@@ -8,7 +9,31 @@ interface ContactEmailData {
   name: string;
   phone: string;
   serviceType: string;
+  region: string;
   message: string;
+  images?: Array<{ filename: string; content: Buffer }>;
+}
+
+/**
+ * 모듈 레벨 싱글턴 transporter (lazy initialization)
+ * - 서버리스 환경에서 warm 인스턴스 내 SMTP 연결 재사용
+ * - 환경 변수는 런타임 주입이므로 첫 호출 시점에 생성
+ */
+let cachedTransporter: Mail | null = null;
+
+function getTransporter(): Mail {
+  if (!cachedTransporter) {
+    cachedTransporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT),
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
+  return cachedTransporter;
 }
 
 /**
@@ -16,15 +41,7 @@ interface ContactEmailData {
  * @param data - 문의자 정보 및 메시지
  */
 export async function sendContactEmail(data: ContactEmailData): Promise<void> {
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: true, // SSL 사용 (포트 465)
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
+  const transporter = getTransporter();
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -56,6 +73,10 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
               <div class="value">${data.phone}</div>
             </div>
             <div class="field">
+              <div class="label">지역</div>
+              <div class="value">${data.region}</div>
+            </div>
+            <div class="field">
               <div class="label">서비스 유형</div>
               <div class="value">${data.serviceType}</div>
             </div>
@@ -77,10 +98,19 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
     text: `
 이름: ${data.name}
 연락처: ${data.phone}
+지역: ${data.region}
 서비스 유형: ${data.serviceType}
 
 문의 내용:
 ${data.message}
     `.trim(),
+    ...(data.images && data.images.length > 0
+      ? {
+          attachments: data.images.map((img) => ({
+            filename: img.filename,
+            content: img.content,
+          })),
+        }
+      : {}),
   });
 }

@@ -8,6 +8,7 @@ export async function submitContactForm(prevState: unknown, formData: FormData) 
     name: formData.get("name"),
     phone: formData.get("phone"),
     serviceType: formData.get("serviceType"),
+    region: formData.get("region"),
     message: formData.get("message"),
   };
 
@@ -20,13 +21,28 @@ export async function submitContactForm(prevState: unknown, formData: FormData) 
     };
   }
 
+  // 다중 이미지 첨부 처리 (병렬 버퍼 변환)
+  const imageFiles = formData.getAll("images") as File[];
+  const imageAttachments = (
+    await Promise.all(
+      imageFiles
+        .filter((file) => file && file.size > 0)
+        .map(async (file) => {
+          const bytes = await file.arrayBuffer();
+          return { filename: file.name, content: Buffer.from(bytes) };
+        })
+    )
+  );
+
   try {
     // 이메일 전송
     await sendContactEmail({
       name: validationResult.data.name,
       phone: validationResult.data.phone,
       serviceType: validationResult.data.serviceType,
+      region: validationResult.data.region,
       message: validationResult.data.message,
+      images: imageAttachments.length > 0 ? imageAttachments : undefined,
     });
 
     return {
