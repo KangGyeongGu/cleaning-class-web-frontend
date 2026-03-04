@@ -5,7 +5,8 @@ export const contactFormSchema = z.object({
   name: z.string().min(1, "이름을 입력해주세요"),
   phone: z.string().min(1, "연락처를 입력해주세요").regex(/^[0-9-]+$/, "올바른 전화번호 형식이 아닙니다"),
   serviceType: z.string().min(1, "서비스 유형을 선택해주세요"),
-  message: z.string().min(1, "문의 내용을 입력해주세요"),
+  region: z.string().min(1, "지역을 선택해주세요"),
+  message: z.string().min(1, "문의 내용을 입력해주세요").max(1000, "문의 내용은 1000자 이하로 작성해주세요"),
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
@@ -23,6 +24,7 @@ export const reviewFormSchema = z.object({
   title: z.string().min(1, "제목을 입력해주세요").max(100, "제목은 100자 이하여야 합니다"),
   summary: z.string().min(1, "소개글을 입력해주세요").max(200, "소개글은 200자 이하여야 합니다"),
   tags: z.array(z.string()).min(1, "최소 1개 이상의 태그를 입력해주세요"),
+  link_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")).optional(),
   sort_order: z.number().int("정렬 순서는 정수여야 합니다").min(0, "정렬 순서는 0 이상이어야 합니다"),
   is_published: z.boolean(),
 });
@@ -38,8 +40,23 @@ export const siteConfigFormSchema = z.object({
   instagram_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")),
   site_url: z.string().url("올바른 URL 형식이 아닙니다"),
   description: z.string().max(500, "설명은 500자 이하여야 합니다").optional(),
-  address_region: z.string().min(1, "지역을 입력해주세요"),
-  address_locality: z.string().min(1, "시/군/구를 입력해주세요"),
+  address_region: z.string().optional().default(''),
+  address_locality: z.string().optional().default(''),
+  address: z.string().max(200, "주소는 200자 이하여야 합니다").optional(),
 });
 
 export type SiteConfigFormData = z.infer<typeof siteConfigFormSchema>;
+
+// 서비스 폼 스키마
+export const serviceFormSchema = z.object({
+  title: z.string().min(1, "서비스명을 입력해주세요").max(50, "서비스명은 50자 이하여야 합니다"),
+  description: z.string().min(1, "설명을 입력해주세요").max(200, "설명은 200자 이하여야 합니다"),
+  sort_order: z.number().int("정렬 순서는 정수여야 합니다").min(0, "정렬 순서는 0 이상이어야 합니다"),
+  is_published: z.boolean(),
+  image_focal_x: z.number().int().min(0).max(100).default(50),
+  image_focal_y: z.number().int().min(0).max(100).default(50),
+  image_after_focal_x: z.number().int().min(0).max(100).default(50),
+  image_after_focal_y: z.number().int().min(0).max(100).default(50),
+});
+
+export type ServiceFormData = z.infer<typeof serviceFormSchema>;

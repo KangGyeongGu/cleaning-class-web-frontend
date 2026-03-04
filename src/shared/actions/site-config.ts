@@ -2,24 +2,68 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
+import { getUser } from "@/shared/lib/supabase/auth";
 import { siteConfigFormSchema } from "@/shared/lib/schema";
 import type { SiteConfigUpdate } from "@/shared/types/database";
 
-/**
- * 현재 인증된 사용자 확인
- */
-async function getUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+/** site_config의 단일 필드를 수정하는 공통 내부 함수 */
+const FIELD_REVALIDATE_MAP: Record<string, string> = {
+  review_description: "/admin/reviews",
+  service_description: "/admin/services",
+};
 
-  if (error || !user) {
-    throw new Error("인증이 필요합니다.");
+async function updateSiteConfigField(
+  field: "review_description" | "service_description",
+  value: string,
+) {
+  try {
+    await getUser();
+
+    const supabase = await createClient();
+    const { data: current } = await supabase
+      .from("site_config")
+      .select("id")
+      .limit(1)
+      .single<{ id: string }>();
+
+    if (!current) {
+      return { success: false, error: "업체 정보를 찾을 수 없습니다." };
+    }
+
+    const { error } = await supabase
+      .from("site_config")
+      .update({ [field]: value, updated_at: new Date().toISOString() })
+      .eq("id", current.id);
+
+    if (error) {
+      return { success: false, error: `수정 실패: ${error.message}` };
+    }
+
+    revalidatePath("/");
+    revalidatePath(FIELD_REVALIDATE_MAP[field]);
+
+    return { success: true };
+  } catch (error) {
+    console.error(`updateSiteConfigField(${field}) error:`, error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
+    };
   }
+}
 
-  return user;
+/**
+ * 리뷰 안내 문구 수정 Server Action
+ */
+export async function updateReviewDescription(description: string) {
+  return updateSiteConfigField("review_description", description);
+}
+
+/**
+ * 서비스 안내 문구 수정 Server Action
+ */
+export async function updateServiceDescription(description: string) {
+  return updateSiteConfigField("service_description", description);
 }
 
 /**
@@ -39,8 +83,9 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       instagram_url: formData.get("instagram_url") || "",
       site_url: formData.get("site_url"),
       description: formData.get("description") || "",
-      address_region: formData.get("address_region"),
-      address_locality: formData.get("address_locality"),
+      address_region: formData.get("address_region") || "",
+      address_locality: formData.get("address_locality") || "",
+      address: formData.get("address") || "",
     };
 
     // 3. Zod 검증
@@ -52,20 +97,31 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       };
     }
 
-    // 4. DB UPDATE (id=1 고정, site_config는 단일 행)
+    // 4. DB UPDATE (site_config는 단일 행, id 조회 후 업데이트)
     const supabase = await createClient();
     const configData: SiteConfigUpdate = {
       ...validationResult.data,
-      blog_url: validationResult.data.blog_url || null,
-      instagram_url: validationResult.data.instagram_url || null,
-      description: validationResult.data.description || null,
+      blog_url: validationResult.data.blog_url || '',
+      instagram_url: validationResult.data.instagram_url || '',
+      description: validationResult.data.description || '',
+      address: validationResult.data.address || '',
       updated_at: new Date().toISOString(),
     };
 
+    const { data: current } = await supabase
+      .from("site_config")
+      .select("id")
+      .limit(1)
+      .single<{ id: string }>();
+
+    if (!current) {
+      throw new Error("업체 정보를 찾을 수 없습니다.");
+    }
+
     const { error } = await supabase
       .from("site_config")
-      .update(configData as never)
-      .eq("id", 1);
+      .update(configData)
+      .eq("id", current.id);
 
     if (error) {
       throw new Error(`업체 정보 수정 실패: ${error.message}`);

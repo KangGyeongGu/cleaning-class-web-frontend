@@ -2,64 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
+import { getUser } from "@/shared/lib/supabase/auth";
+import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
 import { reviewFormSchema } from "@/shared/lib/schema";
 import type { ReviewInsert, ReviewUpdate } from "@/shared/types/database";
 
-/**
- * 현재 인증된 사용자 확인
- */
-async function getUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    throw new Error("인증이 필요합니다.");
-  }
-
-  return user;
-}
-
-/**
- * 이미지 파일 Supabase Storage 업로드
- */
-async function uploadImage(file: File): Promise<string> {
-  const supabase = await createClient();
-  const fileExt = file.name.split(".").pop();
-  const fileName = `${crypto.randomUUID()}.${fileExt}`;
-
-  const { error } = await supabase.storage
-    .from("review-images")
-    .upload(fileName, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-
-  if (error) {
-    throw new Error(`이미지 업로드 실패: ${error.message}`);
-  }
-
-  return fileName;
-}
-
-/**
- * Supabase Storage 이미지 삭제
- */
-async function deleteImage(imagePath: string): Promise<void> {
-  if (!imagePath) return;
-
-  const supabase = await createClient();
-  const { error } = await supabase.storage
-    .from("review-images")
-    .remove([imagePath]);
-
-  if (error) {
-    console.error("이미지 삭제 실패:", error.message);
-    // 이미지 삭제 실패는 치명적이지 않으므로 에러를 throw하지 않음
-  }
-}
+const BUCKET = "review-images";
 
 /**
  * 리뷰 생성 Server Action
@@ -76,6 +24,7 @@ export async function createReview(prevState: unknown, formData: FormData) {
       tags: formData.get("tags")
         ? JSON.parse(formData.get("tags") as string)
         : [],
+      link_url: formData.get("link_url") || "",
       sort_order: Number(formData.get("sort_order") || 0),
       is_published: formData.get("is_published") === "true",
     };
@@ -94,7 +43,7 @@ export async function createReview(prevState: unknown, formData: FormData) {
     let imagePath = "";
 
     if (imageFile && imageFile.size > 0) {
-      imagePath = await uploadImage(imageFile);
+      imagePath = await uploadImage(BUCKET, imageFile);
     }
 
     // 5. DB INSERT
@@ -106,12 +55,12 @@ export async function createReview(prevState: unknown, formData: FormData) {
 
     const { error } = await supabase
       .from("reviews")
-      .insert(reviewData as never);
+      .insert(reviewData);
 
     if (error) {
       // 실패 시 업로드된 이미지 삭제
       if (imagePath) {
-        await deleteImage(imagePath);
+        await deleteImage(BUCKET, imagePath);
       }
       throw new Error(`리뷰 등록 실패: ${error.message}`);
     }
@@ -153,6 +102,7 @@ export async function updateReview(
       tags: formData.get("tags")
         ? JSON.parse(formData.get("tags") as string)
         : [],
+      link_url: formData.get("link_url") || "",
       sort_order: Number(formData.get("sort_order") || 0),
       is_published: formData.get("is_published") === "true",
     };
@@ -188,10 +138,10 @@ export async function updateReview(
     if (imageFile && imageFile.size > 0) {
       // 기존 이미지 삭제
       if (existingImagePath) {
-        await deleteImage(existingImagePath);
+        await deleteImage(BUCKET, existingImagePath);
       }
       // 새 이미지 업로드
-      newImagePath = await uploadImage(imageFile);
+      newImagePath = await uploadImage(BUCKET, imageFile);
     }
 
     // 6. DB UPDATE
@@ -203,13 +153,13 @@ export async function updateReview(
 
     const { error: updateError } = await supabase
       .from("reviews")
-      .update(reviewData as never)
+      .update(reviewData)
       .eq("id", reviewId);
 
     if (updateError) {
       // 실패 시 새 이미지 삭제 (기존 이미지와 다른 경우)
       if (newImagePath !== existingImagePath) {
-        await deleteImage(newImagePath);
+        await deleteImage(BUCKET, newImagePath);
       }
       throw new Error(`리뷰 수정 실패: ${updateError.message}`);
     }
@@ -267,7 +217,7 @@ export async function deleteReview(reviewId: string) {
 
     // 4. Storage 이미지 삭제
     if (existingImagePath) {
-      await deleteImage(existingImagePath);
+      await deleteImage(BUCKET, existingImagePath);
     }
 
     // 5. 캐시 무효화
@@ -306,7 +256,7 @@ export async function toggleReviewPublish(
       .update({
         is_published: isPublished,
         updated_at: new Date().toISOString(),
-      } as never)
+      })
       .eq("id", reviewId);
 
     if (error) {
