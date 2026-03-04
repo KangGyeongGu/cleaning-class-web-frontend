@@ -35,11 +35,22 @@ describe('next/image 정책', () => {
       const content = readFileSync(file, 'utf-8');
 
       // <img 태그 검출 (단, next/image의 Image 컴포넌트는 제외)
-      // JSX 내부 <img ...> 패턴 매칭
-      const nativeImgRegex = /<img\s+[^>]*>/g;
-      const matches = content.match(nativeImgRegex);
+      // eslint-disable 주석으로 허용된 <img>는 예외 (blob URL 미리보기 등)
+      const lines = content.split('\n');
+      let hasViolation = false;
 
-      if (matches) {
+      for (let i = 0; i < lines.length; i++) {
+        if (/<img\s+[^>]*>/.test(lines[i])) {
+          // 바로 윗줄에 eslint-disable 주석이 있으면 허용
+          const prevLine = i > 0 ? lines[i - 1] : '';
+          if (!prevLine.includes('eslint-disable')) {
+            hasViolation = true;
+            break;
+          }
+        }
+      }
+
+      if (hasViolation) {
         violations.push(`${file}: native <img> 태그 사용 감지`);
       }
     }

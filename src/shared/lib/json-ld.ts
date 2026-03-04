@@ -8,7 +8,7 @@ import type { SiteConfig } from '@/shared/types/database';
 
 interface LocalBusinessJsonLd {
   "@context": "https://schema.org";
-  "@type": "LocalBusiness";
+  "@type": ["CleaningService", "LocalBusiness"];
   name: string;
   description: string;
   url: string;
@@ -29,7 +29,7 @@ interface LocalBusinessJsonLd {
 export function generateLocalBusinessJsonLd(siteConfig?: SiteConfig | null): LocalBusinessJsonLd {
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["CleaningService", "LocalBusiness"],
     name: siteConfig?.business_name ?? "청소클라쓰",
     description: siteConfig?.description ?? "전북 전주 지역 전문 청소 서비스 - 거주청소, 정기청소, 특수청소, 쓰레기집, 상가청소",
     url: siteConfig?.site_url ?? "https://www.cleaningclass.co.kr",
