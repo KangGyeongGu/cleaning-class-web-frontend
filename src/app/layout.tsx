@@ -12,15 +12,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    url: "https://cleaningclass.co.kr",
+    url: "https://www.cleaningclass.co.kr",
     siteName: "청소클라쓰",
     title: "청소클라쓰",
     description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+    images: [
+      {
+        url: "https://www.cleaningclass.co.kr/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "청소클라쓰 — 전북 지역 전문 청소 서비스",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "청소클라쓰",
     description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+    images: ["https://www.cleaningclass.co.kr/og-image.png"],
   },
 };
 

@@ -1,22 +1,24 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Edit, Trash2, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { deleteReview, toggleReviewPublish } from '@/shared/actions/review';
-import type { Review } from '@/shared/types/database';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { Edit, Trash2, Eye, EyeOff, Loader2 } from "lucide-react";
+import { deleteReview, toggleReviewPublish } from "@/shared/actions/review";
+import type { Review } from "@/shared/types/database";
 
 interface ReviewListClientProps {
   reviews: (Review & { imageUrl: string })[];
 }
 
 export function ReviewListClient({ reviews }: ReviewListClientProps) {
+  const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const handleDelete = async (reviewId: string) => {
-    if (!confirm('정말 삭제하시겠습니까?')) {
+    if (!confirm("정말 삭제하시겠습니까?")) {
       return;
     }
 
@@ -25,17 +27,24 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
     setDeletingId(null);
 
     if (!result.success) {
-      alert(result.error || '삭제 중 오류가 발생했습니다.');
+      alert(result.error || "삭제 중 오류가 발생했습니다.");
+    } else {
+      router.refresh();
     }
   };
 
-  const handleTogglePublish = async (reviewId: string, currentStatus: boolean) => {
+  const handleTogglePublish = async (
+    reviewId: string,
+    currentStatus: boolean,
+  ) => {
     setTogglingId(reviewId);
     const result = await toggleReviewPublish(reviewId, !currentStatus);
     setTogglingId(null);
 
     if (!result.success) {
-      alert(result.error || '게시 상태 변경 중 오류가 발생했습니다.');
+      alert(result.error || "게시 상태 변경 중 오류가 발생했습니다.");
+    } else {
+      router.refresh();
     }
   };
 
@@ -43,19 +52,36 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
     <div className="border border-slate-200">
       {/* Table Header */}
       <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-slate-50 border-b border-slate-200">
-        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest">이미지</div>
-        <div className="col-span-3 text-xs font-bold text-slate-500 uppercase tracking-widest">제목</div>
-        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest">태그</div>
-        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">게시</div>
-        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">순서</div>
-        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest">등록일</div>
-        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">작업</div>
+        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest">
+          이미지
+        </div>
+        <div className="col-span-3 text-xs font-bold text-slate-500 uppercase tracking-widest">
+          제목
+        </div>
+        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
+          태그
+        </div>
+        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">
+          게시
+        </div>
+        <div className="col-span-1 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">
+          순서
+        </div>
+        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest">
+          등록일
+        </div>
+        <div className="col-span-2 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">
+          작업
+        </div>
       </div>
 
       {/* Table Body */}
       <div className="divide-y divide-slate-200">
         {reviews.map((review) => (
-          <div key={review.id} className="p-4 md:grid md:grid-cols-12 md:gap-4 md:items-center space-y-3 md:space-y-0">
+          <div
+            key={review.id}
+            className="p-4 md:grid md:grid-cols-12 md:gap-4 md:items-center space-y-3 md:space-y-0"
+          >
             {/* 이미지 */}
             <div className="col-span-1">
               <div className="relative w-16 h-16 border border-slate-200">
@@ -71,15 +97,22 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
 
             {/* 제목 */}
             <div className="col-span-3">
-              <p className="font-bold text-slate-900 text-sm line-clamp-2">{review.title}</p>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-1">{review.summary}</p>
+              <p className="font-bold text-slate-900 text-sm line-clamp-2">
+                {review.title}
+              </p>
+              <p className="text-xs text-slate-500 mt-1 line-clamp-1">
+                {review.summary}
+              </p>
             </div>
 
             {/* 태그 */}
             <div className="col-span-2">
               <div className="flex flex-wrap gap-1">
                 {review.tags.map((tag) => (
-                  <span key={tag} className="text-xs text-slate-500 bg-slate-100 px-2 py-1">
+                  <span
+                    key={tag}
+                    className="text-xs text-slate-500 bg-slate-100 px-2 py-1"
+                  >
                     {tag}
                   </span>
                 ))}
@@ -90,7 +123,9 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
             <div className="col-span-1 text-center">
               <button
                 type="button"
-                onClick={() => handleTogglePublish(review.id, review.is_published)}
+                onClick={() =>
+                  handleTogglePublish(review.id, review.is_published)
+                }
                 disabled={togglingId === review.id}
                 className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors disabled:opacity-50"
               >
@@ -101,19 +136,21 @@ export function ReviewListClient({ reviews }: ReviewListClientProps) {
                 ) : (
                   <EyeOff size={14} />
                 )}
-                {review.is_published ? '게시' : '비공개'}
+                {review.is_published ? "게시" : "비공개"}
               </button>
             </div>
 
             {/* 정렬 순서 */}
             <div className="col-span-1 text-center">
-              <span className="text-sm text-slate-500">{review.sort_order}</span>
+              <span className="text-sm text-slate-500">
+                {review.sort_order}
+              </span>
             </div>
 
             {/* 등록일 */}
             <div className="col-span-2">
               <span className="text-xs text-slate-500">
-                {new Date(review.created_at).toLocaleDateString('ko-KR')}
+                {new Date(review.created_at).toLocaleDateString("ko-KR")}
               </span>
             </div>
 
