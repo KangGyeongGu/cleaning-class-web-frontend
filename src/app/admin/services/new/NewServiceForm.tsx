@@ -41,6 +41,12 @@ export function NewServiceForm() {
     };
   }, []);
 
+  useEffect(() => {
+    if (state && "success" in state && state.success) {
+      router.push("/admin/services");
+    }
+  }, [state, router]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -62,12 +68,6 @@ export function NewServiceForm() {
       setAfterImagePreview(url);
     }
   };
-
-  // 성공 시 리다이렉트
-  if (state && "success" in state && state.success) {
-    router.push("/admin/services");
-    return null;
-  }
 
   return (
     <form action={formAction} className="space-y-8">

@@ -20,12 +20,18 @@ async function updateSiteConfigField(
     await getUser();
 
     const supabase = await createClient();
-    const { data: current } = await supabase
+    const { data: current, error: fetchError } = await supabase
       .from("site_config")
       .select("id")
       .limit(1)
       .single<{ id: string }>();
 
+    if (fetchError) {
+      return {
+        success: false,
+        error: `업체 정보 조회 실패: ${fetchError.message}`,
+      };
+    }
     if (!current) {
       return { success: false, error: "업체 정보를 찾을 수 없습니다." };
     }
@@ -47,7 +53,8 @@ async function updateSiteConfigField(
     console.error(`updateSiteConfigField(${field}) error:`, error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
+      error:
+        error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
     };
   }
 }
@@ -101,19 +108,22 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     const supabase = await createClient();
     const configData: SiteConfigUpdate = {
       ...validationResult.data,
-      blog_url: validationResult.data.blog_url || '',
-      instagram_url: validationResult.data.instagram_url || '',
-      description: validationResult.data.description || '',
-      address: validationResult.data.address || '',
+      blog_url: validationResult.data.blog_url || "",
+      instagram_url: validationResult.data.instagram_url || "",
+      description: validationResult.data.description || "",
+      address: validationResult.data.address || "",
       updated_at: new Date().toISOString(),
     };
 
-    const { data: current } = await supabase
+    const { data: current, error: fetchConfigError } = await supabase
       .from("site_config")
       .select("id")
       .limit(1)
       .single<{ id: string }>();
 
+    if (fetchConfigError) {
+      throw new Error(`업체 정보 조회 실패: ${fetchConfigError.message}`);
+    }
     if (!current) {
       throw new Error("업체 정보를 찾을 수 없습니다.");
     }

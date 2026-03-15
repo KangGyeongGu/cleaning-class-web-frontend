@@ -56,9 +56,7 @@ export async function createService(prevState: unknown, formData: FormData) {
       image_after_path: imageAfterPath,
     };
 
-    const { error } = await supabase
-      .from("services")
-      .insert(serviceData );
+    const { error } = await supabase.from("services").insert(serviceData);
 
     if (error) {
       if (imagePath) await deleteImage(BUCKET, imagePath);
@@ -78,7 +76,9 @@ export async function createService(prevState: unknown, formData: FormData) {
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : "서비스 등록 중 오류가 발생했습니다.",
+        error instanceof Error
+          ? error.message
+          : "서비스 등록 중 오류가 발생했습니다.",
     };
   }
 }
@@ -89,7 +89,7 @@ export async function createService(prevState: unknown, formData: FormData) {
 export async function updateService(
   serviceId: string,
   prevState: unknown,
-  formData: FormData
+  formData: FormData,
 ) {
   try {
     await getUser();
@@ -122,16 +122,20 @@ export async function updateService(
       .single();
 
     if (fetchError || !existingService) {
-      throw new Error(`서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`);
+      throw new Error(
+        `서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`,
+      );
     }
 
-    const existing = existingService as { image_path: string; image_after_path: string };
+    const existing = existingService as {
+      image_path: string;
+      image_after_path: string;
+    };
 
     const imageFile = formData.get("image") as File | null;
     let newImagePath = existing.image_path;
 
     if (imageFile && imageFile.size > 0) {
-      if (existing.image_path) await deleteImage(BUCKET, existing.image_path);
       newImagePath = await uploadImage(BUCKET, imageFile);
     }
 
@@ -139,7 +143,6 @@ export async function updateService(
     let newImageAfterPath = existing.image_after_path;
 
     if (imageAfterFile && imageAfterFile.size > 0) {
-      if (existing.image_after_path) await deleteImage(BUCKET, existing.image_after_path);
       newImageAfterPath = await uploadImage(BUCKET, imageAfterFile);
     }
 
@@ -152,17 +155,37 @@ export async function updateService(
 
     const { error: updateError } = await supabase
       .from("services")
-      .update(serviceData )
+      .update(serviceData)
       .eq("id", serviceId);
 
     if (updateError) {
-      if (newImagePath !== existing.image_path) await deleteImage(BUCKET, newImagePath);
-      if (newImageAfterPath !== existing.image_after_path) await deleteImage(BUCKET, newImageAfterPath);
+      if (newImagePath !== existing.image_path)
+        await deleteImage(BUCKET, newImagePath);
+      if (newImageAfterPath !== existing.image_after_path)
+        await deleteImage(BUCKET, newImageAfterPath);
       throw new Error(`서비스 수정 실패: ${updateError.message}`);
     }
 
     revalidatePath("/");
     revalidatePath("/admin/services");
+
+    // DB 업데이트 성공 후 기존 이미지 삭제
+    if (
+      imageFile &&
+      imageFile.size > 0 &&
+      existing.image_path &&
+      newImagePath !== existing.image_path
+    ) {
+      await deleteImage(BUCKET, existing.image_path);
+    }
+    if (
+      imageAfterFile &&
+      imageAfterFile.size > 0 &&
+      existing.image_after_path &&
+      newImageAfterPath !== existing.image_after_path
+    ) {
+      await deleteImage(BUCKET, existing.image_after_path);
+    }
 
     return {
       success: true,
@@ -173,7 +196,9 @@ export async function updateService(
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : "서비스 수정 중 오류가 발생했습니다.",
+        error instanceof Error
+          ? error.message
+          : "서비스 수정 중 오류가 발생했습니다.",
     };
   }
 }
@@ -194,10 +219,15 @@ export async function deleteService(serviceId: string) {
       .single();
 
     if (fetchError || !existingService) {
-      throw new Error(`서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`);
+      throw new Error(
+        `서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`,
+      );
     }
 
-    const existing = existingService as { image_path: string; image_after_path: string };
+    const existing = existingService as {
+      image_path: string;
+      image_after_path: string;
+    };
 
     const { error: deleteError } = await supabase
       .from("services")
@@ -209,7 +239,8 @@ export async function deleteService(serviceId: string) {
     }
 
     if (existing.image_path) await deleteImage(BUCKET, existing.image_path);
-    if (existing.image_after_path) await deleteImage(BUCKET, existing.image_after_path);
+    if (existing.image_after_path)
+      await deleteImage(BUCKET, existing.image_after_path);
 
     revalidatePath("/");
     revalidatePath("/admin/services");
@@ -223,7 +254,9 @@ export async function deleteService(serviceId: string) {
     return {
       success: false,
       error:
-        error instanceof Error ? error.message : "서비스 삭제 중 오류가 발생했습니다.",
+        error instanceof Error
+          ? error.message
+          : "서비스 삭제 중 오류가 발생했습니다.",
     };
   }
 }
@@ -233,7 +266,7 @@ export async function deleteService(serviceId: string) {
  */
 export async function toggleServicePublish(
   serviceId: string,
-  isPublished: boolean
+  isPublished: boolean,
 ) {
   try {
     await getUser();
@@ -244,7 +277,7 @@ export async function toggleServicePublish(
       .update({
         is_published: isPublished,
         updated_at: new Date().toISOString(),
-      } )
+      })
       .eq("id", serviceId);
 
     if (error) {

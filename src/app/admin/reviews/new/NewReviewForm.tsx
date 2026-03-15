@@ -37,6 +37,12 @@ export function NewReviewForm() {
     };
   }, []);
 
+  useEffect(() => {
+    if (state && "success" in state && state.success) {
+      router.push("/admin/reviews");
+    }
+  }, [state, router]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -65,12 +71,6 @@ export function NewReviewForm() {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
   };
-
-  // 성공 시 리다이렉트
-  if (state && "success" in state && state.success) {
-    router.push("/admin/reviews");
-    return null;
-  }
 
   return (
     <form action={handleSubmit} className="space-y-8">

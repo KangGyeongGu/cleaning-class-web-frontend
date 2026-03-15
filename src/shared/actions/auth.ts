@@ -12,7 +12,10 @@ type LoginState = {
  * 관리자 로그인 Server Action
  * REQ-FILE-008, REQ-FUNC-001
  */
-export async function login(prevState: LoginState | null, formData: FormData): Promise<LoginState> {
+export async function login(
+  prevState: LoginState | null,
+  formData: FormData,
+): Promise<LoginState> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -48,6 +51,13 @@ export async function login(prevState: LoginState | null, formData: FormData): P
  */
 export async function logout() {
   const supabase = await createClient();
-  await supabase.auth.signOut();
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("[logout] signOut 오류:", error);
+    }
+  } catch (e) {
+    console.error("[logout] signOut 예외:", e);
+  }
   redirect("/admin/login");
 }

@@ -14,6 +14,8 @@ const ALLOWED_MIME_TYPES = [
 
 const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif"] as const;
 
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+
 type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
 
@@ -43,6 +45,12 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
   if (fileExt === undefined || !isAllowedExtension(fileExt.toLowerCase())) {
     throw new Error(
       `허용되지 않는 파일 확장자입니다: ${fileExt ?? "(없음)"}. 허용 확장자: ${ALLOWED_EXTENSIONS.join(", ")}`,
+    );
+  }
+
+  if (file.size > MAX_UPLOAD_SIZE) {
+    throw new Error(
+      `파일 크기가 제한을 초과합니다: ${(file.size / 1024 / 1024).toFixed(1)}MB. 최대 허용 크기: 10MB`,
     );
   }
 
