@@ -9,6 +9,19 @@ export const metadata: Metadata = {
     template: "%s | 청소클라쓰",
   },
   description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: "https://cleaningclass.co.kr",
+    siteName: "청소클라쓰",
+    title: "청소클라쓰",
+    description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "청소클라쓰",
+    description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+  },
 };
 
 export default async function RootLayout({
@@ -16,11 +29,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const { data: siteConfig } = await supabase
-    .from('site_config')
-    .select('*')
-    .single();
+  let siteConfig = null;
+  try {
+    const supabase = await createClient();
+    const { data, error: siteConfigError } = await supabase
+      .from("site_config")
+      .select("*")
+      .single();
+    if (siteConfigError) {
+      console.error("[layout] site_config 쿼리 실패:", siteConfigError);
+    }
+    siteConfig = data;
+  } catch (e) {
+    console.error("[layout] createClient/query 예외:", e);
+  }
 
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
 
@@ -33,10 +55,14 @@ export default async function RootLayout({
           @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
           jsonLd 객체는 서버에서 생성되며 사용자 입력을 포함하지 않으므로 XSS 위험 없음.
         */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
         />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
         {children}
       </body>
     </html>

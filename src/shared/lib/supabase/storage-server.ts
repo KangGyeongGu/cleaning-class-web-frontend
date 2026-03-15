@@ -5,6 +5,26 @@
 
 import { createClient } from "@/shared/lib/supabase/server";
 
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+] as const;
+
+const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif"] as const;
+
+type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
+type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
+
+function isAllowedMimeType(value: string): value is AllowedMimeType {
+  return (ALLOWED_MIME_TYPES as readonly string[]).includes(value);
+}
+
+function isAllowedExtension(value: string): value is AllowedExtension {
+  return (ALLOWED_EXTENSIONS as readonly string[]).includes(value);
+}
+
 /**
  * 이미지 파일을 Supabase Storage에 업로드
  * @param bucket - Storage 버킷 이름 (e.g. "review-images", "service-images")
@@ -12,16 +32,27 @@ import { createClient } from "@/shared/lib/supabase/server";
  * @returns 저장된 파일명
  */
 export async function uploadImage(bucket: string, file: File): Promise<string> {
-  const supabase = await createClient();
+  if (!isAllowedMimeType(file.type)) {
+    throw new Error(
+      `허용되지 않는 파일 형식입니다: ${file.type}. 허용 형식: ${ALLOWED_MIME_TYPES.join(", ")}`,
+    );
+  }
+
   const fileExt = file.name.split(".").pop();
+
+  if (fileExt === undefined || !isAllowedExtension(fileExt.toLowerCase())) {
+    throw new Error(
+      `허용되지 않는 파일 확장자입니다: ${fileExt ?? "(없음)"}. 허용 확장자: ${ALLOWED_EXTENSIONS.join(", ")}`,
+    );
+  }
+
+  const supabase = await createClient();
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
-  const { error } = await supabase.storage
-    .from(bucket)
-    .upload(fileName, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
+  const { error } = await supabase.storage.from(bucket).upload(fileName, file, {
+    cacheControl: "3600",
+    upsert: false,
+  });
 
   if (error) {
     throw new Error(`이미지 업로드 실패: ${error.message}`);
@@ -35,13 +66,14 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
  * @param bucket - Storage 버킷 이름
  * @param imagePath - 삭제할 이미지 경로
  */
-export async function deleteImage(bucket: string, imagePath: string): Promise<void> {
+export async function deleteImage(
+  bucket: string,
+  imagePath: string,
+): Promise<void> {
   if (!imagePath) return;
 
   const supabase = await createClient();
-  const { error } = await supabase.storage
-    .from(bucket)
-    .remove([imagePath]);
+  const { error } = await supabase.storage.from(bucket).remove([imagePath]);
 
   if (error) {
     console.error("이미지 삭제 실패:", error.message);

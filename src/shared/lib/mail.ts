@@ -15,6 +15,19 @@ interface ContactEmailData {
 }
 
 /**
+ * HTML 특수문자 이스케이프
+ * XSS 방지를 위해 사용자 입력값을 HTML 엔티티로 변환
+ */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
  * 모듈 레벨 싱글턴 transporter (lazy initialization)
  * - 서버리스 환경에서 warm 인스턴스 내 SMTP 연결 재사용
  * - 환경 변수는 런타임 주입이므로 첫 호출 시점에 생성
@@ -66,23 +79,23 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
           <div class="content">
             <div class="field">
               <div class="label">이름</div>
-              <div class="value">${data.name}</div>
+              <div class="value">${escapeHtml(data.name)}</div>
             </div>
             <div class="field">
               <div class="label">연락처</div>
-              <div class="value">${data.phone}</div>
+              <div class="value">${escapeHtml(data.phone)}</div>
             </div>
             <div class="field">
               <div class="label">지역</div>
-              <div class="value">${data.region}</div>
+              <div class="value">${escapeHtml(data.region)}</div>
             </div>
             <div class="field">
               <div class="label">서비스 유형</div>
-              <div class="value">${data.serviceType}</div>
+              <div class="value">${escapeHtml(data.serviceType)}</div>
             </div>
             <div class="field">
               <div class="label">문의 내용</div>
-              <div class="value">${data.message.replace(/\n/g, "<br>")}</div>
+              <div class="value">${escapeHtml(data.message).replace(/\n/g, "<br>")}</div>
             </div>
           </div>
         </div>

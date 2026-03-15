@@ -17,8 +17,10 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // 인증 성공 시 next 파라미터 경로 또는 /admin으로 이동
-      return NextResponse.redirect(new URL(next, request.url));
+      // next 파라미터 오픈 리다이렉트 차단: /로 시작하고 //로 시작하지 않는 상대 경로만 허용
+      const safeNext =
+        next.startsWith("/") && !next.startsWith("//") ? next : "/admin";
+      return NextResponse.redirect(new URL(safeNext, request.url));
     }
   }
 
