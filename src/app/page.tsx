@@ -39,7 +39,11 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
-      <Navbar businessName={siteConfig?.business_name} />
+      <Navbar
+        businessName={siteConfig?.business_name}
+        blogUrl={siteConfig?.blog_url}
+        instagramUrl={siteConfig?.instagram_url}
+      />
       <Hero
         businessName={siteConfig?.business_name}
         phone={siteConfig?.phone}

@@ -7,6 +7,8 @@ import { Menu, X } from "lucide-react";
 
 interface NavbarProps {
   businessName?: string;
+  blogUrl?: string;
+  instagramUrl?: string;
 }
 
 const menuItems = [
@@ -24,9 +26,12 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-export function Navbar({ businessName }: NavbarProps) {
+export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const displayName = businessName ?? "청소클라쓰";
+
+  const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
+  const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
 
   const handleMobileMenuClick = (targetId: string) => {
     setIsOpen(false);
@@ -53,17 +58,43 @@ export function Navbar({ businessName }: NavbarProps) {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-12">
-          {menuItems.map((item) => (
-            <button
-              key={item.target}
-              type="button"
-              className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors bg-transparent border-0 cursor-pointer"
-              onClick={() => scrollToSection(item.target)}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="hidden md:flex items-center gap-6">
+          <div className="flex items-center gap-8">
+            {menuItems.map((item) => (
+              <button
+                key={item.target}
+                type="button"
+                className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors bg-transparent border-0 cursor-pointer"
+                onClick={() => scrollToSection(item.target)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+          {(hasBlogUrl || hasInstagramUrl) && (
+            <div className="flex items-center gap-5 ml-2 pl-6 border-l border-slate-200">
+              {hasBlogUrl && (
+                <a
+                  href={blogUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  블로그
+                </a>
+              )}
+              {hasInstagramUrl && (
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
+                >
+                  인스타그램
+                </a>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -93,6 +124,32 @@ export function Navbar({ businessName }: NavbarProps) {
                 {item.label}
               </button>
             ))}
+            {(hasBlogUrl || hasInstagramUrl) && (
+              <div className="flex items-center gap-6 mt-2 pt-6 border-t border-slate-200">
+                {hasBlogUrl && (
+                  <a
+                    href={blogUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsOpen(false)}
+                    className="text-lg font-bold tracking-tight text-slate-500"
+                  >
+                    블로그
+                  </a>
+                )}
+                {hasInstagramUrl && (
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsOpen(false)}
+                    className="text-lg font-bold tracking-tight text-slate-500"
+                  >
+                    인스타그램
+                  </a>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
       </div>

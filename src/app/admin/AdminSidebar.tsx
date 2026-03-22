@@ -11,6 +11,7 @@ import {
   Image,
   Settings,
   LogOut,
+  ExternalLink,
 } from "lucide-react";
 import { logout } from "@/shared/actions/auth";
 
@@ -75,15 +76,25 @@ export function AdminSidebar() {
                 </Link>
               );
             })}
-            <form action={handleLogout}>
-              <button
-                type="submit"
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+            <div className="mt-8 pt-4 border-t border-slate-200 space-y-1">
+              <Link
+                href="/"
+                target="_blank"
+                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
               >
-                <LogOut size={18} />
-                로그아웃
-              </button>
-            </form>
+                <ExternalLink size={18} />
+                홈페이지
+              </Link>
+              <form action={handleLogout}>
+                <button
+                  type="submit"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                >
+                  <LogOut size={18} />
+                  로그아웃
+                </button>
+              </form>
+            </div>
           </nav>
         </div>
       </aside>
@@ -113,15 +124,26 @@ export function AdminSidebar() {
                 </Link>
               );
             })}
-            <form action={handleLogout}>
-              <button
-                type="submit"
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+            <div className="mt-8 pt-4 border-t border-slate-200 space-y-1">
+              <Link
+                href="/"
+                target="_blank"
+                onClick={() => setIsSidebarOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
               >
-                <LogOut size={18} />
-                로그아웃
-              </button>
-            </form>
+                <ExternalLink size={18} />
+                홈페이지
+              </Link>
+              <form action={handleLogout}>
+                <button
+                  type="submit"
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                >
+                  <LogOut size={18} />
+                  로그아웃
+                </button>
+              </form>
+            </div>
           </nav>
         </div>
       )}
