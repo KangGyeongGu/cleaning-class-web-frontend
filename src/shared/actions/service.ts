@@ -36,6 +36,9 @@ export async function createService(prevState: unknown, formData: FormData) {
     }
 
     const imageFile = formData.get("image") as File | null;
+    if (!imageFile || imageFile.size === 0) {
+      return { success: false, error: "Before 이미지를 선택해주세요." };
+    }
     let imagePath = "";
 
     if (imageFile && imageFile.size > 0) {
@@ -343,5 +346,41 @@ export async function toggleServicePublish(
       success: false,
       error: "게시 상태 변경 중 오류가 발생했습니다.",
     };
+  }
+}
+
+/**
+ * 서비스 순서 일괄 변경 Server Action
+ */
+export async function reorderServices(
+  orderedIds: string[],
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return { success: false, error: "인증이 필요합니다." };
+    }
+
+    const supabase = await createClient();
+
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("services")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+
+      if (error) {
+        console.error("reorderServices DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin/services");
+
+    return { success: true };
+  } catch (error) {
+    console.error("reorderServices error:", error);
+    return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
   }
 }

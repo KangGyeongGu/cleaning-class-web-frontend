@@ -14,7 +14,11 @@ const SERVICE_TYPES = [
   "상가청소",
 ];
 
-export function NewReviewForm() {
+interface NewReviewFormProps {
+  defaultSortOrder?: number;
+}
+
+export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(createReview, null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -102,13 +106,13 @@ export function NewReviewForm() {
           htmlFor="summary"
           className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
         >
-          소개글 (최대 200자)
+          소개글 (최대 500자)
         </label>
         <textarea
           id="summary"
           name="summary"
           required
-          maxLength={200}
+          maxLength={500}
           rows={3}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
           placeholder="리뷰 소개글을 입력하세요"
@@ -239,7 +243,6 @@ export function NewReviewForm() {
           name="image"
           type="file"
           accept="image/*"
-          required
           onChange={handleImageChange}
           className="hidden"
         />
@@ -277,7 +280,7 @@ export function NewReviewForm() {
           name="sort_order"
           type="number"
           min="0"
-          defaultValue="0"
+          defaultValue={defaultSortOrder}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
         />
         {state && "errors" in state && state.errors?.sort_order && (
@@ -288,20 +291,26 @@ export function NewReviewForm() {
       </div>
 
       {/* 게시 여부 */}
-      <div className="flex items-center gap-3">
-        <input
-          id="is_published"
-          name="is_published"
-          type="checkbox"
-          value="true"
-          className="w-5 h-5"
-        />
-        <label
-          htmlFor="is_published"
-          className="text-sm font-bold text-slate-900"
-        >
-          즉시 게시
-        </label>
+      <div>
+        <div className="flex items-center gap-3">
+          <input
+            id="is_published"
+            name="is_published"
+            type="checkbox"
+            value="true"
+            defaultChecked
+            className="w-5 h-5"
+          />
+          <label
+            htmlFor="is_published"
+            className="text-sm font-bold text-slate-900"
+          >
+            즉시 게시
+          </label>
+        </div>
+        <p className="text-xs text-slate-400 mt-2">
+          체크 해제 시 저장만 되고 홈페이지에 노출되지 않습니다.
+        </p>
       </div>
 
       {/* 에러 메시지 */}

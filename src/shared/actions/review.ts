@@ -48,8 +48,11 @@ export async function createReview(prevState: unknown, formData: FormData) {
       };
     }
 
-    // 4. 이미지 업로드
+    // 4. 이미지 업로드 (필수)
     const imageFile = formData.get("image") as File | null;
+    if (!imageFile || imageFile.size === 0) {
+      return { success: false, error: "이미지를 선택해주세요." };
+    }
     let imagePath = "";
 
     if (imageFile && imageFile.size > 0) {
@@ -306,5 +309,41 @@ export async function toggleReviewPublish(
       success: false,
       error: "리뷰 처리 중 오류가 발생했습니다.",
     };
+  }
+}
+
+/**
+ * 리뷰 순서 일괄 변경 Server Action
+ */
+export async function reorderReviews(
+  orderedIds: string[],
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const user = await getUser();
+    if (!user) {
+      return { success: false, error: "인증이 필요합니다." };
+    }
+
+    const supabase = await createClient();
+
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("reviews")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+
+      if (error) {
+        console.error("reorderReviews DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
+    }
+
+    revalidatePath("/");
+    revalidatePath("/admin/reviews");
+
+    return { success: true };
+  } catch (error) {
+    console.error("reorderReviews error:", error);
+    return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
   }
 }

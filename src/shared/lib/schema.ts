@@ -34,7 +34,7 @@ export const reviewFormSchema = z.object({
   summary: z
     .string()
     .min(1, "소개글을 입력해주세요")
-    .max(200, "소개글은 200자 이하여야 합니다"),
+    .max(500, "소개글은 500자 이하여야 합니다"),
   tags: z.array(z.string()).min(1, "최소 1개 이상의 태그를 입력해주세요"),
   link_url: z
     .string()

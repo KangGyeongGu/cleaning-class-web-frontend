@@ -118,13 +118,13 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           htmlFor="summary"
           className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
         >
-          소개글 (최대 200자)
+          소개글 (최대 500자)
         </label>
         <textarea
           id="summary"
           name="summary"
           required
-          maxLength={200}
+          maxLength={500}
           rows={3}
           defaultValue={review.summary}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
