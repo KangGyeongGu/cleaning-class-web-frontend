@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface FocalPointPickerProps {
   imageUrl: string | null;
@@ -18,17 +18,34 @@ const TARGET_RATIO = 3 / 4; // 3:4 세로
  * 부모 컴포넌트에서 key={imageUrl}을 전달하면 컴포넌트가 리마운트되어
  * naturalSize가 자동으로 null로 초기화됩니다.
  */
-export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: FocalPointPickerProps) {
+export function FocalPointPicker({
+  imageUrl,
+  focalX,
+  focalY,
+  onChange,
+  label,
+}: FocalPointPickerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null);
+  const [naturalSize, setNaturalSize] = useState<{
+    w: number;
+    h: number;
+  } | null>(null);
   const [dragging, setDragging] = useState(false);
-  const dragStartRef = useRef<{ startMouseX: number; startMouseY: number; startFocalX: number; startFocalY: number } | null>(null);
+  const dragStartRef = useRef<{
+    startMouseX: number;
+    startMouseY: number;
+    startFocalX: number;
+    startFocalY: number;
+  } | null>(null);
 
   // 이미지 로드 시 원본 크기 감지
-  const handleImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight });
-  }, []);
+  const handleImageLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const img = e.currentTarget;
+      setNaturalSize({ w: img.naturalWidth, h: img.naturalHeight });
+    },
+    [],
+  );
 
   // 가이드 직사각형 크기 계산 (컨테이너 기준 비율)
   const getGuideRect = useCallback(() => {
@@ -59,26 +76,32 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
     const y = (focalY / 100) * maxOffsetY;
 
     return {
-      x, y, w: guideW, h: guideH,
+      x,
+      y,
+      w: guideW,
+      h: guideH,
       canDragX: maxOffsetX > 0.001,
       canDragY: maxOffsetY > 0.001,
     };
   }, [naturalSize, focalX, focalY]);
 
   // 드래그 핸들러
-  const handlePointerDown = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+  const handlePointerDown = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      e.preventDefault();
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
 
-    dragStartRef.current = {
-      startMouseX: clientX,
-      startMouseY: clientY,
-      startFocalX: focalX,
-      startFocalY: focalY,
-    };
-    setDragging(true);
-  }, [focalX, focalY]);
+      dragStartRef.current = {
+        startMouseX: clientX,
+        startMouseY: clientY,
+        startFocalX: focalX,
+        startFocalY: focalY,
+      };
+      setDragging(true);
+    },
+    [focalX, focalY],
+  );
 
   useEffect(() => {
     if (!dragging || !containerRef.current || !naturalSize) return;
@@ -98,8 +121,8 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
 
     const handleMove = (e: MouseEvent | TouchEvent) => {
       if (!dragStartRef.current) return;
-      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
 
       const deltaX = clientX - dragStartRef.current.startMouseX;
       const deltaY = clientY - dragStartRef.current.startMouseY;
@@ -108,13 +131,25 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
       let newFocalY = dragStartRef.current.startFocalY;
 
       if (canDragX && maxOffsetX > 0) {
-        const deltaPercent = (deltaX / containerRect.width) / maxOffsetX * 100;
-        newFocalX = Math.max(0, Math.min(100, Math.round(dragStartRef.current.startFocalX + deltaPercent)));
+        const deltaPercent = (deltaX / containerRect.width / maxOffsetX) * 100;
+        newFocalX = Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(dragStartRef.current.startFocalX + deltaPercent),
+          ),
+        );
       }
 
       if (canDragY && maxOffsetY > 0) {
-        const deltaPercent = (deltaY / containerRect.height) / maxOffsetY * 100;
-        newFocalY = Math.max(0, Math.min(100, Math.round(dragStartRef.current.startFocalY + deltaPercent)));
+        const deltaPercent = (deltaY / containerRect.height / maxOffsetY) * 100;
+        newFocalY = Math.max(
+          0,
+          Math.min(
+            100,
+            Math.round(dragStartRef.current.startFocalY + deltaPercent),
+          ),
+        );
       }
 
       onChange(newFocalX, newFocalY);
@@ -125,23 +160,25 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
       dragStartRef.current = null;
     };
 
-    document.addEventListener('mousemove', handleMove);
-    document.addEventListener('mouseup', handleUp);
-    document.addEventListener('touchmove', handleMove, { passive: false });
-    document.addEventListener('touchend', handleUp);
+    document.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseup", handleUp);
+    document.addEventListener("touchmove", handleMove, { passive: false });
+    document.addEventListener("touchend", handleUp);
 
     return () => {
-      document.removeEventListener('mousemove', handleMove);
-      document.removeEventListener('mouseup', handleUp);
-      document.removeEventListener('touchmove', handleMove);
-      document.removeEventListener('touchend', handleUp);
+      document.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseup", handleUp);
+      document.removeEventListener("touchmove", handleMove);
+      document.removeEventListener("touchend", handleUp);
     };
   }, [dragging, naturalSize, onChange]);
 
   if (!imageUrl) {
     return (
       <div className="w-full aspect-[3/4] max-w-xs border border-dashed border-slate-300 flex items-center justify-center">
-        <p className="text-slate-400 text-xs text-center">이미지를 선택하면{'\n'}표시 영역을 지정할 수 있습니다</p>
+        <p className="text-slate-400 text-xs text-center">
+          이미지를 선택하면{"\n"}표시 영역을 지정할 수 있습니다
+        </p>
       </div>
     );
   }
@@ -151,14 +188,16 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
   return (
     <div className="space-y-4">
       {label && (
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{label} 표시 영역 설정</p>
+        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+          {label} 표시 영역 설정
+        </p>
       )}
 
       {/* 원본 이미지 + 가이드 직사각형 */}
       <div
         ref={containerRef}
         className="relative max-w-xs select-none overflow-hidden"
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: "none" }}
       >
         <Image
           src={imageUrl}
@@ -210,14 +249,14 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
             <div
               role="application"
               tabIndex={0}
-              aria-label={`표시 영역 조정: ${guide.canDragX ? '좌우' : '상하'} 드래그로 위치 변경`}
+              aria-label={`표시 영역 조정: ${guide.canDragX ? "좌우" : "상하"} 드래그로 위치 변경`}
               className="absolute border-2 border-white/80 shadow-lg"
               style={{
                 left: `${guide.x * 100}%`,
                 top: `${guide.y * 100}%`,
                 width: `${guide.w * 100}%`,
                 height: `${guide.h * 100}%`,
-                cursor: dragging ? 'grabbing' : 'grab',
+                cursor: dragging ? "grabbing" : "grab",
               }}
               onMouseDown={handlePointerDown}
               onTouchStart={handlePointerDown}
@@ -225,7 +264,7 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
               {/* 방향 힌트 */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <p className="text-white/70 text-xs font-bold drop-shadow-md">
-                  {guide.canDragX ? '← 좌우 드래그 →' : '↑ 상하 드래그 ↓'}
+                  {guide.canDragX ? "← 좌우 드래그 →" : "↑ 상하 드래그 ↓"}
                 </p>
               </div>
             </div>
@@ -234,7 +273,9 @@ export function FocalPointPicker({ imageUrl, focalX, focalY, onChange, label }: 
 
         {guide && !guide.canDragX && !guide.canDragY && naturalSize && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-white/70 text-xs font-bold drop-shadow-md bg-black/30 px-2 py-1">3:4 비율 일치</p>
+            <p className="text-white/70 text-xs font-bold drop-shadow-md bg-black/30 px-2 py-1">
+              3:4 비율 일치
+            </p>
           </div>
         )}
       </div>

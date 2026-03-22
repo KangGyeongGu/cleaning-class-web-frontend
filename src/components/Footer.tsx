@@ -1,8 +1,6 @@
-"use client";
-
-import { useState } from 'react';
-import { Copy, Check, Instagram } from 'lucide-react';
-import type { SiteConfig } from '@/shared/types/database';
+import { Instagram } from "lucide-react";
+import { CopyEmailButton } from "@/components/CopyEmailButton";
+import type { SiteConfig } from "@/shared/types/database";
 
 // 네이버블로그 아이콘 (lucide-react에 없으므로 직접 구현)
 function NaverBlogIcon({ size = 16 }: { size?: number }) {
@@ -18,22 +16,23 @@ interface FooterProps {
 }
 
 export function Footer({ siteConfig }: FooterProps) {
-  const [copied, setCopied] = useState(false);
-  const businessName = siteConfig?.business_name ?? '청소클라쓰';
-  const phone = siteConfig?.phone ?? '';
-  const email = siteConfig?.email ?? '';
+  const businessName = siteConfig?.business_name ?? "청소클라쓰";
+  const phone = siteConfig?.phone ?? "";
+  const email = siteConfig?.email ?? "";
   const blogUrl = siteConfig?.blog_url;
   const instagramUrl = siteConfig?.instagram_url;
 
-  const hasBlogUrl = blogUrl && blogUrl.trim() !== '';
-  const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== '';
+  const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
+  const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
 
   return (
     <footer className="bg-white text-slate-900 py-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <p className="text-3xl font-black tracking-tighter mb-6">{businessName}</p>
+            <p className="text-3xl font-black tracking-tighter mb-6">
+              {businessName}
+            </p>
             {siteConfig?.description && (
               <p className="text-slate-500 text-sm leading-relaxed max-w-sm font-light">
                 {siteConfig.description}
@@ -42,48 +41,42 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-6">Contact</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-6">
+              Contact
+            </p>
             <ul className="space-y-4 text-sm font-light text-slate-600">
               {phone && (
                 <li>
-                  <a href={`tel:${phone}`} className="hover:text-slate-900 transition-colors">
+                  <a
+                    href={`tel:${phone}`}
+                    className="hover:text-slate-900 transition-colors"
+                  >
                     {phone}
                   </a>
                 </li>
               )}
               {email && (
                 <li>
-                  <span className="inline-flex items-center gap-2">
-                    {email}
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        await navigator.clipboard.writeText(email);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
-                      }}
-                      className="text-slate-400 hover:text-slate-900 transition-colors"
-                      title="이메일 복사"
-                    >
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
-                    </button>
-                  </span>
+                  <CopyEmailButton email={email} />
                 </li>
               )}
-              {siteConfig?.address && (
-                <li>
-                  {siteConfig.address}
-                </li>
-              )}
+              {siteConfig?.address && <li>{siteConfig.address}</li>}
             </ul>
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-6">Social</p>
+            <p className="text-xs font-bold uppercase tracking-widest mb-6">
+              Social
+            </p>
             <ul className="space-y-4 text-sm font-light text-slate-600">
               {hasBlogUrl && (
                 <li>
-                  <a href={blogUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors">
+                  <a
+                    href={blogUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors"
+                  >
                     <NaverBlogIcon size={14} />
                     Naver Blog
                   </a>
@@ -91,7 +84,12 @@ export function Footer({ siteConfig }: FooterProps) {
               )}
               {hasInstagramUrl && (
                 <li>
-                  <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors">
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors"
+                  >
                     <Instagram size={15} />
                     Instagram
                   </a>
@@ -102,7 +100,10 @@ export function Footer({ siteConfig }: FooterProps) {
         </div>
 
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 uppercase tracking-wider font-medium">
-          <p>&copy; {new Date().getFullYear()} {businessName.toUpperCase()}. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} {businessName.toUpperCase()}. All
+            rights reserved.
+          </p>
         </div>
       </div>
     </footer>
