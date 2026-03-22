@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env*
+__tests__
+.lighthouseci
+.claude
+*.md
+.mcp.json
