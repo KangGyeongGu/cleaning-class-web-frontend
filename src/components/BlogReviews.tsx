@@ -1,13 +1,21 @@
 "use client";
 
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
+
+function NaverBlogIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
+    </svg>
+  );
+}
 
 interface BlogReviewsProps {
   reviews: Review[];
@@ -173,7 +181,7 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
               >
-                VIEW BLOG <ArrowUpRight size={16} />
+                <NaverBlogIcon size={16} /> BLOG <ArrowUpRight size={16} />
               </a>
             )}
             {hasInstagramUrl && (
@@ -183,7 +191,7 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
               >
-                VIEW INSTAGRAM <ArrowUpRight size={16} />
+                <Instagram size={16} /> INSTAGRAM <ArrowUpRight size={16} />
               </a>
             )}
           </motion.div>
@@ -230,7 +238,7 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
               >
-                VIEW BLOG <ArrowUpRight size={16} />
+                <NaverBlogIcon size={16} /> BLOG <ArrowUpRight size={16} />
               </a>
             )}
             {hasInstagramUrl && (
@@ -240,7 +248,7 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
               >
-                VIEW INSTAGRAM <ArrowUpRight size={16} />
+                <Instagram size={16} /> INSTAGRAM <ArrowUpRight size={16} />
               </a>
             )}
           </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 interface NavbarProps {
@@ -37,10 +38,17 @@ export function Navbar({ businessName }: NavbarProps) {
       <div className="max-w-5xl mx-auto px-8 flex justify-between items-center">
         <button
           type="button"
-          className="text-2xl font-black tracking-tighter text-slate-900 z-50 relative bg-transparent border-0 cursor-pointer"
+          className="flex items-center gap-2 text-2xl font-black tracking-tighter text-slate-900 z-50 relative bg-transparent border-0 cursor-pointer"
           aria-label="홈으로 이동"
           onClick={scrollToTop}
         >
+          <Image
+            src="/images/logo.png"
+            alt=""
+            width={44}
+            height={44}
+            className="rounded-sm"
+          />
           {displayName}
         </button>
 
