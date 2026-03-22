@@ -45,20 +45,34 @@ export const metadata: Metadata = {
     default: "청소클라쓰",
     template: "%s | 청소클라쓰",
   },
-  description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+  description:
+    "전주 청소업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소 전문 서비스",
+  keywords: [
+    "전주 청소업체",
+    "전주 입주청소",
+    "전북 거주청소",
+    "전북 정기청소",
+    "전북 특수청소",
+    "전북 쓰레기집청소",
+    "전주 상가청소",
+    "전북 청소",
+    "전주 청소",
+    "청소클라쓰",
+  ],
   openGraph: {
     type: "website",
     locale: "ko_KR",
     url: "https://www.cleaningclass.co.kr",
     siteName: "청소클라쓰",
     title: "청소클라쓰",
-    description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
+    description:
+      "전주 청소업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "청소클라쓰 — 전북 지역 전문 청소 서비스",
+        alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
       },
     ],
   },

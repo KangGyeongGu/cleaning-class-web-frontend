@@ -53,6 +53,7 @@ export function generateLocalBusinessJsonLd(
     },
     serviceType: [
       "거주청소",
+      "입주청소",
       "정기청소",
       "특수청소",
       "쓰레기집청소",
