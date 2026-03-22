@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from 'motion/react';
-import Image from 'next/image';
+import { motion } from "motion/react";
+import Image from "next/image";
 
 interface ServiceItem {
   id: string;
@@ -29,19 +29,22 @@ export function Services({ services, serviceDescription }: ServicesProps) {
     <section id="services" className="py-32 bg-white relative">
       <div className="container mx-auto px-4 max-w-7xl">
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-16 text-center"
         >
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">SERVICE</h2>
-            <p className="text-slate-500 text-sm md:text-base font-light tracking-wide">
-              {serviceDescription || '공간의 성격에 맞는 최적의 청소 서비스를 제공합니다.'}
-            </p>
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">
+            SERVICE
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base font-light tracking-wide">
+            {serviceDescription ||
+              "공간의 성격에 맞는 최적의 청소 서비스를 제공합니다."}
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
-          {services.map((service) => (
+          {services.map((service, index) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 30 }}
@@ -58,8 +61,11 @@ export function Services({ services, serviceDescription }: ServicesProps) {
                       alt={`${service.title} Before`}
                       fill
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                      priority={index === 0}
                       className="object-cover grayscale transition-opacity duration-700 ease-in-out group-hover:opacity-0"
-                      style={{ objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%` }}
+                      style={{
+                        objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+                      }}
                     />
                     <Image
                       src={service.afterImageUrl}
@@ -67,7 +73,9 @@ export function Services({ services, serviceDescription }: ServicesProps) {
                       fill
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
                       className="object-cover absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100"
-                      style={{ objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%` }}
+                      style={{
+                        objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
+                      }}
                     />
                   </>
                 ) : (
@@ -76,8 +84,11 @@ export function Services({ services, serviceDescription }: ServicesProps) {
                     alt={service.title}
                     fill
                     sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                    priority={index === 0}
                     className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 filter grayscale group-hover:grayscale-0"
-                    style={{ objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%` }}
+                    style={{
+                      objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+                    }}
                   />
                 )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />

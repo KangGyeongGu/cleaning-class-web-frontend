@@ -1,62 +1,41 @@
-import { BlogReviews } from "@/components/BlogReviews";
-import { ContactForm } from "@/components/ContactForm";
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { Navbar } from "@/components/Navbar";
-import { Services } from "@/components/Services";
-import { createClient } from "@/shared/lib/supabase/server";
-import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
-import type { SiteConfig, Review, Service } from "@/shared/types/database";
+import { getSiteConfig } from "@/shared/lib/site-config";
+import {
+  getPublishedReviews,
+  getPublishedServicesWithImageUrls,
+} from "@/shared/lib/home";
+
+const Services = dynamic(() =>
+  import("@/components/Services").then((mod) => ({ default: mod.Services })),
+  { ssr: true },
+);
+const BlogReviews = dynamic(() =>
+  import("@/components/BlogReviews").then((mod) => ({ default: mod.BlogReviews })),
+  { ssr: true },
+);
+const ContactForm = dynamic(() =>
+  import("@/components/ContactForm").then((mod) => ({ default: mod.ContactForm })),
+  { ssr: true },
+);
 
 // ISR: 1시간마다 재검증
 export const revalidate = 3600;
 
+export const metadata: Metadata = {
+  title: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+};
+
 export default async function Home() {
-  const supabase = await createClient();
-
-  // 병렬 데이터 페칭
-  const [siteConfigResult, reviewsResult, servicesResult] = await Promise.all([
-    supabase.from("site_config").select("*").single(),
-    supabase
-      .from("reviews")
-      .select("*")
-      .eq("is_published", true)
-      .order("sort_order", { ascending: true }),
-    supabase
-      .from("services")
-      .select("*")
-      .eq("is_published", true)
-      .order("sort_order", { ascending: true }),
+  const [siteConfig, reviews, servicesWithImageUrls] = await Promise.all([
+    getSiteConfig(),
+    getPublishedReviews(),
+    getPublishedServicesWithImageUrls(),
   ]);
-
-  if (siteConfigResult.error) {
-    console.error("[page] site_config fetch error:", siteConfigResult.error);
-  }
-  if (reviewsResult.error) {
-    console.error("[page] reviews fetch error:", reviewsResult.error);
-  }
-  if (servicesResult.error) {
-    console.error("[page] services fetch error:", servicesResult.error);
-  }
-
-  const siteConfig = siteConfigResult.data as SiteConfig | null;
-  const reviews = (reviewsResult.data as Review[] | null) ?? [];
-  const services = (servicesResult.data as Service[] | null) ?? [];
-
-  const servicesWithImageUrls = services.map((s) => ({
-    id: s.id,
-    title: s.title,
-    description: s.description,
-    imageUrl: getServiceImageUrl(s.image_path),
-    afterImageUrl: s.image_after_path
-      ? getServiceImageUrl(s.image_after_path)
-      : undefined,
-    focalX: s.image_focal_x,
-    focalY: s.image_focal_y,
-    afterFocalX: s.image_after_focal_x,
-    afterFocalY: s.image_after_focal_y,
-  }));
 
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
