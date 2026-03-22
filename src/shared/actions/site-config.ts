@@ -27,13 +27,14 @@ async function updateSiteConfigField(
       .single<{ id: string }>();
 
     if (fetchError) {
+      console.error(`updateSiteConfigField(${field}) fetch error:`, fetchError);
       return {
         success: false,
-        error: `업체 정보 조회 실패: ${fetchError.message}`,
+        error: "설정 처리 중 오류가 발생했습니다.",
       };
     }
     if (!current) {
-      return { success: false, error: "업체 정보를 찾을 수 없습니다." };
+      return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
     const { error } = await supabase
@@ -42,7 +43,8 @@ async function updateSiteConfigField(
       .eq("id", current.id);
 
     if (error) {
-      return { success: false, error: `수정 실패: ${error.message}` };
+      console.error(`updateSiteConfigField(${field}) update error:`, error);
+      return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");
@@ -53,8 +55,7 @@ async function updateSiteConfigField(
     console.error(`updateSiteConfigField(${field}) error:`, error);
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : "수정 중 오류가 발생했습니다.",
+      error: "설정 처리 중 오류가 발생했습니다.",
     };
   }
 }
@@ -122,10 +123,11 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       .single<{ id: string }>();
 
     if (fetchConfigError) {
-      throw new Error(`업체 정보 조회 실패: ${fetchConfigError.message}`);
+      console.error("updateSiteConfig fetch error:", fetchConfigError);
+      throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
     if (!current) {
-      throw new Error("업체 정보를 찾을 수 없습니다.");
+      throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
 
     const { error } = await supabase
@@ -134,7 +136,8 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       .eq("id", current.id);
 
     if (error) {
-      throw new Error(`업체 정보 수정 실패: ${error.message}`);
+      console.error("updateSiteConfig update error:", error);
+      throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
 
     // 5. 캐시 무효화 (공개 페이지 즉시 반영)
@@ -149,10 +152,7 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     console.error("updateSiteConfig error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "업체 정보 수정 중 오류가 발생했습니다.",
+      error: "설정 처리 중 오류가 발생했습니다.",
     };
   }
 }

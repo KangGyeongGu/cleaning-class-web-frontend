@@ -14,8 +14,10 @@ export default function Error({
         <p className="text-slate-600 mb-8 text-lg font-light">
           문제가 발생했습니다. 잠시 후 다시 시도해주세요.
         </p>
-        {error.message && (
-          <p className="text-slate-400 text-sm mb-8 font-mono">{error.message}</p>
+        {process.env.NODE_ENV === "development" && error.message && (
+          <p className="text-slate-400 text-sm mb-8 font-mono">
+            {error.message}
+          </p>
         )}
         <button
           type="button"

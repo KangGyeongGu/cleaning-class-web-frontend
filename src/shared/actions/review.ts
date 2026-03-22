@@ -70,7 +70,8 @@ export async function createReview(prevState: unknown, formData: FormData) {
       if (imagePath) {
         await deleteImage(BUCKET, imagePath);
       }
-      throw new Error(`리뷰 등록 실패: ${error.message}`);
+      console.error("createReview DB error:", error);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     // 6. 캐시 무효화
@@ -85,10 +86,7 @@ export async function createReview(prevState: unknown, formData: FormData) {
     console.error("createReview error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "리뷰 등록 중 오류가 발생했습니다.",
+      error: "리뷰 처리 중 오류가 발생했습니다.",
     };
   }
 }
@@ -146,9 +144,8 @@ export async function updateReview(
       .single();
 
     if (fetchError || !existingReview) {
-      throw new Error(
-        `리뷰 조회 실패: ${fetchError?.message || "리뷰를 찾을 수 없습니다"}`,
-      );
+      console.error("updateReview fetch error:", fetchError);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     const existingImagePath = (existingReview as { image_path: string })
@@ -180,7 +177,8 @@ export async function updateReview(
       if (newImagePath !== existingImagePath) {
         await deleteImage(BUCKET, newImagePath);
       }
-      throw new Error(`리뷰 수정 실패: ${updateError.message}`);
+      console.error("updateReview DB error:", updateError);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     // DB UPDATE 성공 시 기존 이미지 삭제
@@ -205,10 +203,7 @@ export async function updateReview(
     console.error("updateReview error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "리뷰 수정 중 오류가 발생했습니다.",
+      error: "리뷰 처리 중 오류가 발생했습니다.",
     };
   }
 }
@@ -231,9 +226,8 @@ export async function deleteReview(reviewId: string) {
       .single();
 
     if (fetchError || !existingReview) {
-      throw new Error(
-        `리뷰 조회 실패: ${fetchError?.message || "리뷰를 찾을 수 없습니다"}`,
-      );
+      console.error("deleteReview fetch error:", fetchError);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     const existingImagePath = (existingReview as { image_path: string })
@@ -246,7 +240,8 @@ export async function deleteReview(reviewId: string) {
       .eq("id", reviewId);
 
     if (deleteError) {
-      throw new Error(`리뷰 삭제 실패: ${deleteError.message}`);
+      console.error("deleteReview DB error:", deleteError);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     // 4. Storage 이미지 삭제
@@ -266,10 +261,7 @@ export async function deleteReview(reviewId: string) {
     console.error("deleteReview error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "리뷰 삭제 중 오류가 발생했습니다.",
+      error: "리뷰 처리 중 오류가 발생했습니다.",
     };
   }
 }
@@ -296,7 +288,8 @@ export async function toggleReviewPublish(
       .eq("id", reviewId);
 
     if (error) {
-      throw new Error(`게시 상태 변경 실패: ${error.message}`);
+      console.error("toggleReviewPublish DB error:", error);
+      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
     // 3. 캐시 무효화
@@ -311,10 +304,7 @@ export async function toggleReviewPublish(
     console.error("toggleReviewPublish error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "게시 상태 변경 중 오류가 발생했습니다.",
+      error: "리뷰 처리 중 오류가 발생했습니다.",
     };
   }
 }

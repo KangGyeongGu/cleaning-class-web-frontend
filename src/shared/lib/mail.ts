@@ -15,6 +15,23 @@ interface ContactEmailData {
 }
 
 /**
+ * SMTP 헤더 인젝션 방지 — 개행문자 제거
+ */
+function sanitizeHeader(str: string): string {
+  return str.replace(/[\r\n]/g, " ");
+}
+
+/**
+ * 첨부파일명 정규화 — 경로 구분자 및 헤더 인젝션 문자 제거
+ */
+function sanitizeFilename(name: string): string {
+  const sanitized = name
+    .replace(/[/\\:*?"<>|\r\n]/g, "")
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+  return sanitized || "attachment";
+}
+
+/**
  * HTML 특수문자 이스케이프
  * XSS 방지를 위해 사용자 입력값을 HTML 엔티티로 변환
  */
@@ -106,7 +123,7 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
   await transporter.sendMail({
     from: `"청소클라쓰 견적문의" <${process.env.SMTP_USER}>`,
     to: process.env.ADMIN_EMAIL,
-    subject: `[청소클라쓰] 새 견적문의 - ${data.name}`,
+    subject: `[청소클라쓰] 새 견적문의 - ${sanitizeHeader(data.name)}`,
     html: htmlContent,
     text: `
 이름: ${data.name}
@@ -120,7 +137,7 @@ ${data.message}
     ...(data.images && data.images.length > 0
       ? {
           attachments: data.images.map((img) => ({
-            filename: img.filename,
+            filename: sanitizeFilename(img.filename),
             content: img.content,
           })),
         }

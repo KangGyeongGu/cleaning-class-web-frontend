@@ -86,7 +86,11 @@ export async function submitContactForm(
     const imageAttachments = await Promise.all(
       filteredImageFiles.map(async (file) => {
         const bytes = await file.arrayBuffer();
-        return { filename: file.name, content: Buffer.from(bytes) };
+        const sanitized =
+          file.name
+            .replace(/[/\\:*?"<>|\r\n]/g, "")
+            .replace(/[^a-zA-Z0-9._-]/g, "_") || "attachment";
+        return { filename: sanitized, content: Buffer.from(bytes) };
       }),
     );
 

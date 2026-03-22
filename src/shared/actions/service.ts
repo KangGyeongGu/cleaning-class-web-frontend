@@ -59,9 +59,28 @@ export async function createService(prevState: unknown, formData: FormData) {
     const { error } = await supabase.from("services").insert(serviceData);
 
     if (error) {
-      if (imagePath) await deleteImage(BUCKET, imagePath);
-      if (imageAfterPath) await deleteImage(BUCKET, imageAfterPath);
-      throw new Error(`서비스 등록 실패: ${error.message}`);
+      console.error("createService DB error:", error);
+      if (imagePath) {
+        try {
+          await deleteImage(BUCKET, imagePath);
+        } catch (rollbackErr) {
+          console.error(
+            "createService: before-image rollback failed:",
+            rollbackErr,
+          );
+        }
+      }
+      if (imageAfterPath) {
+        try {
+          await deleteImage(BUCKET, imageAfterPath);
+        } catch (rollbackErr) {
+          console.error(
+            "createService: after-image rollback failed:",
+            rollbackErr,
+          );
+        }
+      }
+      return { success: false, error: "서비스 등록 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");
@@ -75,10 +94,7 @@ export async function createService(prevState: unknown, formData: FormData) {
     console.error("createService error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "서비스 등록 중 오류가 발생했습니다.",
+      error: "서비스 등록 중 오류가 발생했습니다.",
     };
   }
 }
@@ -122,9 +138,8 @@ export async function updateService(
       .single();
 
     if (fetchError || !existingService) {
-      throw new Error(
-        `서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`,
-      );
+      console.error("updateService fetch error:", fetchError);
+      return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
     }
 
     const existing = existingService as {
@@ -159,24 +174,42 @@ export async function updateService(
       .eq("id", serviceId);
 
     if (updateError) {
-      if (newImagePath !== existing.image_path)
-        await deleteImage(BUCKET, newImagePath);
-      if (newImageAfterPath !== existing.image_after_path)
-        await deleteImage(BUCKET, newImageAfterPath);
-      throw new Error(`서비스 수정 실패: ${updateError.message}`);
+      console.error("updateService DB error:", updateError);
+      if (newImagePath !== existing.image_path) {
+        try {
+          await deleteImage(BUCKET, newImagePath);
+        } catch (rollbackErr) {
+          console.error("updateService: image rollback failed:", rollbackErr);
+        }
+      }
+      if (newImageAfterPath !== existing.image_after_path) {
+        try {
+          await deleteImage(BUCKET, newImageAfterPath);
+        } catch (rollbackErr) {
+          console.error(
+            "updateService: after-image rollback failed:",
+            rollbackErr,
+          );
+        }
+      }
+      return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");
     revalidatePath("/admin/services");
 
-    // DB 업데이트 성공 후 기존 이미지 삭제
+    // DB 업데이트 성공 후 기존 이미지 삭제 (실패해도 성공 응답 유지)
     if (
       imageFile &&
       imageFile.size > 0 &&
       existing.image_path &&
       newImagePath !== existing.image_path
     ) {
-      await deleteImage(BUCKET, existing.image_path);
+      try {
+        await deleteImage(BUCKET, existing.image_path);
+      } catch (err) {
+        console.error("updateService: old image cleanup failed:", err);
+      }
     }
     if (
       imageAfterFile &&
@@ -184,7 +217,11 @@ export async function updateService(
       existing.image_after_path &&
       newImageAfterPath !== existing.image_after_path
     ) {
-      await deleteImage(BUCKET, existing.image_after_path);
+      try {
+        await deleteImage(BUCKET, existing.image_after_path);
+      } catch (err) {
+        console.error("updateService: old after-image cleanup failed:", err);
+      }
     }
 
     return {
@@ -195,10 +232,7 @@ export async function updateService(
     console.error("updateService error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "서비스 수정 중 오류가 발생했습니다.",
+      error: "서비스 수정 중 오류가 발생했습니다.",
     };
   }
 }
@@ -219,9 +253,8 @@ export async function deleteService(serviceId: string) {
       .single();
 
     if (fetchError || !existingService) {
-      throw new Error(
-        `서비스 조회 실패: ${fetchError?.message || "서비스를 찾을 수 없습니다"}`,
-      );
+      console.error("deleteService fetch error:", fetchError);
+      return { success: false, error: "서비스 삭제 중 오류가 발생했습니다." };
     }
 
     const existing = existingService as {
@@ -235,12 +268,24 @@ export async function deleteService(serviceId: string) {
       .eq("id", serviceId);
 
     if (deleteError) {
-      throw new Error(`서비스 삭제 실패: ${deleteError.message}`);
+      console.error("deleteService DB error:", deleteError);
+      return { success: false, error: "서비스 삭제 중 오류가 발생했습니다." };
     }
 
-    if (existing.image_path) await deleteImage(BUCKET, existing.image_path);
-    if (existing.image_after_path)
-      await deleteImage(BUCKET, existing.image_after_path);
+    if (existing.image_path) {
+      try {
+        await deleteImage(BUCKET, existing.image_path);
+      } catch (err) {
+        console.error("deleteService: image cleanup failed:", err);
+      }
+    }
+    if (existing.image_after_path) {
+      try {
+        await deleteImage(BUCKET, existing.image_after_path);
+      } catch (err) {
+        console.error("deleteService: after-image cleanup failed:", err);
+      }
+    }
 
     revalidatePath("/");
     revalidatePath("/admin/services");
@@ -253,10 +298,7 @@ export async function deleteService(serviceId: string) {
     console.error("deleteService error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "서비스 삭제 중 오류가 발생했습니다.",
+      error: "서비스 삭제 중 오류가 발생했습니다.",
     };
   }
 }
@@ -281,7 +323,11 @@ export async function toggleServicePublish(
       .eq("id", serviceId);
 
     if (error) {
-      throw new Error(`게시 상태 변경 실패: ${error.message}`);
+      console.error("toggleServicePublish DB error:", error);
+      return {
+        success: false,
+        error: "게시 상태 변경 중 오류가 발생했습니다.",
+      };
     }
 
     revalidatePath("/");
@@ -295,10 +341,7 @@ export async function toggleServicePublish(
     console.error("toggleServicePublish error:", error);
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "게시 상태 변경 중 오류가 발생했습니다.",
+      error: "게시 상태 변경 중 오류가 발생했습니다.",
     };
   }
 }

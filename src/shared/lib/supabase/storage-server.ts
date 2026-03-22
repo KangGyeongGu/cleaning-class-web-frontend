@@ -58,12 +58,13 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
   const fileName = `${crypto.randomUUID()}.${fileExt}`;
 
   const { error } = await supabase.storage.from(bucket).upload(fileName, file, {
-    cacheControl: "3600",
+    cacheControl: "31536000",
     upsert: false,
   });
 
   if (error) {
-    throw new Error(`이미지 업로드 실패: ${error.message}`);
+    console.error("uploadImage storage error:", error);
+    throw new Error("이미지 업로드 중 오류가 발생했습니다.");
   }
 
   return fileName;
