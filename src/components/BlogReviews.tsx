@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
@@ -115,6 +116,16 @@ export function BlogReviews({
   instagramUrl,
   reviewDescription,
 }: BlogReviewsProps) {
+  const sliderRef = useRef<Slider>(null);
+
+  // 모바일 Safari/인앱 브라우저에서 초기 너비 계산 오류 보정
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      sliderRef.current?.slickGoTo(0);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // 리뷰가 없으면 섹션 숨김
   if (!reviews || reviews.length === 0) {
     return null;
@@ -197,7 +208,7 @@ export function BlogReviews({
         </div>
 
         <div className="relative px-0 sm:px-2">
-          <Slider {...settings}>
+          <Slider ref={sliderRef} {...settings}>
             {reviews.map((review, index) => {
               const cardUrl = review.link_url || blogUrl || null;
               return (
