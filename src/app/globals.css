@@ -143,4 +143,16 @@
   .slick-slide > div {
     height: 100%;
   }
+
+  /* react-slick 초기화 전 overflow 방지 (모바일에서 카드 4개 나열 방지) */
+  .slick-slider:not(.slick-initialized) {
+    overflow: hidden;
+  }
+  .slick-slider:not(.slick-initialized) .slick-list {
+    display: flex;
+    overflow: hidden;
+  }
+  .slick-slider:not(.slick-initialized) .slick-slide {
+    min-width: 100%;
+  }
 }

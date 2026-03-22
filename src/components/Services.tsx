@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 
@@ -18,6 +19,92 @@ interface ServiceItem {
 interface ServicesProps {
   services: ServiceItem[];
   serviceDescription?: string;
+}
+
+function ServiceCard({
+  service,
+  priority,
+}: {
+  service: ServiceItem;
+  priority: boolean;
+}) {
+  const [showAfter, setShowAfter] = useState(false);
+
+  useEffect(() => {
+    if (!service.afterImageUrl) return;
+
+    const mq = window.matchMedia("(hover: none)");
+    if (!mq.matches) return;
+
+    const interval = setInterval(() => {
+      setShowAfter((prev) => !prev);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [service.afterImageUrl]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="group cursor-default pb-4 md:pb-0"
+    >
+      <div className="aspect-square md:aspect-[3/4] overflow-hidden mb-3 md:mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">
+        {service.afterImageUrl ? (
+          <>
+            <Image
+              src={service.imageUrl}
+              alt={`${service.title} Before`}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+              priority={priority}
+              className={`object-cover grayscale transition-opacity duration-700 ease-in-out group-hover:opacity-0 ${
+                showAfter ? "opacity-0" : ""
+              }`}
+              style={{
+                objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+              }}
+            />
+            <Image
+              src={service.afterImageUrl}
+              alt={`${service.title} After`}
+              fill
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+              className={`object-cover absolute inset-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100 ${
+                showAfter ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
+              }}
+            />
+          </>
+        ) : (
+          <Image
+            src={service.imageUrl}
+            alt={service.title}
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
+            priority={priority}
+            className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 filter grayscale group-hover:grayscale-0"
+            style={{
+              objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+            }}
+          />
+        )}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+      </div>
+      <div className="text-center px-1">
+        <h3 className="text-base font-bold mb-2 text-slate-900 transition-transform duration-300 origin-center group-hover:scale-110 group-hover:text-black">
+          {service.title}
+        </h3>
+        <p className="text-slate-500 text-xs leading-tight font-medium transition-colors duration-300 group-hover:text-slate-800">
+          {service.description}
+        </p>
+      </div>
+    </motion.div>
+  );
 }
 
 export function Services({ services, serviceDescription }: ServicesProps) {
@@ -43,65 +130,13 @@ export function Services({ services, serviceDescription }: ServicesProps) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-8">
           {services.map((service, index) => (
-            <motion.div
+            <ServiceCard
               key={service.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="group cursor-default"
-            >
-              <div className="aspect-[3/4] overflow-hidden mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">
-                {service.afterImageUrl ? (
-                  <>
-                    <Image
-                      src={service.imageUrl}
-                      alt={`${service.title} Before`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                      priority={index === 0}
-                      className="object-cover grayscale transition-opacity duration-700 ease-in-out group-hover:opacity-0"
-                      style={{
-                        objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
-                      }}
-                    />
-                    <Image
-                      src={service.afterImageUrl}
-                      alt={`${service.title} After`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                      className="object-cover absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100"
-                      style={{
-                        objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
-                      }}
-                    />
-                  </>
-                ) : (
-                  <Image
-                    src={service.imageUrl}
-                    alt={service.title}
-                    fill
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                    priority={index === 0}
-                    className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 filter grayscale group-hover:grayscale-0"
-                    style={{
-                      objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
-                    }}
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
-              </div>
-              <div className="text-center px-1">
-                <h3 className="text-base font-bold mb-2 text-slate-900 transition-transform duration-300 origin-center group-hover:scale-110 group-hover:text-black">
-                  {service.title}
-                </h3>
-                <p className="text-slate-500 text-xs leading-tight font-medium transition-colors duration-300 group-hover:text-slate-800">
-                  {service.description}
-                </p>
-              </div>
-            </motion.div>
+              service={service}
+              priority={index === 0}
+            />
           ))}
         </div>
       </div>
