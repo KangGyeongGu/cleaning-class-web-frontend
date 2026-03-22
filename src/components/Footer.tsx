@@ -5,7 +5,7 @@ import type { SiteConfig } from "@/shared/types/database";
 // 네이버블로그 아이콘 (lucide-react에 없으므로 직접 구현)
 function NaverBlogIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
     </svg>
   );
@@ -49,7 +49,7 @@ export function Footer({ siteConfig }: FooterProps) {
                 <li>
                   <a
                     href={`tel:${phone}`}
-                    className="hover:text-slate-900 transition-colors"
+                    className="inline-flex items-center min-h-11 hover:text-slate-900 transition-colors"
                   >
                     {phone}
                   </a>
@@ -75,7 +75,7 @@ export function Footer({ siteConfig }: FooterProps) {
                     href={blogUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors"
+                    className="inline-flex items-center gap-2 min-h-11 hover:text-slate-900 transition-colors"
                   >
                     <NaverBlogIcon size={14} />
                     Naver Blog
@@ -88,7 +88,7 @@ export function Footer({ siteConfig }: FooterProps) {
                     href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 hover:text-slate-900 transition-colors"
+                    className="inline-flex items-center gap-2 min-h-11 hover:text-slate-900 transition-colors"
                   >
                     <Instagram size={15} />
                     Instagram
@@ -99,7 +99,7 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-slate-400 uppercase tracking-wider font-medium">
+        <div className="pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 uppercase tracking-wider font-medium">
           <p>
             &copy; {new Date().getFullYear()} {businessName.toUpperCase()}. All
             rights reserved.
