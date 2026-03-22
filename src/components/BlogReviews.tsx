@@ -64,7 +64,7 @@ function ReviewCard({
   return (
     <div className="flex flex-col h-full">
       {/* Image Section */}
-      <div className="aspect-[4/3] overflow-hidden mb-5 bg-slate-200 relative shrink-0">
+      <div className="aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
@@ -91,11 +91,11 @@ function ReviewCard({
           ))}
         </div>
 
-        <h3 className="text-lg font-bold mb-2 text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-2 min-h-[3.25rem]">
+        <h3 className="text-lg font-bold mb-2 text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-2 min-h-13">
           {review.title}
         </h3>
 
-        <p className="text-slate-700 text-sm leading-relaxed line-clamp-2 mb-4 font-normal min-h-[2.5rem]">
+        <p className="text-slate-700 text-sm leading-relaxed line-clamp-2 mb-4 font-normal min-h-10">
           {review.summary}
         </p>
 
