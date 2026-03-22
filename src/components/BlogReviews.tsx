@@ -149,6 +149,8 @@ export function BlogReviews({
         settings: {
           slidesToShow: 1,
           arrows: false,
+          centerMode: true,
+          centerPadding: "0px",
         },
       },
     ],
@@ -199,7 +201,7 @@ export function BlogReviews({
             {reviews.map((review, index) => {
               const cardUrl = review.link_url || blogUrl || null;
               return (
-                <div key={review.id} className="px-1.5 sm:px-3 py-4">
+                <div key={review.id} className="px-0 sm:px-3 py-4">
                   {cardUrl ? (
                     <a
                       href={cardUrl}
