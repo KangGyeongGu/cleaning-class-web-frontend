@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
@@ -144,6 +145,26 @@ export function BlogReviews({
   instagramUrl,
   reviewDescription,
 }: BlogReviewsProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollLeft = el.scrollLeft;
+    const cardWidth = el.firstElementChild?.clientWidth ?? 1;
+    const gap = 16; // gap-4 = 16px
+    const index = Math.round(scrollLeft / (cardWidth + gap));
+    setActiveIndex(index);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
   // 리뷰가 없으면 섹션 숨김
   if (!reviews || reviews.length === 0) {
     return null;
@@ -175,7 +196,7 @@ export function BlogReviews({
   return (
     <section id="reviews" className="py-16 md:py-32 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4 md:px-20 lg:px-24 max-w-8xl">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-10 px-2">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:px-2">
           <div>
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
               REVIEW
@@ -213,7 +234,10 @@ export function BlogReviews({
         </div>
 
         {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
-        <div className="md:hidden flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide">
+        <div
+          ref={scrollRef}
+          className="md:hidden flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
+        >
           {reviews.map((review, index) => (
             <div
               key={review.id}
@@ -225,6 +249,26 @@ export function BlogReviews({
                 priority={index === 0}
               />
             </div>
+          ))}
+        </div>
+        {/* 모바일 인디케이터 */}
+        <div className="md:hidden flex justify-center gap-2 mt-4">
+          {reviews.map((review, index) => (
+            <button
+              key={review.id}
+              type="button"
+              aria-label={`리뷰 ${index + 1}`}
+              className={`w-2 h-2 rounded-full transition-colors ${
+                index === activeIndex ? "bg-slate-900" : "bg-slate-300"
+              }`}
+              onClick={() => {
+                const el = scrollRef.current;
+                if (!el) return;
+                const cardWidth = el.firstElementChild?.clientWidth ?? 0;
+                const gap = 16;
+                el.scrollTo({ left: index * (cardWidth + gap), behavior: "smooth" });
+              }}
+            />
           ))}
         </div>
 
