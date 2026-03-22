@@ -15,8 +15,14 @@ const nextConfig: NextConfig = {
         hostname: "gezvfabmalvpnumewwgu.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "gezvfabmalvpnumewwgu.supabase.co",
+        pathname: "/storage/v1/render/image/public/**",
+      },
     ],
-    qualities: [75, 90],
+    deviceSizes: [390, 430, 640, 750, 828, 1080, 1200, 1920],
+    qualities: [75, 85],
     formats: ["image/avif", "image/webp"],
   },
 };

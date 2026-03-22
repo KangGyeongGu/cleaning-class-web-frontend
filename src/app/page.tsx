@@ -10,17 +10,55 @@ import {
   getPublishedServicesWithImageUrls,
 } from "@/shared/lib/home";
 
-const Services = dynamic(() =>
-  import("@/components/Services").then((mod) => ({ default: mod.Services })),
-  { ssr: true },
+const Services = dynamic(
+  () => import("@/components/Services").then((mod) => ({ default: mod.Services })),
+  {
+    ssr: true,
+    loading: () => (
+      <div className="py-16 md:py-32">
+        <div className="max-w-7xl mx-auto px-6 animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="h-64 bg-slate-200 rounded" />
+            <div className="h-64 bg-slate-200 rounded" />
+            <div className="h-64 bg-slate-200 rounded" />
+          </div>
+        </div>
+      </div>
+    ),
+  },
 );
-const BlogReviews = dynamic(() =>
-  import("@/components/BlogReviews").then((mod) => ({ default: mod.BlogReviews })),
-  { ssr: true },
+// BlogReviews, ContactForm: 'use client' 컴포넌트이므로 ssr: false는
+// Client Component 경계 안에서만 허용됩니다 (Next.js 16 Turbopack 제약).
+// loading skeleton으로 hydration 전 placeholder를 제공합니다.
+const BlogReviews = dynamic(
+  () => import("@/components/BlogReviews").then((mod) => ({ default: mod.BlogReviews })),
+  {
+    loading: () => (
+      <div className="py-16 md:py-32">
+        <div className="max-w-7xl mx-auto px-6 animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
+          <div className="h-64 bg-slate-200 rounded" />
+        </div>
+      </div>
+    ),
+  },
 );
-const ContactForm = dynamic(() =>
-  import("@/components/ContactForm").then((mod) => ({ default: mod.ContactForm })),
-  { ssr: true },
+const ContactForm = dynamic(
+  () => import("@/components/ContactForm").then((mod) => ({ default: mod.ContactForm })),
+  {
+    loading: () => (
+      <div className="py-16 md:py-32">
+        <div className="max-w-7xl mx-auto px-6 animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
+          <div className="h-12 bg-slate-200 rounded mb-4" />
+          <div className="h-12 bg-slate-200 rounded mb-4" />
+          <div className="h-32 bg-slate-200 rounded mb-4" />
+          <div className="h-12 bg-slate-200 rounded w-32" />
+        </div>
+      </div>
+    ),
+  },
 );
 
 // ISR: 1시간마다 재검증
