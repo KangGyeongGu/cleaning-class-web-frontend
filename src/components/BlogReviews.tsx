@@ -64,7 +64,7 @@ function ReviewCard({
   return (
     <div className="flex flex-col h-full">
       {/* Image Section */}
-      <div className="aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
+      <div className="aspect-16/9 sm:aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
@@ -156,7 +156,7 @@ export function BlogReviews({
 
   return (
     <section id="reviews" className="py-16 md:py-32 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-6 md:px-20 lg:px-24 max-w-8xl">
+      <div className="container mx-auto px-4 md:px-20 lg:px-24 max-w-8xl">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 px-2">
           <div>
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
@@ -194,12 +194,12 @@ export function BlogReviews({
           </div>
         </div>
 
-        <div className="relative px-2">
+        <div className="relative px-0 sm:px-2">
           <Slider {...settings}>
             {reviews.map((review, index) => {
               const cardUrl = review.link_url || blogUrl || null;
               return (
-                <div key={review.id} className="px-3 py-4">
+                <div key={review.id} className="px-1.5 sm:px-3 py-4">
                   {cardUrl ? (
                     <a
                       href={cardUrl}
