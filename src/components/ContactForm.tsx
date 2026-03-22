@@ -415,7 +415,6 @@ export function ContactForm({ phone }: ContactFormProps) {
                   {images.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {images.map((file, index) => (
-                        // eslint-disable-next-line @eslint-react/no-array-index-key -- File objects need index for stable keys during add/remove operations
                         <div
                           key={`${file.name}-${file.lastModified}-${index}`}
                           className="relative w-20 h-20 group/image"
@@ -442,7 +441,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                   )}
 
                   {/* 파일 추가 버튼 */}
-                  <label className="flex items-center gap-3 cursor-pointer group/add flex-shrink-0">
+                  <label className="flex items-center gap-3 cursor-pointer group/add shrink-0">
                     <div className="w-12 h-12 border border-slate-200 flex items-center justify-center text-slate-400 group-hover/add:border-slate-900 group-hover/add:text-slate-900 transition-colors">
                       <Plus size={20} />
                     </div>

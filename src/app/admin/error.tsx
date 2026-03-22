@@ -14,7 +14,7 @@ export default function AdminError({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-6">
+    <div className="flex flex-col items-center justify-center min-h-100 gap-6">
       <div className="text-center">
         <h2 className="text-xl font-bold text-slate-900 mb-2">
           오류가 발생했습니다

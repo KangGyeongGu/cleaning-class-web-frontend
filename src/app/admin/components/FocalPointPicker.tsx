@@ -175,7 +175,7 @@ export function FocalPointPicker({
 
   if (!imageUrl) {
     return (
-      <div className="w-full aspect-[3/4] max-w-xs border border-dashed border-slate-300 flex items-center justify-center">
+      <div className="w-full aspect-3/4 max-w-xs border border-dashed border-slate-300 flex items-center justify-center">
         <p className="text-slate-400 text-xs text-center">
           이미지를 선택하면{"\n"}표시 영역을 지정할 수 있습니다
         </p>
@@ -286,10 +286,10 @@ export function FocalPointPicker({
         </p>
       )}
 
-      {/* aspect-[3/4] 미리보기 */}
+      {/* aspect-3/4 미리보기 */}
       <div>
         <p className="text-xs text-slate-500 mb-2">실제 표시 미리보기 (3:4)</p>
-        <div className="relative w-32 aspect-[3/4] overflow-hidden border border-slate-200 bg-slate-100">
+        <div className="relative w-32 aspect-3/4 overflow-hidden border border-slate-200 bg-slate-100">
           <Image
             src={imageUrl}
             alt="미리보기"

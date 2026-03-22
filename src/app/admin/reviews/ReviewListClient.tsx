@@ -139,6 +139,7 @@ export function ReviewListClient({
         {reviews.map((review, index) => (
           <div
             key={review.id}
+            role="listitem"
             draggable
             onDragStart={() => handleDragStart(index)}
             onDragEnter={() => handleDragEnter(index)}
@@ -156,7 +157,7 @@ export function ReviewListClient({
             <div className="col-span-1 flex items-center gap-2">
               <GripVertical
                 size={16}
-                className="text-slate-300 hover:text-slate-500 flex-shrink-0"
+                className="text-slate-300 hover:text-slate-500 shrink-0"
               />
               <span className="text-xs text-slate-400">{index}</span>
             </div>

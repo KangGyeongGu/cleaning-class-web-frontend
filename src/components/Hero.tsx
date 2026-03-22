@@ -11,15 +11,15 @@ export function Hero({ businessName, phone, description }: HeroProps) {
   return (
     <section className="relative min-h-svh w-full overflow-hidden bg-white text-slate-900 flex flex-col items-center justify-center py-16 md:py-24">
       {/* Background Abstract Elements */}
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-slate-100 via-white to-white pointer-events-none opacity-5" />
+      <div className="absolute top-0 left-0 w-full h-full bg-linear-to-br from-slate-100 via-white to-white pointer-events-none opacity-5" />
 
       {/* Floating Elements — 모바일에서 hidden으로 GPU 절약, md 이상에서만 표시 */}
       <div
-        className="hidden md:block absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-gradient-to-b from-slate-50 to-white opacity-60 md:blur-2xl animate-[floatUp_6s_ease-in-out_infinite]"
+        className="hidden md:block absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-linear-to-b from-slate-50 to-white opacity-60 md:blur-2xl animate-[floatUp_6s_ease-in-out_infinite]"
         aria-hidden="true"
       />
       <div
-        className="hidden md:block absolute bottom-1/3 left-1/4 w-48 h-48 rounded-full bg-gradient-to-t from-slate-50 to-white opacity-60 md:blur-2xl animate-[floatDown_7s_1s_ease-in-out_infinite]"
+        className="hidden md:block absolute bottom-1/3 left-1/4 w-48 h-48 rounded-full bg-linear-to-t from-slate-50 to-white opacity-60 md:blur-2xl animate-[floatDown_7s_1s_ease-in-out_infinite]"
         aria-hidden="true"
       />
 

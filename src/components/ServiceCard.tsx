@@ -54,7 +54,7 @@ export function ServiceCard({ service, priority, showAfter = false }: ServiceCar
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
-      <div className="aspect-square md:aspect-[3/4] overflow-hidden mb-3 md:mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">
+      <div className="aspect-square md:aspect-3/4 overflow-hidden mb-3 md:mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">
         {service.afterImageUrl ? (
           <>
             <Image
@@ -80,7 +80,7 @@ export function ServiceCard({ service, priority, showAfter = false }: ServiceCar
               placeholder="blur"
               blurDataURL={BLUR_PLACEHOLDER}
               className={`object-cover absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100 ${
-                showAfter ? "!opacity-100" : ""
+                showAfter ? "opacity-100!" : ""
               }`}
               style={{
                 objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
