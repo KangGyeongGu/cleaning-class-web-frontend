@@ -35,6 +35,12 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.cleaningclass.co.kr"),
+  verification: {
+    google: "p_YMbf0LS_UF1H8XHrmiIYuU-qCfd4oCj6ue9YuY_Us",
+    other: {
+      "naver-site-verification": "b5cac6e111205c041ca91df1b9a59e5fa81635fa",
+    },
+  },
   title: {
     default: "청소클라쓰",
     template: "%s | 청소클라쓰",
