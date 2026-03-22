@@ -27,7 +27,10 @@ const ContactForm = dynamic(() =>
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+  title: {
+    absolute:
+      "전주 청소업체 청소클라쓰 | 거주·정기·특수·쓰레기집·상가·부분청소",
+  },
 };
 
 export default async function Home() {
