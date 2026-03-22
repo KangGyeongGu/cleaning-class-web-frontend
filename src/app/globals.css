@@ -133,6 +133,29 @@
     }
   }
 
+  /* Hero 장식 요소 float 애니메이션 (CSS-only, motion/react 대체) */
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+  }
+
+  @keyframes floatDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(40px); }
+  }
+
+  /* Hero CTA 버튼 페이드인 애니메이션 */
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Hero 전화번호 페이드인 애니메이션 */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   /* react-slick 균등 높이 */
   .slick-track {
     display: flex !important;

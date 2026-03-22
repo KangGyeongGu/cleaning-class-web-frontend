@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
@@ -9,9 +8,12 @@ import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 
+const BLUR_PLACEHOLDER =
+  "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
+
 function NaverBlogIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
     </svg>
   );
@@ -30,8 +32,7 @@ function NextArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="다음 리뷰"
-      className="absolute top-1/2 -right-4 md:-right-8 lg:-right-12 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg
- transform -translate-y-1/2"
+      className="absolute top-1/2 -right-4 md:-right-8 lg:-right-12 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg transform -translate-y-1/2"
       onClick={onClick}
     >
       <ArrowRight className="w-5 h-5" />
@@ -45,7 +46,7 @@ function PrevArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="이전 리뷰"
-      className="absolute top-1/2 -left-4 md:-left-8 lg:-left-12 z-20 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg transform -translate-y-1/2"
+      className="absolute top-1/2 -left-4 md:-left-8 lg:-left-12 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg transform -translate-y-1/2"
       onClick={onClick}
     >
       <ArrowLeft className="w-5 h-5" />
@@ -53,28 +54,37 @@ function PrevArrow(props: CustomArrowProps) {
   );
 }
 
-function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({
+  review,
+  priority = false,
+}: {
+  review: Review;
+  priority?: boolean;
+}) {
   return (
     <div className="flex flex-col h-full">
       {/* Image Section */}
-      <div className="aspect-[4/3] overflow-hidden mb-5 bg-slate-200 relative flex-shrink-0">
+      <div className="aspect-[4/3] overflow-hidden mb-5 bg-slate-200 relative shrink-0">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
           fill
+          priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
       </div>
 
       {/* Content Section */}
       <div className="px-5 pb-6 flex flex-col flex-1">
-        {/* Hashtags (moved above title) */}
-        <div className="flex flex-wrap gap-2 mb-1.5 min-h-[20px]">
+        {/* Hashtags */}
+        <div className="flex flex-wrap gap-2 mb-1.5 min-h-5">
           {review.tags.map((tag) => (
             <span
               key={tag}
-              className="text-[10px] uppercase tracking-wider text-slate-600"
+              className="text-xs uppercase tracking-wider text-slate-600"
             >
               {tag}
             </span>
@@ -91,7 +101,7 @@ function ReviewCard({ review }: { review: Review }) {
 
         <div className="flex justify-end mt-auto">
           <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-widest border-b border-transparent group-hover:border-slate-900 pb-1 w-fit transition-all">
-            More <ArrowUpRight size={12} />
+            More <ArrowUpRight size={12} aria-hidden="true" />
           </div>
         </div>
       </div>
@@ -124,41 +134,31 @@ export function BlogReviews({
     responsive: [
       {
         breakpoint: 1280,
-        settings: {
-          slidesToShow: 3,
-        },
+        settings: { slidesToShow: 3 },
       },
       {
         breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
+        settings: { slidesToShow: 3 },
       },
       {
         breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
+        settings: { slidesToShow: 2 },
       },
       {
         breakpoint: 640,
         settings: {
           slidesToShow: 1,
-          arrows: false, // 모바일에서는 화살표 숨김 (터치 스와이프가 더 자연스러움)
+          arrows: false,
         },
       },
     ],
   };
 
   return (
-    <section id="reviews" className="py-32 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-12 md:px-20 lg:px-24 max-w-8xl">
+    <section id="reviews" className="py-16 md:py-32 bg-white relative overflow-hidden">
+      <div className="container mx-auto px-6 md:px-20 lg:px-24 max-w-8xl">
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 px-2">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
+          <div>
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
               REVIEW
             </h2>
@@ -166,14 +166,9 @@ export function BlogReviews({
               {reviewDescription ||
                 "의뢰 전 업체의 작업 방식을 확인할 수 있는 후기들을 확인해보세요."}
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="hidden md:flex items-center gap-4"
-          >
+          <div className="hidden md:flex items-center gap-4">
             {hasBlogUrl && (
               <a
                 href={blogUrl}
@@ -181,7 +176,8 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
               >
-                <NaverBlogIcon size={16} /> BLOG <ArrowUpRight size={16} />
+                <NaverBlogIcon size={16} /> BLOG{" "}
+                <ArrowUpRight size={16} aria-hidden="true" />
               </a>
             )}
             {hasInstagramUrl && (
@@ -191,21 +187,16 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
               >
-                <Instagram size={16} /> INSTAGRAM <ArrowUpRight size={16} />
+                <Instagram size={16} /> INSTAGRAM{" "}
+                <ArrowUpRight size={16} aria-hidden="true" />
               </a>
             )}
-          </motion.div>
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="relative px-2" /* 슬라이더 컨테이너에 약간의 패딩 추가 */
-        >
+        <div className="relative px-2">
           <Slider {...settings}>
-            {reviews.map((review) => {
+            {reviews.map((review, index) => {
               const cardUrl = review.link_url || blogUrl || null;
               return (
                 <div key={review.id} className="px-3 py-4">
@@ -216,18 +207,18 @@ export function BlogReviews({
                       rel="noopener noreferrer"
                       className="group block border border-slate-200 rounded-xl overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300 h-full bg-white"
                     >
-                      <ReviewCard review={review} />
+                      <ReviewCard review={review} priority={index === 0} />
                     </a>
                   ) : (
                     <div className="group border border-slate-200 rounded-xl overflow-hidden h-full bg-white">
-                      <ReviewCard review={review} />
+                      <ReviewCard review={review} priority={index === 0} />
                     </div>
                   )}
                 </div>
               );
             })}
           </Slider>
-        </motion.div>
+        </div>
 
         {(hasBlogUrl || hasInstagramUrl) && (
           <div className="mt-12 text-center md:hidden flex flex-col gap-3 items-center">
@@ -238,7 +229,8 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
               >
-                <NaverBlogIcon size={16} /> BLOG <ArrowUpRight size={16} />
+                <NaverBlogIcon size={16} /> BLOG{" "}
+                <ArrowUpRight size={16} aria-hidden="true" />
               </a>
             )}
             {hasInstagramUrl && (
@@ -248,7 +240,8 @@ export function BlogReviews({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
               >
-                <Instagram size={16} /> INSTAGRAM <ArrowUpRight size={16} />
+                <Instagram size={16} /> INSTAGRAM{" "}
+                <ArrowUpRight size={16} aria-hidden="true" />
               </a>
             )}
           </div>

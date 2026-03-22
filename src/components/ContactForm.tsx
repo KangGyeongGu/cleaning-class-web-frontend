@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useState, useRef, useEffect } from "react";
-import { motion } from "motion/react";
 import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
@@ -34,7 +33,7 @@ function CustomDropdown({
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: PointerEvent) {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target as Node)
@@ -43,9 +42,9 @@ function CustomDropdown({
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("pointerdown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("pointerdown", handleClickOutside);
     };
   }, []);
 
@@ -64,7 +63,7 @@ function CustomDropdown({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light text-left flex justify-between items-center"
+          className="w-full py-3 min-h-12 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light text-left flex justify-between items-center"
         >
           <span className={value ? "text-slate-900" : "text-slate-400"}>
             {value || placeholder || "선택해주세요"}
@@ -112,6 +111,8 @@ export function ContactForm({ phone }: ContactFormProps) {
   const [serviceType, setServiceType] = useState("");
   const [region, setRegion] = useState("");
   const [isReset, setIsReset] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   const isSuccess = state?.success === true;
   const showSuccess = isSuccess && !isReset;
@@ -127,6 +128,25 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => {
       previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
     };
+  }, []);
+
+  // IntersectionObserver로 섹션 진입 애니메이션
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   // 전송 성공 시 3초간 메시지 표시 후 폼 리셋
@@ -213,13 +233,14 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   return (
-    <section id="contact" className="py-32 bg-white">
+    <section ref={sectionRef} id="contact" className="py-16 md:py-32 bg-white">
       <div className="container mx-auto px-4 max-w-2xl">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
+        <div
+          className={`text-center mb-16 transition-all duration-700 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+          }`}
         >
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
             CONTACT
@@ -229,21 +250,21 @@ export function ContactForm({ phone }: ContactFormProps) {
               유선상담{" "}
               <a
                 href={`tel:${phone}`}
-                className="font-bold text-slate-900 hover:underline"
+                className="font-bold text-slate-900 hover:underline inline-flex items-center min-h-12 px-1"
               >
                 {phone}
               </a>
             </p>
           )}
-        </motion.div>
+        </div>
 
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
+        <form
           action={formAction}
-          className="space-y-12"
+          className={`space-y-12 transition-all duration-700 delay-200 ${
+            isVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+          }`}
         >
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -410,7 +431,8 @@ export function ContactForm({ phone }: ContactFormProps) {
                           <button
                             type="button"
                             onClick={() => handleImageRemove(index)}
-                            className="absolute inset-0 bg-black/50 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center"
+                            aria-label="이미지 삭제"
+                            className="absolute inset-0 bg-black/50 opacity-100 md:opacity-0 md:group-hover/image:opacity-100 transition-opacity flex items-center justify-center"
                           >
                             <X size={16} className="text-white" />
                           </button>
@@ -424,7 +446,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                     <div className="w-12 h-12 border border-slate-200 flex items-center justify-center text-slate-400 group-hover/add:border-slate-900 group-hover/add:text-slate-900 transition-colors">
                       <Plus size={20} />
                     </div>
-                    <span className="text-xs text-slate-400 group-hover/add:text-slate-600 transition-colors whitespace-nowrap">
+                    <span className="text-xs text-slate-400 group-hover/add:text-slate-600 transition-colors">
                       이미지 첨부 (선택, {images.length}/15)
                     </span>
                     <input
@@ -471,7 +493,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               <p className="text-red-600 text-sm mt-4">{state.error}</p>
             )}
           </div>
-        </motion.form>
+        </form>
       </div>
     </section>
   );
