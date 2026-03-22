@@ -167,15 +167,12 @@
     height: 100%;
   }
 
-  /* react-slick 초기화 전 overflow 방지 (모바일에서 카드 4개 나열 방지) */
-  .slick-slider:not(.slick-initialized) {
-    overflow: hidden;
+  /* 모바일 스크롤 영역 스크롤바 숨김 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  .slick-slider:not(.slick-initialized) .slick-list {
-    display: flex;
-    overflow: hidden;
-  }
-  .slick-slider:not(.slick-initialized) .slick-slide {
-    min-width: 100%;
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

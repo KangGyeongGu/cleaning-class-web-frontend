@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
@@ -65,13 +64,13 @@ function ReviewCard({
   return (
     <div className="flex flex-col h-full">
       {/* Image Section */}
-      <div className="aspect-16/9 sm:aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
+      <div className="aspect-16/9 md:aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
           fill
           priority={priority}
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          sizes="(max-width: 768px) 85vw, (max-width: 1280px) 33vw, 25vw"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -110,22 +109,41 @@ function ReviewCard({
   );
 }
 
+function ReviewCardWrapper({
+  review,
+  blogUrl,
+  priority = false,
+}: {
+  review: Review;
+  blogUrl?: string;
+  priority?: boolean;
+}) {
+  const cardUrl = review.link_url || blogUrl || null;
+  if (cardUrl) {
+    return (
+      <a
+        href={cardUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block border border-slate-200 rounded-xl overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300 h-full bg-white"
+      >
+        <ReviewCard review={review} priority={priority} />
+      </a>
+    );
+  }
+  return (
+    <div className="group border border-slate-200 rounded-xl overflow-hidden h-full bg-white">
+      <ReviewCard review={review} priority={priority} />
+    </div>
+  );
+}
+
 export function BlogReviews({
   reviews,
   blogUrl,
   instagramUrl,
   reviewDescription,
 }: BlogReviewsProps) {
-  const sliderRef = useRef<Slider>(null);
-
-  // 모바일 Safari/인앱 브라우저에서 초기 너비 계산 오류 보정
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      sliderRef.current?.slickGoTo(0);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   // 리뷰가 없으면 섹션 숨김
   if (!reviews || reviews.length === 0) {
     return null;
@@ -134,7 +152,7 @@ export function BlogReviews({
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
 
-  const settings = {
+  const slickSettings = {
     dots: true,
     infinite: true,
     speed: 500,
@@ -150,19 +168,6 @@ export function BlogReviews({
       {
         breakpoint: 1024,
         settings: { slidesToShow: 3 },
-      },
-      {
-        breakpoint: 768,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: 640,
-        settings: {
-          slidesToShow: 1,
-          arrows: false,
-          centerMode: true,
-          centerPadding: "0px",
-        },
       },
     ],
   };
@@ -207,26 +212,33 @@ export function BlogReviews({
           </div>
         </div>
 
-        <div className="relative px-0 sm:px-2">
-          <Slider ref={sliderRef} {...settings}>
+        {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
+        <div className="md:hidden flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide">
+          {reviews.map((review, index) => (
+            <div
+              key={review.id}
+              className="snap-center shrink-0 w-[85vw]"
+            >
+              <ReviewCardWrapper
+                review={review}
+                blogUrl={blogUrl}
+                priority={index === 0}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* 데스크톱: slick carousel */}
+        <div className="hidden md:block relative px-2">
+          <Slider {...slickSettings}>
             {reviews.map((review, index) => {
-              const cardUrl = review.link_url || blogUrl || null;
               return (
-                <div key={review.id} className="px-0 sm:px-3 py-4">
-                  {cardUrl ? (
-                    <a
-                      href={cardUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group block border border-slate-200 rounded-xl overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300 h-full bg-white"
-                    >
-                      <ReviewCard review={review} priority={index === 0} />
-                    </a>
-                  ) : (
-                    <div className="group border border-slate-200 rounded-xl overflow-hidden h-full bg-white">
-                      <ReviewCard review={review} priority={index === 0} />
-                    </div>
-                  )}
+                <div key={review.id} className="px-3 py-4">
+                  <ReviewCardWrapper
+                    review={review}
+                    blogUrl={blogUrl}
+                    priority={index === 0}
+                  />
                 </div>
               );
             })}
