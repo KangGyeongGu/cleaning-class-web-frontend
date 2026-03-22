@@ -1,6 +1,4 @@
-"use client";
-
-import { Phone } from 'lucide-react';
+import { Phone } from "lucide-react";
 
 interface MobilePhoneButtonProps {
   phone: string;

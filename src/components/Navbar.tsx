@@ -1,31 +1,31 @@
 "use client";
 
-import { useState } from 'react';
-import { motion } from 'motion/react';
-import { Menu, X } from 'lucide-react';
+import { useState } from "react";
+import { motion } from "motion/react";
+import { Menu, X } from "lucide-react";
 
 interface NavbarProps {
   businessName?: string;
 }
 
 const menuItems = [
-  { label: '서비스', target: 'services' },
-  { label: '후기', target: 'reviews' },
-  { label: '견적의뢰', target: 'contact' }
+  { label: "서비스", target: "services" },
+  { label: "후기", target: "reviews" },
+  { label: "견적의뢰", target: "contact" },
 ];
 
 function scrollToSection(targetId: string) {
   const element = document.getElementById(targetId);
-  element?.scrollIntoView({ behavior: 'smooth' });
+  element?.scrollIntoView({ behavior: "smooth" });
 }
 
 function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 export function Navbar({ businessName }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const displayName = businessName ?? '청소클라쓰';
+  const displayName = businessName ?? "청소클라쓰";
 
   const handleMobileMenuClick = (targetId: string) => {
     setIsOpen(false);
@@ -70,22 +70,22 @@ export function Navbar({ businessName }: NavbarProps) {
 
         {/* Mobile Menu Overlay */}
         {isOpen && (
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8"
-            >
-                {menuItems.map((item) => (
-                    <button
-                      key={item.target}
-                      type="button"
-                      className="text-2xl font-black tracking-tighter text-slate-900 bg-transparent border-0 cursor-pointer"
-                      onClick={() => handleMobileMenuClick(item.target)}
-                    >
-                        {item.label}
-                    </button>
-                ))}
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8"
+          >
+            {menuItems.map((item) => (
+              <button
+                key={item.target}
+                type="button"
+                className="text-2xl font-black tracking-tighter text-slate-900 bg-transparent border-0 cursor-pointer"
+                onClick={() => handleMobileMenuClick(item.target)}
+              >
+                {item.label}
+              </button>
+            ))}
+          </motion.div>
         )}
       </div>
     </nav>

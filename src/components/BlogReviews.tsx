@@ -1,13 +1,13 @@
 "use client";
 
-import { motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
-import Image from 'next/image';
+import { motion } from "motion/react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import Slider, { type CustomArrowProps } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import type { Review } from '@/shared/types/database';
-import { getReviewImageUrl } from '@/shared/lib/supabase/storage';
+import type { Review } from "@/shared/types/database";
+import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 
 interface BlogReviewsProps {
   reviews: Review[];
@@ -63,8 +63,11 @@ function ReviewCard({ review }: { review: Review }) {
       <div className="px-5 pb-6 flex flex-col flex-1">
         {/* Hashtags (moved above title) */}
         <div className="flex flex-wrap gap-2 mb-1.5 min-h-[20px]">
-          {review.tags.map(tag => (
-            <span key={tag} className="text-[10px] uppercase tracking-wider text-slate-600">
+          {review.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] uppercase tracking-wider text-slate-600"
+            >
               {tag}
             </span>
           ))}
@@ -88,14 +91,19 @@ function ReviewCard({ review }: { review: Review }) {
   );
 }
 
-export function BlogReviews({ reviews, blogUrl, instagramUrl, reviewDescription }: BlogReviewsProps) {
+export function BlogReviews({
+  reviews,
+  blogUrl,
+  instagramUrl,
+  reviewDescription,
+}: BlogReviewsProps) {
   // 리뷰가 없으면 섹션 숨김
   if (!reviews || reviews.length === 0) {
     return null;
   }
 
-  const hasBlogUrl = blogUrl && blogUrl.trim() !== '';
-  const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== '';
+  const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
+  const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
 
   const settings = {
     dots: true,
@@ -110,28 +118,28 @@ export function BlogReviews({ reviews, blogUrl, instagramUrl, reviewDescription 
         breakpoint: 1280,
         settings: {
           slidesToShow: 3,
-        }
+        },
       },
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-        }
+        },
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
-        }
+        },
       },
       {
         breakpoint: 640,
         settings: {
           slidesToShow: 1,
-          arrows: false // 모바일에서는 화살표 숨김 (터치 스와이프가 더 자연스러움)
-        }
-      }
-    ]
+          arrows: false, // 모바일에서는 화살표 숨김 (터치 스와이프가 더 자연스러움)
+        },
+      },
+    ],
   };
 
   return (
@@ -147,10 +155,11 @@ export function BlogReviews({ reviews, blogUrl, instagramUrl, reviewDescription 
               REVIEW
             </h2>
             <p className="text-slate-500 text-sm md:text-base font-light tracking-wide max-w-lg">
-              {reviewDescription || '의뢰 전 업체의 작업 방식을 확인할 수 있는 후기들을 확인해보세요.'}
+              {reviewDescription ||
+                "의뢰 전 업체의 작업 방식을 확인할 수 있는 후기들을 확인해보세요."}
             </p>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -211,7 +220,7 @@ export function BlogReviews({ reviews, blogUrl, instagramUrl, reviewDescription 
             })}
           </Slider>
         </motion.div>
-        
+
         {(hasBlogUrl || hasInstagramUrl) && (
           <div className="mt-12 text-center md:hidden flex flex-col gap-3 items-center">
             {hasBlogUrl && (

@@ -19,14 +19,20 @@ export async function updateSession(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+        setAll(
+          cookiesToSet: {
+            name: string;
+            value: string;
+            options: CookieOptions;
+          }[],
+        ) {
           cookiesToSet.forEach(({ name, value, options }) => {
             request.cookies.set(name, value);
             supabaseResponse.cookies.set(name, value, options);
           });
         },
       },
-    }
+    },
   );
 
   // 세션 갱신 및 사용자 확인

@@ -1,13 +1,19 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { updateReview } from '@/shared/actions/review';
-import { Loader2, X, Plus } from 'lucide-react';
-import Image from 'next/image';
-import type { Review } from '@/shared/types/database';
+import { useActionState, useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { updateReview } from "@/shared/actions/review";
+import { Loader2, X, Plus } from "lucide-react";
+import Image from "next/image";
+import type { Review } from "@/shared/types/database";
 
-const SERVICE_TYPES = ['거주청소', '정기청소', '특수청소', '쓰레기집청소', '상가청소'];
+const SERVICE_TYPES = [
+  "거주청소",
+  "정기청소",
+  "특수청소",
+  "쓰레기집청소",
+  "상가청소",
+];
 
 interface EditReviewFormProps {
   review: Review;
@@ -18,13 +24,15 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     updateReview.bind(null, String(review.id)),
-    null
+    null,
   );
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [tags, setTags] = useState<string[]>(review.tags);
-  const [tagInput, setTagInput] = useState('');
-  const existingService = review.tags.find(t => SERVICE_TYPES.includes(t));
-  const [selectedService, setSelectedService] = useState<string>(existingService || '');
+  const [tagInput, setTagInput] = useState("");
+  const existingService = review.tags.find((t) => SERVICE_TYPES.includes(t));
+  const [selectedService, setSelectedService] = useState<string>(
+    existingService || "",
+  );
 
   // blob URL 메모리 누수 방지: ref로 최신 URL 추적
   const imagePreviewRef = useRef<string | null>(null);
@@ -56,7 +64,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
     const trimmed = tagInput.trim();
     if (trimmed && !tags.includes(trimmed)) {
       setTags([...tags, trimmed]);
-      setTagInput('');
+      setTagInput("");
     }
   };
 
@@ -66,15 +74,16 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
 
   const handleSubmit = async (formData: FormData) => {
     // 태그를 JSON 문자열로 추가
-    formData.set('tags', JSON.stringify(tags));
+    formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
   };
 
   // 성공 시 리다이렉트
-  if (state && 'success' in state && state.success) {
-    router.push('/admin/reviews');
-    return null;
-  }
+  useEffect(() => {
+    if (state && "success" in state && state.success) {
+      router.push("/admin/reviews");
+    }
+  }, [state, router]);
 
   const displayImageUrl = imagePreview || imageUrl;
 
@@ -82,7 +91,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
     <form action={handleSubmit} className="space-y-8">
       {/* 제목 */}
       <div>
-        <label htmlFor="title" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="title"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           제목 (최대 100자)
         </label>
         <input
@@ -95,14 +107,17 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="리뷰 제목을 입력하세요"
         />
-        {state && 'errors' in state && state.errors?.title && (
+        {state && "errors" in state && state.errors?.title && (
           <p className="text-red-500 text-xs mt-1">{state.errors.title[0]}</p>
         )}
       </div>
 
       {/* 소개글 */}
       <div>
-        <label htmlFor="summary" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="summary"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           소개글 (최대 200자)
         </label>
         <textarea
@@ -115,26 +130,31 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
           placeholder="리뷰 소개글을 입력하세요"
         ></textarea>
-        {state && 'errors' in state && state.errors?.summary && (
+        {state && "errors" in state && state.errors?.summary && (
           <p className="text-red-500 text-xs mt-1">{state.errors.summary[0]}</p>
         )}
       </div>
 
       {/* 바로가기 링크 */}
       <div>
-        <label htmlFor="link_url" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="link_url"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           바로가기 링크 (선택)
         </label>
         <input
           id="link_url"
           name="link_url"
           type="url"
-          defaultValue={review.link_url || ''}
+          defaultValue={review.link_url || ""}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="https://blog.naver.com/..."
         />
-        {state && 'errors' in state && state.errors?.link_url && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.link_url[0]}</p>
+        {state && "errors" in state && state.errors?.link_url && (
+          <p className="text-red-500 text-xs mt-1">
+            {state.errors.link_url[0]}
+          </p>
         )}
       </div>
 
@@ -143,21 +163,24 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         <div className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
           서비스 종류 <span className="text-red-500">*</span>
         </div>
-        <p className="text-xs text-slate-500 mb-3">서비스 종류를 반드시 하나 선택해주세요. 선택한 항목은 태그로 자동 추가됩니다.</p>
+        <p className="text-xs text-slate-500 mb-3">
+          서비스 종류를 반드시 하나 선택해주세요. 선택한 항목은 태그로 자동
+          추가됩니다.
+        </p>
         <div className="flex flex-wrap gap-2">
           {SERVICE_TYPES.map((type) => (
             <button
               key={type}
               type="button"
               onClick={() => {
-                const filtered = tags.filter(t => !SERVICE_TYPES.includes(t));
+                const filtered = tags.filter((t) => !SERVICE_TYPES.includes(t));
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}
               className={`px-4 py-2 text-sm border transition-colors ${
                 selectedService === type
-                  ? 'border-slate-900 bg-slate-900 text-white'
-                  : 'border-slate-200 text-slate-500 hover:border-slate-900'
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-200 text-slate-500 hover:border-slate-900"
               }`}
             >
               {type}
@@ -168,7 +191,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
 
       {/* 태그 */}
       <div>
-        <label htmlFor="tagInput" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="tagInput"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           태그
         </label>
         <div className="flex gap-2 mb-3">
@@ -178,7 +204,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
             value={tagInput}
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+              if (e.key === "Enter") {
                 e.preventDefault();
                 if (!e.nativeEvent.isComposing) {
                   handleAddTag();
@@ -198,22 +224,32 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         </div>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
-            <span key={tag} className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm">
+            <span
+              key={tag}
+              className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm"
+            >
               {tag}
-              <button type="button" onClick={() => handleRemoveTag(tag)} className="text-slate-500 hover:text-slate-900">
+              <button
+                type="button"
+                onClick={() => handleRemoveTag(tag)}
+                className="text-slate-500 hover:text-slate-900"
+              >
                 <X size={14} />
               </button>
             </span>
           ))}
         </div>
-        {state && 'errors' in state && state.errors?.tags && (
+        {state && "errors" in state && state.errors?.tags && (
           <p className="text-red-500 text-xs mt-1">{state.errors.tags[0]}</p>
         )}
       </div>
 
       {/* 이미지 업로드 */}
       <div>
-        <label htmlFor="image" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="image"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           이미지
         </label>
         <input
@@ -229,16 +265,26 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs"
         >
           <Plus size={16} />
-          {imagePreview ? '이미지 변경' : '새 이미지 선택'}
+          {imagePreview ? "이미지 변경" : "새 이미지 선택"}
         </label>
         <div className="mt-4 relative w-full max-w-md h-64 border border-slate-200">
-          <Image src={displayImageUrl} alt="미리보기" fill className="object-cover" sizes="(max-width: 768px) 100vw, 448px" />
+          <Image
+            src={displayImageUrl}
+            alt="미리보기"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 448px"
+            unoptimized={!!imagePreview}
+          />
         </div>
       </div>
 
       {/* 정렬 순서 */}
       <div>
-        <label htmlFor="sort_order" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="sort_order"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           정렬 순서
         </label>
         <input
@@ -249,8 +295,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           defaultValue={review.sort_order}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
         />
-        {state && 'errors' in state && state.errors?.sort_order && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.sort_order[0]}</p>
+        {state && "errors" in state && state.errors?.sort_order && (
+          <p className="text-red-500 text-xs mt-1">
+            {state.errors.sort_order[0]}
+          </p>
         )}
       </div>
 
@@ -264,13 +312,16 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           defaultChecked={review.is_published}
           className="w-5 h-5"
         />
-        <label htmlFor="is_published" className="text-sm font-bold text-slate-900">
+        <label
+          htmlFor="is_published"
+          className="text-sm font-bold text-slate-900"
+        >
           게시
         </label>
       </div>
 
       {/* 에러 메시지 */}
-      {state && 'error' in state && state.error && (
+      {state && "error" in state && state.error && (
         <p className="text-red-500 text-sm">{state.error}</p>
       )}
 
@@ -286,7 +337,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
               <Loader2 className="animate-spin w-4 h-4" /> 수정 중...
             </span>
           ) : (
-            '수정'
+            "수정"
           )}
         </button>
         <button

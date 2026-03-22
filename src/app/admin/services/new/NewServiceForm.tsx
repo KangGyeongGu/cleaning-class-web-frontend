@@ -4,7 +4,7 @@ import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createService } from "@/shared/actions/service";
 import { Loader2, Plus } from "lucide-react";
-import { FocalPointPicker } from "@/app/admin/services/FocalPointPicker";
+import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
 
 export function NewServiceForm() {
   const router = useRouter();

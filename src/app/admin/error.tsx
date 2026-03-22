@@ -20,7 +20,9 @@ export default function AdminError({
           오류가 발생했습니다
         </h2>
         <p className="text-sm text-slate-500">
-          {error.message || "페이지를 불러오는 중 문제가 발생했습니다."}
+          {process.env.NODE_ENV === "development" && error.message
+            ? error.message
+            : "페이지를 불러오는 중 문제가 발생했습니다."}
         </p>
       </div>
       <button

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { Pencil, X, Check, Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { Pencil, X, Check, Loader2 } from "lucide-react";
 
 interface InlineDescriptionEditorProps {
   initialValue: string;
@@ -30,7 +30,7 @@ export function InlineDescriptionEditor({
       setValue(draft);
       setIsEditing(false);
     } else {
-      alert(result.error || '저장 중 오류가 발생했습니다.');
+      alert(result.error || "저장 중 오류가 발생했습니다.");
     }
   };
 
@@ -66,7 +66,11 @@ export function InlineDescriptionEditor({
           className="p-2 text-slate-400 hover:text-green-600 transition-colors disabled:opacity-50"
           title="저장"
         >
-          {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+          {isSaving ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <Check size={16} />
+          )}
         </button>
       </div>
     );
@@ -74,9 +78,7 @@ export function InlineDescriptionEditor({
 
   return (
     <div className="flex items-center gap-2 mb-8">
-      <p className="text-sm font-light text-slate-500">
-        {value || emptyText}
-      </p>
+      <p className="text-sm font-light text-slate-500">{value || emptyText}</p>
       <button
         type="button"
         onClick={() => setIsEditing(true)}

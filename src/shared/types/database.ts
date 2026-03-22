@@ -170,8 +170,10 @@ export interface Database {
 
 // 편의 타입 별칭
 export type SiteConfigRow = Database["public"]["Tables"]["site_config"]["Row"];
-export type SiteConfigInsert = Database["public"]["Tables"]["site_config"]["Insert"];
-export type SiteConfigUpdate = Database["public"]["Tables"]["site_config"]["Update"];
+export type SiteConfigInsert =
+  Database["public"]["Tables"]["site_config"]["Insert"];
+export type SiteConfigUpdate =
+  Database["public"]["Tables"]["site_config"]["Update"];
 
 export type ReviewRow = Database["public"]["Tables"]["reviews"]["Row"];
 export type ReviewInsert = Database["public"]["Tables"]["reviews"]["Insert"];

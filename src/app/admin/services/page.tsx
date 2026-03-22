@@ -1,35 +1,34 @@
-import Link from 'next/link';
-import { createClient } from '@/shared/lib/supabase/server';
-import { getServiceImageUrl } from '@/shared/lib/supabase/storage';
-import { Plus } from 'lucide-react';
-import { ServiceListClient } from '@/app/admin/services/ServiceListClient';
-import { InlineDescriptionEditor } from '@/app/admin/components/InlineDescriptionEditor';
-import { updateServiceDescription } from '@/shared/actions/site-config';
-import type { Service, SiteConfig } from '@/shared/types/database';
+import Link from "next/link";
+import { createClient } from "@/shared/lib/supabase/server";
+import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
+import { Plus } from "lucide-react";
+import { ServiceListClient } from "@/app/admin/services/ServiceListClient";
+import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
+import { updateServiceDescription } from "@/shared/actions/site-config";
+import type { Service, SiteConfig } from "@/shared/types/database";
 
 export default async function ServicesPage() {
   const supabase = await createClient();
 
   const [servicesResult, configResult] = await Promise.all([
     supabase
-      .from('services')
-      .select('*')
-      .order('sort_order', { ascending: true }),
-    supabase
-      .from('site_config')
-      .select('*')
-      .single(),
+      .from("services")
+      .select("*")
+      .order("sort_order", { ascending: true }),
+    supabase.from("site_config").select("*").single(),
   ]);
 
   if (servicesResult.error) {
-    console.error('서비스 목록 조회 실패:', servicesResult.error);
+    console.error("서비스 목록 조회 실패:", servicesResult.error);
   }
 
   const siteConfig = configResult.data as SiteConfig | null;
-  const servicesWithImageUrls = (servicesResult.data as Service[] ?? []).map((service) => ({
-    ...service,
-    imageUrl: getServiceImageUrl(service.image_path),
-  }));
+  const servicesWithImageUrls = ((servicesResult.data as Service[]) ?? []).map(
+    (service) => ({
+      ...service,
+      imageUrl: getServiceImageUrl(service.image_path),
+    }),
+  );
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -45,7 +44,7 @@ export default async function ServicesPage() {
       </div>
 
       <InlineDescriptionEditor
-        initialValue={siteConfig?.service_description ?? ''}
+        initialValue={siteConfig?.service_description ?? ""}
         placeholder="서비스 섹션 안내 문구를 입력하세요"
         emptyText="서비스 섹션 안내 문구가 없습니다."
         onSave={updateServiceDescription}
@@ -56,7 +55,9 @@ export default async function ServicesPage() {
           <p className="text-slate-500 font-light">등록된 서비스가 없습니다.</p>
         </div>
       ) : (
-        <ServiceListClient services={servicesWithImageUrls as (Service & { imageUrl: string })[]} />
+        <ServiceListClient
+          services={servicesWithImageUrls as (Service & { imageUrl: string })[]}
+        />
       )}
     </div>
   );

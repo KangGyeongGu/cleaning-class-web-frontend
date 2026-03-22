@@ -1,11 +1,11 @@
 "use client";
 
-import { useActionState, useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { updateService } from '@/shared/actions/service';
-import { Loader2, Plus } from 'lucide-react';
-import { FocalPointPicker } from '@/app/admin/services/FocalPointPicker';
-import type { Service } from '@/shared/types/database';
+import { useActionState, useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { updateService } from "@/shared/actions/service";
+import { Loader2, Plus } from "lucide-react";
+import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
+import type { Service } from "@/shared/types/database";
 
 interface EditServiceFormProps {
   service: Service;
@@ -13,14 +13,20 @@ interface EditServiceFormProps {
   afterImageUrl?: string;
 }
 
-export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServiceFormProps) {
+export function EditServiceForm({
+  service,
+  imageUrl,
+  afterImageUrl,
+}: EditServiceFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     updateService.bind(null, String(service.id)),
-    null
+    null,
   );
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [afterImagePreview, setAfterImagePreview] = useState<string | null>(null);
+  const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
+    null,
+  );
   const [focalX, setFocalX] = useState(service.image_focal_x);
   const [focalY, setFocalY] = useState(service.image_focal_y);
   const [afterFocalX, setAfterFocalX] = useState(service.image_after_focal_x);
@@ -72,10 +78,11 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
   };
 
   // 성공 시 리다이렉트
-  if (state && 'success' in state && state.success) {
-    router.push('/admin/services');
-    return null;
-  }
+  useEffect(() => {
+    if (state && "success" in state && state.success) {
+      router.push("/admin/services");
+    }
+  }, [state, router]);
 
   const displayImageUrl = imagePreview || imageUrl;
   const displayAfterImageUrl = afterImagePreview || afterImageUrl;
@@ -84,7 +91,10 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
     <form action={formAction} className="space-y-8">
       {/* 서비스명 */}
       <div>
-        <label htmlFor="title" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="title"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           서비스명 (최대 50자)
         </label>
         <input
@@ -97,14 +107,17 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
           placeholder="서비스명을 입력하세요"
         />
-        {state && 'errors' in state && state.errors?.title && (
+        {state && "errors" in state && state.errors?.title && (
           <p className="text-red-500 text-xs mt-1">{state.errors.title[0]}</p>
         )}
       </div>
 
       {/* 설명 */}
       <div>
-        <label htmlFor="description" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="description"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           설명 (최대 200자)
         </label>
         <textarea
@@ -117,15 +130,20 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
           placeholder="서비스 설명을 입력하세요"
         ></textarea>
-        {state && 'errors' in state && state.errors?.description && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.description[0]}</p>
+        {state && "errors" in state && state.errors?.description && (
+          <p className="text-red-500 text-xs mt-1">
+            {state.errors.description[0]}
+          </p>
         )}
       </div>
 
       {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          <label htmlFor="image" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+          <label
+            htmlFor="image"
+            className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          >
             Before 이미지 (작업 전)
           </label>
           <input
@@ -141,14 +159,17 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
             className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs mb-4"
           >
             <Plus size={16} />
-            {imagePreview ? '이미지 변경' : '새 이미지 선택'}
+            {imagePreview ? "이미지 변경" : "새 이미지 선택"}
           </label>
           <FocalPointPicker
             key={displayImageUrl}
             imageUrl={displayImageUrl}
             focalX={focalX}
             focalY={focalY}
-            onChange={(x, y) => { setFocalX(x); setFocalY(y); }}
+            onChange={(x, y) => {
+              setFocalX(x);
+              setFocalY(y);
+            }}
             label="Before"
           />
           <input type="hidden" name="image_focal_x" value={focalX} />
@@ -156,7 +177,10 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
         </div>
 
         <div>
-          <label htmlFor="image_after" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+          <label
+            htmlFor="image_after"
+            className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          >
             After 이미지 (작업 후, 선택)
           </label>
           <input
@@ -172,14 +196,17 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
             className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs mb-4"
           >
             <Plus size={16} />
-            {afterImagePreview ? '이미지 변경' : '새 이미지 선택'}
+            {afterImagePreview ? "이미지 변경" : "새 이미지 선택"}
           </label>
           <FocalPointPicker
-            key={displayAfterImageUrl ?? 'no-after'}
+            key={displayAfterImageUrl ?? "no-after"}
             imageUrl={displayAfterImageUrl ?? null}
             focalX={afterFocalX}
             focalY={afterFocalY}
-            onChange={(x, y) => { setAfterFocalX(x); setAfterFocalY(y); }}
+            onChange={(x, y) => {
+              setAfterFocalX(x);
+              setAfterFocalY(y);
+            }}
             label="After"
           />
           <input type="hidden" name="image_after_focal_x" value={afterFocalX} />
@@ -189,7 +216,10 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
 
       {/* 정렬 순서 */}
       <div>
-        <label htmlFor="sort_order" className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <label
+          htmlFor="sort_order"
+          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+        >
           정렬 순서
         </label>
         <input
@@ -200,8 +230,10 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
           defaultValue={service.sort_order}
           className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
         />
-        {state && 'errors' in state && state.errors?.sort_order && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.sort_order[0]}</p>
+        {state && "errors" in state && state.errors?.sort_order && (
+          <p className="text-red-500 text-xs mt-1">
+            {state.errors.sort_order[0]}
+          </p>
         )}
       </div>
 
@@ -215,13 +247,16 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
           defaultChecked={service.is_published}
           className="w-5 h-5"
         />
-        <label htmlFor="is_published" className="text-sm font-bold text-slate-900">
+        <label
+          htmlFor="is_published"
+          className="text-sm font-bold text-slate-900"
+        >
           게시
         </label>
       </div>
 
       {/* 에러 메시지 */}
-      {state && 'error' in state && state.error && (
+      {state && "error" in state && state.error && (
         <p className="text-red-500 text-sm">{state.error}</p>
       )}
 
@@ -237,7 +272,7 @@ export function EditServiceForm({ service, imageUrl, afterImageUrl }: EditServic
               <Loader2 className="animate-spin w-4 h-4" /> 수정 중...
             </span>
           ) : (
-            '수정'
+            "수정"
           )}
         </button>
         <button

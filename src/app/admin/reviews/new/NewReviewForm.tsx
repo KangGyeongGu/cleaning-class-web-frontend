@@ -256,6 +256,7 @@ export function NewReviewForm() {
               src={imagePreview}
               alt="미리보기"
               fill
+              unoptimized
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 448px"
             />
