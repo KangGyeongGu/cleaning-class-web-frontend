@@ -1,10 +1,18 @@
 /**
- * Schema.org LocalBusiness JSON-LD 생성
+ * Schema.org JSON-LD 생성
  * @see https://schema.org/LocalBusiness
  * @see https://schema.org/CleaningService
+ * @see https://schema.org/WebSite
  */
 
 import type { SiteConfig } from "@/shared/types/database";
+
+interface WebSiteJsonLd {
+  "@context": "https://schema.org";
+  "@type": "WebSite";
+  name: string;
+  url: string;
+}
 
 interface LocalBusinessJsonLd {
   "@context": "https://schema.org";
@@ -26,6 +34,17 @@ interface LocalBusinessJsonLd {
   };
   serviceType: string[];
   priceRange: string;
+}
+
+export function generateWebSiteJsonLd(
+  siteConfig?: SiteConfig | null,
+): WebSiteJsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig?.business_name ?? "청소클라쓰",
+    url: siteConfig?.site_url ?? "https://www.cleaningclass.co.kr",
+  };
 }
 
 export function generateLocalBusinessJsonLd(

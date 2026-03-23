@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/app/globals.css";
-import { generateLocalBusinessJsonLd } from "@/shared/lib/json-ld";
+import { generateLocalBusinessJsonLd, generateWebSiteJsonLd } from "@/shared/lib/json-ld";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
 const GA_ID = "G-SN842PJMYW";
@@ -115,6 +115,7 @@ export default async function RootLayout({
     getPretendardCss(),
   ]);
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
+  const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
 
   return (
     <html lang="ko">
@@ -137,6 +138,14 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- WebSite JSON-LD, 서버 생성 데이터로 XSS 위험 없음 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteJsonLd).replace(/</g, "\\u003c"),
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
