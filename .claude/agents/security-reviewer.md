@@ -5,7 +5,7 @@ description: >
   auth gaps, and exposed secrets. Invoked in parallel by audit-worker Phase 2.
 tools: Read, Grep, Glob, Bash
 disallowedTools: Write, Edit
-model: sonnet
+model: opus
 maxTurns: 12
 permissionMode: default
 ---

@@ -61,7 +61,7 @@ Microsoft 공식 `@playwright/mcp` MCP 서버를 통해 Claude Code가 실제 Ch
 | `plan-worker` | sonnet | 25 | Read, Grep, Glob, Write *(Edit/Bash 금지)* | /w-plan 전용 도메인 조사 에이전트. 요구사항·참조문서를 받아 코드베이스를 스스로 조사하고 `.claude/plans/workers/{domain}-report.json` 작성. 리프 워커 |
 | `develop-worker` | sonnet | 25 | Read, Write, Edit, Grep, Glob, Bash | 승인된 plan의 Task Card 구현 + smoke 검증. `isolation: worktree`. 리프 워커 |
 | `reviewer` | sonnet | 12 | Read, Grep, Glob *(Write/Edit/Bash 금지)* | 범용 리뷰어. 호출 시 동적 주입된 도메인·체크리스트로 특화 (structure/image/seo/logic). 리프 워커 |
-| `security-reviewer` | sonnet | 12 | Read, Grep, Glob, Bash *(Write/Edit 금지)* | 웹 보안 전담 (Bash 필요 — Semgrep 실행). 리프 워커 |
+| `security-reviewer` | **opus** | 12 | Read, Grep, Glob, Bash *(Write/Edit 금지)* | 웹 보안 전담 (Bash 필요 — Semgrep 실행). 누락 비용 높아 Opus 배정. 리프 워커 |
 
 ### 3.2 스킬 목록
 
