@@ -7,7 +7,8 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    exclude: ['__tests__/e2e/**', 'node_modules/**'],
+    exclude: ['__tests__/e2e/**', 'node_modules/**', '.claude/worktrees/**'],
+    testTimeout: 10000,
   },
   resolve: {
     alias: {
