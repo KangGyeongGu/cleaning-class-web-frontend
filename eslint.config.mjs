@@ -4,6 +4,8 @@ import nextTs from "eslint-config-next/typescript";
 import boundaries from "eslint-plugin-boundaries";
 import eslintReact from "@eslint-react/eslint-plugin";
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
+import vitestPlugin from "@vitest/eslint-plugin";
+import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -73,7 +75,34 @@ const eslintConfig = defineConfig([
     files: ["**/*.tsx"],
     ...eslintReact.configs["recommended-typescript"],
   },
-  // 5. no-relative-import-paths — @/ alias 강제
+  // 5. @vitest/eslint-plugin — 테스트 품질
+  {
+    files: ["__tests__/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    plugins: { vitest: vitestPlugin },
+    rules: {
+      "vitest/expect-expect": "error",
+      "vitest/no-conditional-expect": "error",
+      "vitest/no-identical-title": "error",
+      "vitest/no-disabled-tests": "warn",
+    },
+  },
+  // 6. eslint-plugin-better-tailwindcss — Tailwind v4 호환 클래스 검증
+  {
+    files: ["**/*.tsx"],
+    plugins: { "better-tailwindcss": betterTailwindcss },
+    settings: {
+      "better-tailwindcss": {
+        entryPoint: "src/app/globals.css",
+      },
+    },
+    rules: {
+      "better-tailwindcss/no-conflicting-classes": "warn",
+      "better-tailwindcss/no-duplicate-classes": "warn",
+      "better-tailwindcss/no-unnecessary-whitespace": "warn",
+      "better-tailwindcss/no-unknown-classes": "warn",
+    },
+  },
+  // 7. no-relative-import-paths — @/ alias 강제
   {
     plugins: { "no-relative-import-paths": noRelativeImportPaths },
     rules: {
