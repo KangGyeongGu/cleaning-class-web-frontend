@@ -5,6 +5,7 @@ import { Hero } from "@/components/Hero";
 import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { Navbar } from "@/components/Navbar";
 import { getSiteConfig } from "@/shared/lib/site-config";
+import type { SiteConfig } from "@/shared/types/database";
 import {
   getPublishedReviews,
   getPublishedServicesWithImageUrls,
@@ -64,12 +65,20 @@ const ContactForm = dynamic(
 // ISR: 1시간마다 재검증
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: {
-    absolute:
-      "전주 청소업체 청소클라쓰 | 거주·정기·특수·쓰레기집·상가·부분청소",
-  },
-};
+function buildDescription(siteConfig?: SiteConfig | null): string {
+  const phone = siteConfig?.phone ?? "010-6711-2964";
+  return `${phone} · 연중무휴 · 전주 청소업체 청소클라쓰 · 거주청소 · 입주청소 · 정기청소 · 특수청소 · 쓰레기집청소 · 상가청소`;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const siteConfig = await getSiteConfig();
+  return {
+    title: {
+      absolute: "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스",
+    },
+    description: buildDescription(siteConfig),
+  };
+}
 
 export default async function Home() {
   const [siteConfig, reviews, servicesWithImageUrls] = await Promise.all([
