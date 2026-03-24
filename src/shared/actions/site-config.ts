@@ -27,7 +27,7 @@ async function updateSiteConfigField(
       .single<{ id: string }>();
 
     if (fetchError) {
-      console.error(`updateSiteConfigField(${field}) fetch error:`, fetchError);
+      console.error("updateSiteConfigField fetch error", { field }, fetchError);
       return {
         success: false,
         error: "설정 처리 중 오류가 발생했습니다.",
@@ -43,7 +43,7 @@ async function updateSiteConfigField(
       .eq("id", current.id);
 
     if (error) {
-      console.error(`updateSiteConfigField(${field}) update error:`, error);
+      console.error("updateSiteConfigField update error", { field }, error);
       return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
@@ -52,7 +52,7 @@ async function updateSiteConfigField(
 
     return { success: true };
   } catch (error) {
-    console.error(`updateSiteConfigField(${field}) error:`, error);
+    console.error("updateSiteConfigField error", { field }, error);
     return {
       success: false,
       error: "설정 처리 중 오류가 발생했습니다.",
