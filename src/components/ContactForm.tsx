@@ -412,6 +412,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                     <div className="flex flex-wrap gap-2">
                       {images.map((file, index) => (
                         <div
+                          // eslint-disable-next-line @eslint-react/no-array-index-key -- 동일 파일 중복 첨부 시 name+lastModified만으로 유일성 보장 불가
                           key={`${file.name}-${file.lastModified}-${index}`}
                           className="group/image relative h-20 w-20"
                         >

@@ -55,6 +55,8 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* 커스텀 max-width 토큰 — 리뷰 섹션 등 넓은 컨테이너 용도 */
+  --width-8xl: 90rem;
 }
 
 @layer base {

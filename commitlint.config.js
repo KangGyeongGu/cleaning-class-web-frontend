@@ -1,4 +1,4 @@
-export default {
+const commitlintConfig = {
   extends: ["@commitlint/config-conventional"],
   rules: {
     "type-enum": [
@@ -20,3 +20,5 @@ export default {
     "subject-full-stop": [2, "never", "."],
   },
 };
+
+export default commitlintConfig;
