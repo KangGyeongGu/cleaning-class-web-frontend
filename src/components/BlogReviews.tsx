@@ -14,7 +14,13 @@ const BLUR_PLACEHOLDER =
 
 function NaverBlogIcon({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
     </svg>
   );
@@ -33,10 +39,10 @@ function NextArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="다음 리뷰"
-      className="absolute top-1/2 -right-4 md:-right-8 lg:-right-12 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg transform -translate-y-1/2"
+      className="absolute top-1/2 -right-4 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center rounded-full border border-slate-200 bg-white text-slate-900 shadow-lg transition-all hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-right-8 lg:-right-12"
       onClick={onClick}
     >
-      <ArrowRight className="w-5 h-5" />
+      <ArrowRight className="h-5 w-5" />
     </button>
   );
 }
@@ -47,10 +53,10 @@ function PrevArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="이전 리뷰"
-      className="absolute top-1/2 -left-4 md:-left-8 lg:-left-12 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white border border-slate-200 hover:border-slate-900 hover:bg-slate-900 text-slate-900 hover:text-white transition-all shadow-lg transform -translate-y-1/2"
+      className="absolute top-1/2 -left-4 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center rounded-full border border-slate-200 bg-white text-slate-900 shadow-lg transition-all hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-left-8 lg:-left-12"
       onClick={onClick}
     >
-      <ArrowLeft className="w-5 h-5" />
+      <ArrowLeft className="h-5 w-5" />
     </button>
   );
 }
@@ -63,9 +69,9 @@ function ReviewCard({
   priority?: boolean;
 }) {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       {/* Image Section */}
-      <div className="aspect-16/9 md:aspect-4/3 overflow-hidden mb-5 bg-slate-200 relative shrink-0">
+      <div className="relative mb-5 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:aspect-4/3">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
@@ -79,29 +85,29 @@ function ReviewCard({
       </div>
 
       {/* Content Section */}
-      <div className="px-5 pb-6 flex flex-col flex-1">
+      <div className="flex flex-1 flex-col px-5 pb-6">
         {/* Hashtags */}
-        <div className="flex flex-wrap gap-2 mb-1.5 min-h-5">
+        <div className="mb-1.5 flex min-h-5 flex-wrap gap-2">
           {review.tags.map((tag) => (
             <span
               key={tag}
-              className="text-xs uppercase tracking-wider text-slate-600"
+              className="text-xs tracking-wider text-slate-600 uppercase"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <h3 className="text-lg font-bold mb-2 text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-2 min-h-13">
+        <h3 className="mb-2 line-clamp-2 min-h-13 text-lg leading-snug font-bold text-slate-900 transition-colors group-hover:text-slate-700">
           {review.title}
         </h3>
 
-        <p className="text-slate-700 text-sm leading-relaxed line-clamp-2 mb-4 font-normal min-h-10">
+        <p className="mb-4 line-clamp-2 min-h-10 text-sm leading-relaxed font-normal text-slate-700">
           {review.summary}
         </p>
 
-        <div className="flex justify-end mt-auto">
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-widest border-b border-transparent group-hover:border-slate-900 pb-1 w-fit transition-all">
+        <div className="mt-auto flex justify-end">
+          <div className="flex w-fit items-center gap-2 border-b border-transparent pb-1 text-xs font-bold tracking-widest text-slate-900 uppercase transition-all group-hover:border-slate-900">
             More <ArrowUpRight size={12} aria-hidden="true" />
           </div>
         </div>
@@ -126,14 +132,14 @@ function ReviewCardWrapper({
         href={cardUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="group block border border-slate-200 rounded-xl overflow-hidden hover:border-slate-400 hover:shadow-xl transition-all duration-300 h-full bg-white"
+        className="group block h-full overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:border-slate-400 hover:shadow-xl"
       >
         <ReviewCard review={review} priority={priority} />
       </a>
     );
   }
   return (
-    <div className="group border border-slate-200 rounded-xl overflow-hidden h-full bg-white">
+    <div className="group h-full overflow-hidden rounded-xl border border-slate-200 bg-white">
       <ReviewCard review={review} priority={priority} />
     </div>
   );
@@ -194,26 +200,29 @@ export function BlogReviews({
   };
 
   return (
-    <section id="reviews" className="py-16 md:py-32 bg-white relative overflow-hidden">
-      <div className="container mx-auto px-4 md:px-20 lg:px-24 max-w-8xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:px-2">
+    <section
+      id="reviews"
+      className="relative overflow-hidden bg-white py-16 md:py-32"
+    >
+      <div className="max-w-8xl container mx-auto px-4 md:px-20 lg:px-24">
+        <div className="mb-10 flex flex-col items-start justify-between md:flex-row md:items-end md:px-2">
           <div>
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
               REVIEW
             </h2>
-            <p className="text-slate-500 text-sm md:text-base font-light tracking-wide max-w-lg">
+            <p className="max-w-lg text-sm font-light tracking-wide text-slate-500 md:text-base">
               {reviewDescription ||
                 "의뢰 전 업체의 작업 방식을 확인할 수 있는 후기들을 확인해보세요."}
             </p>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden items-center gap-4 md:flex">
             {hasBlogUrl && (
               <a
                 href={blogUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
+                className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
               >
                 <NaverBlogIcon size={16} /> BLOG{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -224,7 +233,7 @@ export function BlogReviews({
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors text-sm font-medium tracking-wide"
+                className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
               >
                 <Instagram size={16} /> INSTAGRAM{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -236,13 +245,10 @@ export function BlogReviews({
         {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
         <div
           ref={scrollRef}
-          className="md:hidden flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
+          className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
         >
           {reviews.map((review, index) => (
-            <div
-              key={review.id}
-              className="snap-center shrink-0 w-[85vw]"
-            >
+            <div key={review.id} className="w-[85vw] shrink-0 snap-center">
               <ReviewCardWrapper
                 review={review}
                 blogUrl={blogUrl}
@@ -252,13 +258,13 @@ export function BlogReviews({
           ))}
         </div>
         {/* 모바일 인디케이터 */}
-        <div className="md:hidden flex justify-center gap-2 mt-4">
+        <div className="mt-4 flex justify-center gap-2 md:hidden">
           {reviews.map((review, index) => (
             <button
               key={review.id}
               type="button"
               aria-label={`리뷰 ${index + 1}`}
-              className={`w-2 h-2 rounded-full transition-colors ${
+              className={`h-2 w-2 rounded-full transition-colors ${
                 index === activeIndex ? "bg-slate-900" : "bg-slate-300"
               }`}
               onClick={() => {
@@ -266,14 +272,17 @@ export function BlogReviews({
                 if (!el) return;
                 const cardWidth = el.firstElementChild?.clientWidth ?? 0;
                 const gap = 16;
-                el.scrollTo({ left: index * (cardWidth + gap), behavior: "smooth" });
+                el.scrollTo({
+                  left: index * (cardWidth + gap),
+                  behavior: "smooth",
+                });
               }}
             />
           ))}
         </div>
 
         {/* 데스크톱: slick carousel */}
-        <div className="hidden md:block relative px-2">
+        <div className="relative hidden px-2 md:block">
           <Slider {...slickSettings}>
             {reviews.map((review, index) => {
               return (
@@ -290,13 +299,13 @@ export function BlogReviews({
         </div>
 
         {(hasBlogUrl || hasInstagramUrl) && (
-          <div className="mt-12 text-center md:hidden flex flex-col gap-3 items-center">
+          <div className="mt-12 flex flex-col items-center gap-3 text-center md:hidden">
             {hasBlogUrl && (
               <a
                 href={blogUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
+                className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
               >
                 <NaverBlogIcon size={16} /> BLOG{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -307,7 +316,7 @@ export function BlogReviews({
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-slate-900 font-bold hover:text-slate-600 transition-colors text-sm"
+                className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
               >
                 <Instagram size={16} /> INSTAGRAM{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
