@@ -13,17 +13,18 @@ import {
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
 
 const Services = dynamic(
-  () => import("@/components/Services").then((mod) => ({ default: mod.Services })),
+  () =>
+    import("@/components/Services").then((mod) => ({ default: mod.Services })),
   {
     ssr: true,
     loading: () => (
       <div className="py-16 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 animate-pulse">
-          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="h-64 bg-slate-200 rounded" />
-            <div className="h-64 bg-slate-200 rounded" />
-            <div className="h-64 bg-slate-200 rounded" />
+        <div className="mx-auto max-w-7xl animate-pulse px-6">
+          <div className="mx-auto mb-8 h-8 w-48 rounded bg-slate-200" />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div className="h-64 rounded bg-slate-200" />
+            <div className="h-64 rounded bg-slate-200" />
+            <div className="h-64 rounded bg-slate-200" />
           </div>
         </div>
       </div>
@@ -34,29 +35,35 @@ const Services = dynamic(
 // Client Component 경계 안에서만 허용됩니다 (Next.js 16 Turbopack 제약).
 // loading skeleton으로 hydration 전 placeholder를 제공합니다.
 const BlogReviews = dynamic(
-  () => import("@/components/BlogReviews").then((mod) => ({ default: mod.BlogReviews })),
+  () =>
+    import("@/components/BlogReviews").then((mod) => ({
+      default: mod.BlogReviews,
+    })),
   {
     loading: () => (
       <div className="py-16 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 animate-pulse">
-          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
-          <div className="h-64 bg-slate-200 rounded" />
+        <div className="mx-auto max-w-7xl animate-pulse px-6">
+          <div className="mx-auto mb-8 h-8 w-48 rounded bg-slate-200" />
+          <div className="h-64 rounded bg-slate-200" />
         </div>
       </div>
     ),
   },
 );
 const ContactForm = dynamic(
-  () => import("@/components/ContactForm").then((mod) => ({ default: mod.ContactForm })),
+  () =>
+    import("@/components/ContactForm").then((mod) => ({
+      default: mod.ContactForm,
+    })),
   {
     loading: () => (
       <div className="py-16 md:py-32">
-        <div className="max-w-7xl mx-auto px-6 animate-pulse">
-          <div className="h-8 bg-slate-200 rounded w-48 mx-auto mb-8" />
-          <div className="h-12 bg-slate-200 rounded mb-4" />
-          <div className="h-12 bg-slate-200 rounded mb-4" />
-          <div className="h-32 bg-slate-200 rounded mb-4" />
-          <div className="h-12 bg-slate-200 rounded w-32" />
+        <div className="mx-auto max-w-7xl animate-pulse px-6">
+          <div className="mx-auto mb-8 h-8 w-48 rounded bg-slate-200" />
+          <div className="mb-4 h-12 rounded bg-slate-200" />
+          <div className="mb-4 h-12 rounded bg-slate-200" />
+          <div className="mb-4 h-32 rounded bg-slate-200" />
+          <div className="h-12 w-32 rounded bg-slate-200" />
         </div>
       </div>
     ),

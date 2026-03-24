@@ -7,15 +7,15 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="text-center max-w-md">
-        <h1 className="text-9xl font-black text-slate-900 mb-4">404</h1>
-        <p className="text-slate-600 mb-8 text-lg font-light">
+    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+      <div className="max-w-md text-center">
+        <h1 className="mb-4 text-9xl font-black text-slate-900">404</h1>
+        <p className="mb-8 text-lg font-light text-slate-600">
           페이지를 찾을 수 없습니다.
         </p>
         <Link
           href="/"
-          className="inline-block px-8 py-3 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors"
+          className="inline-block bg-slate-900 px-8 py-3 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800"
         >
           홈으로 돌아가기
         </Link>
