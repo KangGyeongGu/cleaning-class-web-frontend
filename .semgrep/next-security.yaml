@@ -1,0 +1,104 @@
+rules:
+  # ─── XSS: dangerouslySetInnerHTML ──────────────────────────────
+  - id: dangerous-innerhtml-user-data
+    message: >
+      dangerouslySetInnerHTML with potentially user-controlled data.
+      Only use with server-generated or properly sanitized content.
+    severity: ERROR
+    languages: [typescript]
+    pattern: |
+      <$TAG dangerouslySetInnerHTML={{__html: $EXPR}} />
+    paths:
+      include:
+        - /src/**/*.tsx
+      exclude:
+        - /src/app/layout.tsx  # Server component — CDN CSS + JSON-LD only, reviewed safe
+
+  # ─── Open Redirect ─────────────────────────────────────────────
+  - id: open-redirect-user-input
+    message: >
+      Redirect with user-controlled URL. Validate that the URL
+      is a relative path starting with "/" and not "//".
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern-either:
+          - pattern: redirect($REQ.searchParams.get(...))
+          - pattern: redirect($REQ.query.$PARAM)
+          - pattern: NextResponse.redirect(new URL($REQ.searchParams.get(...), ...))
+      - pattern-not-inside: |
+          ...
+          const $SAFE = $URL.startsWith("/") && !$URL.startsWith("//") ? $URL : ...;
+          ...
+    paths:
+      include:
+        - /src/**/*.ts
+        - /src/**/*.tsx
+
+  # ─── Hardcoded Secrets ─────────────────────────────────────────
+  - id: hardcoded-secret-in-source
+    message: >
+      Potential hardcoded secret detected in source code.
+      Use environment variables instead.
+    severity: ERROR
+    languages: [typescript]
+    pattern-either:
+      - pattern: |
+          "sk_live_..."
+      - pattern: |
+          "sk_test_..."
+      - pattern: |
+          "password = \"...\""
+    paths:
+      include:
+        - /src/**/*.ts
+        - /src/**/*.tsx
+
+  # ─── Sensitive Env in Client ───────────────────────────────────
+  - id: non-public-env-in-client
+    message: >
+      Non-NEXT_PUBLIC_ environment variable accessed in a client component.
+      Only NEXT_PUBLIC_ prefixed vars are available in the browser.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: process.env.$VAR
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: ^(?!NEXT_PUBLIC_|NODE_ENV).*$
+      - pattern-inside: |
+          "use client";
+          ...
+    paths:
+      include:
+        - /src/**/*.tsx
+
+  # ─── Email Template Injection ──────────────────────────────────
+  - id: email-template-unescaped
+    message: >
+      User data interpolated into email HTML without escaping.
+      Use escapeHtml() for all user-provided values in email templates.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          `...<$TAG>...${$DATA}...</$TAG>...`
+      - pattern-not: |
+          `...<$TAG>...${escapeHtml($DATA)}...</$TAG>...`
+    paths:
+      include:
+        - /src/shared/lib/mail.ts
+
+  # ─── Header Injection ──────────────────────────────────────────
+  - id: email-header-injection
+    message: >
+      User data in email subject/headers without sanitization.
+      Use sanitizeHeader() to strip CR/LF characters.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: "subject: `...${$DATA}...`"
+      - pattern-not: "subject: `...${sanitizeHeader(...)}...`"
+    paths:
+      include:
+        - /src/shared/lib/mail.ts

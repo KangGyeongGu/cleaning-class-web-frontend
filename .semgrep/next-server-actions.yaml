@@ -1,0 +1,70 @@
+rules:
+  # ─── Server Action Auth ────────────────────────────────────────
+  - id: server-action-missing-auth
+    message: >
+      Server action performs DB operation without auth check.
+      All admin server actions must call getUser() before any Supabase query.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern-inside: |
+          export async function $FUNC(...) {
+            ...
+          }
+      - pattern: (await $CLIENT).from(...)
+      - pattern-not-inside: |
+          ...
+          await getUser();
+          ...
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+      exclude:
+        - /src/shared/actions/contact.ts  # Public endpoint — no auth required
+
+  # ─── JSON.parse Safety ─────────────────────────────────────────
+  - id: json-parse-without-try-catch
+    message: >
+      JSON.parse on user-supplied data without try-catch.
+      Wrap in try-catch to prevent server crashes on malformed input.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: JSON.parse($X)
+      - pattern-not-inside: |
+          try { ... } catch (...) { ... }
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+        - /src/app/api/**/*.ts
+
+  # ─── DB Error Leakage ──────────────────────────────────────────
+  - id: db-error-message-exposure
+    message: >
+      Database error message may be exposed to client.
+      Return generic error messages; log detailed errors server-side only.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern-either:
+          - pattern: "return { ..., error: $ERR.message, ... }"
+          - pattern: "return { ..., error: $ERR.detail, ... }"
+          - pattern: "return { ..., error: $ERR.hint, ... }"
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+
+  # ─── Supabase Error Check ──────────────────────────────────────
+  - id: supabase-unchecked-error
+    message: >
+      Supabase query result destructured without error variable.
+      Always destructure both { data, error } and check error before using data.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: "const { data: $DATA } = await $CLIENT.from(...).$METHOD(...);"
+      - pattern-not: "const { data: $DATA, error: $ERR } = await $CLIENT.from(...).$METHOD(...);"
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+        - /src/shared/lib/*.ts
