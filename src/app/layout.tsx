@@ -111,6 +111,7 @@ export const metadata: Metadata = {
     title: "청소클라쓰",
   },
   alternates: {
+    canonical: "https://www.cleaningclass.co.kr",
     types: {
       "application/rss+xml": "/feed.xml",
     },
