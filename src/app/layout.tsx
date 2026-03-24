@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/app/globals.css";
-import { generateLocalBusinessJsonLd } from "@/shared/lib/json-ld";
+import {
+  generateBreadcrumbListJsonLd,
+  generateFaqPageJsonLd,
+  generateLocalBusinessJsonLd,
+  generateWebSiteJsonLd,
+} from "@/shared/lib/json-ld";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
 const GA_ID = "G-SN842PJMYW";
@@ -18,7 +23,9 @@ const PRETENDARD_CSS_URL =
  */
 async function getPretendardCss(): Promise<string> {
   try {
-    const res = await fetch(PRETENDARD_CSS_URL, { next: { revalidate: 86400 } });
+    const res = await fetch(PRETENDARD_CSS_URL, {
+      next: { revalidate: 86400 },
+    });
     if (!res.ok) return "";
     let css = await res.text();
     // 상대 경로를 CDN 절대 경로로 변환 (인라인 시 서버 도메인 기준 해석 방지)
@@ -103,6 +110,11 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "청소클라쓰",
   },
+  alternates: {
+    types: {
+      "application/rss+xml": "/feed.xml",
+    },
+  },
 };
 
 export default async function RootLayout({
@@ -115,6 +127,11 @@ export default async function RootLayout({
     getPretendardCss(),
   ]);
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
+  const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
+  const faqPageJsonLd = generateFaqPageJsonLd();
+  const breadcrumbListJsonLd = generateBreadcrumbListJsonLd([
+    { name: "홈", url: "https://www.cleaningclass.co.kr" },
+  ]);
 
   return (
     <html lang="ko">
@@ -125,7 +142,7 @@ export default async function RootLayout({
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
         )}
       </head>
-      <body className="antialiased font-sans">
+      <body className="font-sans antialiased">
         {/*
           JSON-LD 구조화 데이터 삽입.
           dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
@@ -137,6 +154,33 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- WebSite JSON-LD, 서버 생성 데이터로 XSS 위험 없음 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- FAQPage JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqPageJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbListJsonLd).replace(
+              /</g,
+              "\\u003c",
+            ),
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}

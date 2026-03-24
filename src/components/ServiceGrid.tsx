@@ -65,7 +65,7 @@ export function ServiceGrid({ services }: { services: ServiceItem[] }) {
   }, [hasAfterImages]);
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-8">
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-8 lg:grid-cols-5">
       {services.map((service, index) => (
         <ServiceCard
           key={service.id}

@@ -11,11 +11,11 @@ export default async function SiteConfigPage() {
   const config = await getSiteConfig();
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-black text-slate-900 mb-8">업체 정보</h1>
+    <div className="mx-auto max-w-4xl p-8">
+      <h1 className="mb-8 text-3xl font-black text-slate-900">업체 정보</h1>
       {!config ? (
         <div className="border border-slate-200 p-12 text-center">
-          <p className="text-slate-500 font-light">
+          <p className="font-light text-slate-500">
             업체 정보를 불러올 수 없습니다.
           </p>
         </div>

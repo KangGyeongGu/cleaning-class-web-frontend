@@ -27,8 +27,8 @@ export default async function EditReviewPage({ params }: EditReviewPageProps) {
   const imageUrl = getReviewImageUrl(typedReview.image_path);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-black text-slate-900 mb-8">리뷰 수정</h1>
+    <div className="mx-auto max-w-4xl p-8">
+      <h1 className="mb-8 text-3xl font-black text-slate-900">리뷰 수정</h1>
       <EditReviewForm review={typedReview} imageUrl={imageUrl} />
     </div>
   );

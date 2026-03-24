@@ -93,7 +93,7 @@ export function EditServiceForm({
       <div>
         <label
           htmlFor="title"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           서비스명 (최대 50자)
         </label>
@@ -104,11 +104,11 @@ export function EditServiceForm({
           required
           maxLength={50}
           defaultValue={service.title}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="서비스명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.title && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.title[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
         )}
       </div>
 
@@ -116,7 +116,7 @@ export function EditServiceForm({
       <div>
         <label
           htmlFor="description"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           설명 (최대 200자)
         </label>
@@ -127,22 +127,22 @@ export function EditServiceForm({
           maxLength={200}
           rows={3}
           defaultValue={service.description}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
+          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="서비스 설명을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.description && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="mt-1 text-xs text-red-500">
             {state.errors.description[0]}
           </p>
         )}
       </div>
 
       {/* Before/After 이미지 업로드 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <label
             htmlFor="image"
-            className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
           >
             Before 이미지 (작업 전)
           </label>
@@ -156,7 +156,7 @@ export function EditServiceForm({
           />
           <label
             htmlFor="image"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs mb-4"
+            className="mb-4 inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
           >
             <Plus size={16} />
             {imagePreview ? "이미지 변경" : "새 이미지 선택"}
@@ -179,7 +179,7 @@ export function EditServiceForm({
         <div>
           <label
             htmlFor="image_after"
-            className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
           >
             After 이미지 (작업 후, 선택)
           </label>
@@ -193,7 +193,7 @@ export function EditServiceForm({
           />
           <label
             htmlFor="image_after"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs mb-4"
+            className="mb-4 inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
           >
             <Plus size={16} />
             {afterImagePreview ? "이미지 변경" : "새 이미지 선택"}
@@ -218,7 +218,7 @@ export function EditServiceForm({
       <div>
         <label
           htmlFor="sort_order"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           정렬 순서
         </label>
@@ -228,10 +228,10 @@ export function EditServiceForm({
           type="number"
           min="0"
           defaultValue={service.sort_order}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
         />
         {state && "errors" in state && state.errors?.sort_order && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="mt-1 text-xs text-red-500">
             {state.errors.sort_order[0]}
           </p>
         )}
@@ -245,7 +245,7 @@ export function EditServiceForm({
           type="checkbox"
           value="true"
           defaultChecked={service.is_published}
-          className="w-5 h-5"
+          className="h-5 w-5"
         />
         <label
           htmlFor="is_published"
@@ -257,7 +257,7 @@ export function EditServiceForm({
 
       {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
-        <p className="text-red-500 text-sm">{state.error}</p>
+        <p className="text-sm text-red-500">{state.error}</p>
       )}
 
       {/* 버튼 */}
@@ -265,11 +265,11 @@ export function EditServiceForm({
         <button
           type="submit"
           disabled={isPending}
-          className="px-8 py-4 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="animate-spin w-4 h-4" /> 수정 중...
+              <Loader2 className="h-4 w-4 animate-spin" /> 수정 중...
             </span>
           ) : (
             "수정"
@@ -278,7 +278,7 @@ export function EditServiceForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 border border-slate-900 text-slate-900 font-bold text-sm tracking-widest hover:bg-slate-900 hover:text-white transition-colors"
+          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
         >
           취소
         </button>

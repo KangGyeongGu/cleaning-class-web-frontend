@@ -33,7 +33,7 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-200">
+      <header className="fixed top-0 right-0 left-0 z-40 border-b border-slate-200 bg-white md:hidden">
         <div className="flex items-center justify-between p-4">
           <div className="text-xl font-black text-slate-900">
             청소클라쓰 관리자
@@ -50,9 +50,9 @@ export function AdminSidebar() {
       </header>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200">
+      <aside className="fixed top-0 left-0 hidden h-screen w-64 border-r border-slate-200 bg-white md:block">
         <div className="p-8">
-          <div className="text-2xl font-black text-slate-900 mb-12">
+          <div className="mb-12 text-2xl font-black text-slate-900">
             청소클라쓰
           </div>
           <nav className="space-y-2">
@@ -67,8 +67,8 @@ export function AdminSidebar() {
                   href={item.href}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest transition-colors ${
                     isActive
-                      ? "text-slate-900 bg-slate-100"
-                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-slate-100 text-slate-900"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
                   <Icon size={18} />
@@ -76,11 +76,11 @@ export function AdminSidebar() {
                 </Link>
               );
             })}
-            <div className="mt-8 pt-4 border-t border-slate-200 space-y-1">
+            <div className="mt-8 space-y-1 border-t border-slate-200 pt-4">
               <Link
                 href="/"
                 target="_blank"
-                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
                 <ExternalLink size={18} />
                 홈페이지
@@ -88,7 +88,7 @@ export function AdminSidebar() {
               <form action={handleLogout}>
                 <button
                   type="submit"
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                 >
                   <LogOut size={18} />
                   로그아웃
@@ -101,8 +101,8 @@ export function AdminSidebar() {
 
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-white">
-          <nav className="pt-20 px-4 space-y-2">
+        <div className="fixed inset-0 z-30 bg-white md:hidden">
+          <nav className="space-y-2 px-4 pt-20">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
@@ -115,8 +115,8 @@ export function AdminSidebar() {
                   onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest transition-colors ${
                     isActive
-                      ? "text-slate-900 bg-slate-100"
-                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                      ? "bg-slate-100 text-slate-900"
+                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
                   <Icon size={18} />
@@ -124,12 +124,12 @@ export function AdminSidebar() {
                 </Link>
               );
             })}
-            <div className="mt-8 pt-4 border-t border-slate-200 space-y-1">
+            <div className="mt-8 space-y-1 border-t border-slate-200 pt-4">
               <Link
                 href="/"
                 target="_blank"
                 onClick={() => setIsSidebarOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
                 <ExternalLink size={18} />
                 홈페이지
@@ -137,7 +137,7 @@ export function AdminSidebar() {
               <form action={handleLogout}>
                 <button
                   type="submit"
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
                 >
                   <LogOut size={18} />
                   로그아웃

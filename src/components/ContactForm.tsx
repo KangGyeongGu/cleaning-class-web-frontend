@@ -55,15 +55,15 @@ function CustomDropdown({
 
   return (
     <div className="group" ref={dropdownRef}>
-      <label className="block text-xs font-bold text-slate-900 tracking-wider mb-3">
+      <label className="mb-3 block text-xs font-bold tracking-wider text-slate-900">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="ml-1 text-red-500">*</span>}
       </label>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full py-3 min-h-12 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light text-left flex justify-between items-center"
+          className="flex min-h-12 w-full items-center justify-between border-b border-slate-200 bg-transparent py-3 text-left text-lg font-light transition-colors outline-none focus:border-slate-900"
         >
           <span className={value ? "text-slate-900" : "text-slate-400"}>
             {value || placeholder || "선택해주세요"}
@@ -71,13 +71,13 @@ function CustomDropdown({
           <ArrowDown size={16} className="text-slate-400" />
         </button>
         {isOpen && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 shadow-lg max-h-60 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+          <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 [&::-webkit-scrollbar-track]:bg-transparent">
             {options.map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => handleSelect(option)}
-                className="w-full px-4 py-3 hover:bg-slate-50 text-lg font-light text-left transition-colors"
+                className="w-full px-4 py-3 text-left text-lg font-light transition-colors hover:bg-slate-50"
               >
                 {option}
               </button>
@@ -86,7 +86,7 @@ function CustomDropdown({
         )}
         <input type="hidden" name={name} value={value} />
       </div>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
     </div>
   );
 }
@@ -233,24 +233,22 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="py-16 md:py-32 bg-white">
-      <div className="container mx-auto px-4 max-w-2xl">
+    <section ref={sectionRef} id="contact" className="bg-white py-16 md:py-32">
+      <div className="container mx-auto max-w-2xl px-4">
         <div
-          className={`text-center mb-16 transition-all duration-700 ${
-            isVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8"
+          className={`mb-16 text-center transition-all duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">
+          <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
             CONTACT
           </h2>
           {phone && (
-            <p className="mt-3 text-slate-600 text-sm">
+            <p className="mt-3 text-sm text-slate-600">
               유선상담{" "}
               <a
                 href={`tel:${phone}`}
-                className="font-bold text-slate-900 hover:underline inline-flex items-center min-h-12 px-1"
+                className="inline-flex min-h-12 items-center px-1 font-bold text-slate-900 hover:underline"
               >
                 {phone}
               </a>
@@ -260,21 +258,19 @@ export function ContactForm({ phone }: ContactFormProps) {
 
         <form
           action={formAction}
-          className={`space-y-12 transition-all duration-700 delay-200 ${
-            isVisible
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8"
+          className={`space-y-12 transition-all delay-200 duration-700 ${
+            isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
           <div className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               <div className="group">
                 <label
                   htmlFor="name"
-                  className="block text-xs font-bold text-slate-900 tracking-wider mb-3"
+                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
                 >
                   성함
-                  <span className="text-red-500 ml-1">*</span>
+                  <span className="ml-1 text-red-500">*</span>
                 </label>
                 <input
                   ref={nameRef}
@@ -282,12 +278,12 @@ export function ContactForm({ phone }: ContactFormProps) {
                   name="name"
                   type="text"
                   required
-                  className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-400"
+                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
                   placeholder="이름을 입력하세요"
                   onInput={checkFormValidity}
                 />
                 {state?.errors?.name && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {state.errors.name[0]}
                   </p>
                 )}
@@ -295,10 +291,10 @@ export function ContactForm({ phone }: ContactFormProps) {
               <div className="group">
                 <label
                   htmlFor="phone"
-                  className="block text-xs font-bold text-slate-900 tracking-wider mb-3"
+                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
                 >
                   연락처
-                  <span className="text-red-500 ml-1">*</span>
+                  <span className="ml-1 text-red-500">*</span>
                 </label>
                 <input
                   ref={phoneRef}
@@ -311,11 +307,11 @@ export function ContactForm({ phone }: ContactFormProps) {
                     input.value = formatPhoneNumber(input.value);
                     checkFormValidity();
                   }}
-                  className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-400"
+                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
                   placeholder="010-0000-0000"
                 />
                 {state?.errors?.phone && (
-                  <p className="text-red-500 text-xs mt-1">
+                  <p className="mt-1 text-xs text-red-500">
                     {state.errors.phone[0]}
                   </p>
                 )}
@@ -376,10 +372,10 @@ export function ContactForm({ phone }: ContactFormProps) {
             <div className="group">
               <label
                 htmlFor="message"
-                className="block text-xs font-bold text-slate-900 tracking-wider mb-3"
+                className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
               >
                 문의사항
-                <span className="text-red-500 ml-1">*</span>
+                <span className="ml-1 text-red-500">*</span>
               </label>
               <textarea
                 ref={messageRef}
@@ -388,17 +384,17 @@ export function ContactForm({ phone }: ContactFormProps) {
                 rows={6}
                 maxLength={1000}
                 required
-                className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-400 resize-none overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full"
+                className="w-full resize-none overflow-y-auto border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
                 placeholder="문의 내용을 자유롭게 작성해주세요"
                 onInput={(e) => {
                   setMessageLength(e.currentTarget.value.length);
                   checkFormValidity();
                 }}
               ></textarea>
-              <div className="flex justify-between mt-1">
+              <div className="mt-1 flex justify-between">
                 <div>
                   {state?.errors?.message && (
-                    <p className="text-red-500 text-xs">
+                    <p className="text-xs text-red-500">
                       {state.errors.message[0]}
                     </p>
                   )}
@@ -416,8 +412,9 @@ export function ContactForm({ phone }: ContactFormProps) {
                     <div className="flex flex-wrap gap-2">
                       {images.map((file, index) => (
                         <div
+                          // eslint-disable-next-line @eslint-react/no-array-index-key -- 동일 파일 중복 첨부 시 name+lastModified만으로 유일성 보장 불가
                           key={`${file.name}-${file.lastModified}-${index}`}
-                          className="relative w-20 h-20 group/image"
+                          className="group/image relative h-20 w-20"
                         >
                           <Image
                             src={previewUrls[index]}
@@ -425,13 +422,13 @@ export function ContactForm({ phone }: ContactFormProps) {
                             fill
                             unoptimized
                             sizes="80px"
-                            className="object-cover border border-slate-200"
+                            className="border border-slate-200 object-cover"
                           />
                           <button
                             type="button"
                             onClick={() => handleImageRemove(index)}
                             aria-label="이미지 삭제"
-                            className="absolute inset-0 bg-black/50 opacity-100 md:opacity-0 md:group-hover/image:opacity-100 transition-opacity flex items-center justify-center"
+                            className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-100 transition-opacity md:opacity-0 md:group-hover/image:opacity-100"
                           >
                             <X size={16} className="text-white" />
                           </button>
@@ -441,11 +438,11 @@ export function ContactForm({ phone }: ContactFormProps) {
                   )}
 
                   {/* 파일 추가 버튼 */}
-                  <label className="flex items-center gap-3 cursor-pointer group/add shrink-0">
-                    <div className="w-12 h-12 border border-slate-200 flex items-center justify-center text-slate-400 group-hover/add:border-slate-900 group-hover/add:text-slate-900 transition-colors">
+                  <label className="group/add flex shrink-0 cursor-pointer items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center border border-slate-200 text-slate-400 transition-colors group-hover/add:border-slate-900 group-hover/add:text-slate-900">
                       <Plus size={20} />
                     </div>
-                    <span className="text-xs text-slate-400 group-hover/add:text-slate-600 transition-colors">
+                    <span className="text-xs text-slate-400 transition-colors group-hover/add:text-slate-600">
                       이미지 첨부 (선택, {images.length}/15)
                     </span>
                     <input
@@ -463,33 +460,33 @@ export function ContactForm({ phone }: ContactFormProps) {
             </div>
           </div>
 
-          <div className="text-center pt-8">
+          <div className="pt-8 text-center">
             <button
               type="submit"
               disabled={isPending || !formValid}
-              className={`px-12 py-4 font-bold text-sm tracking-widest transition-all disabled:cursor-not-allowed ${
+              className={`px-12 py-4 text-sm font-bold tracking-widest transition-all disabled:cursor-not-allowed ${
                 formValid && !isPending
                   ? "bg-slate-900 text-white hover:bg-slate-800"
-                  : "bg-slate-200 text-slate-400 border border-slate-200"
+                  : "border border-slate-200 bg-slate-200 text-slate-400"
               }`}
             >
               {isPending ? (
-                <span className="flex items-center gap-2 justify-center">
-                  <Loader2 className="animate-spin w-4 h-4" /> 문의 중...
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" /> 문의 중...
                 </span>
               ) : showSuccess ? (
-                <span className="flex items-center gap-2 justify-center">
-                  <Check className="w-4 h-4" /> 전송 완료
+                <span className="flex items-center justify-center gap-2">
+                  <Check className="h-4 w-4" /> 전송 완료
                 </span>
               ) : (
                 "문의하기"
               )}
             </button>
             {showSuccess && state?.message && (
-              <p className="text-green-600 text-sm mt-4">{state.message}</p>
+              <p className="mt-4 text-sm text-green-600">{state.message}</p>
             )}
             {state?.error && (
-              <p className="text-red-600 text-sm mt-4">{state.error}</p>
+              <p className="mt-4 text-sm text-red-600">{state.error}</p>
             )}
           </div>
         </form>

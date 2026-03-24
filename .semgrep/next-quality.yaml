@@ -1,0 +1,94 @@
+rules:
+  # ─── img Tag Instead of next/image ─────────────────────────────
+  - id: html-img-instead-of-next-image
+    message: >
+      Use next/image <Image> component instead of <img> tag.
+      next/image provides automatic optimization, lazy loading, and CLS prevention.
+    severity: ERROR
+    languages: [typescript]
+    pattern: |
+      <img $...ATTRS />
+    paths:
+      include:
+        - /src/**/*.tsx
+
+  # ─── Console.log in Production ─────────────────────────────────
+  - id: console-log-in-component
+    message: >
+      console.log left in component code. Remove before production
+      or use conditional logging.
+    severity: WARNING
+    languages: [typescript]
+    pattern: console.log(...)
+    paths:
+      include:
+        - /src/components/**/*.tsx
+        - /src/app/**/*.tsx
+      exclude:
+        - /src/shared/actions/*.ts  # Server-side logging is acceptable
+
+  # ─── File Upload Without Validation ────────────────────────────
+  - id: file-upload-no-mime-check
+    message: >
+      File object accessed without MIME type validation.
+      Check file.type against an allowlist before processing.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          const $FILE = $FORMDATA.get(...) as File;
+          ...
+          await uploadImage(..., $FILE);
+      - pattern-not-inside: |
+          ...
+          $FILE.type ...
+          ...
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+
+  # ─── Unvalidated FormData ──────────────────────────────────────
+  - id: formdata-without-zod-validation
+    message: >
+      FormData fields used without Zod schema validation.
+      Parse through a Zod schema before using form data.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          const $DATA = { ..., $FIELD: formData.get("..."), ... };
+          ...
+          await $CLIENT.from(...).$METHOD($DATA);
+      - pattern-not-inside: |
+          ...
+          $SCHEMA.safeParse(...)
+          ...
+    paths:
+      include:
+        - /src/shared/actions/*.ts
+
+  # ─── Missing Error Boundary ────────────────────────────────────
+  - id: async-without-try-catch-in-action
+    message: >
+      Async server action function without top-level try-catch.
+      Server actions should catch all errors to return structured responses.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          export async function $FUNC($...PARAMS) {
+            ...
+            await $EXPR;
+            ...
+          }
+      - pattern-not: |
+          export async function $FUNC($...PARAMS) {
+            try {
+              ...
+            } catch (...) {
+              ...
+            }
+          }
+    paths:
+      include:
+        - /src/shared/actions/*.ts

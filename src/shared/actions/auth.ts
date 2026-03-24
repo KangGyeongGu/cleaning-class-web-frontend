@@ -24,7 +24,8 @@ export async function login(
 
   if (!result.success) {
     return {
-      error: result.error.errors[0].message,
+      // nosemgrep: semgrep.db-error-message-exposure -- Zod 검증 에러 메시지로 DB 에러 아님
+      error: result.error.errors[0]?.message ?? "입력값을 확인해주세요",
     };
   }
 

@@ -40,19 +40,26 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# ai agents
-.claude/
+# ai agents — 핵심 설정은 추적, 런타임 산출물만 무시
+.claude/worktrees/
+.claude/plans/active/
+.claude/plans/workers/
+.claude/plans/archive/
+.claude/reports/
+.claude/known-failures.md
+.claude/status.json
+.claude/memory/
+.claude/settings.local.json
 .agents/
 
 # ide
 .idea/
 .vscode/
 
-# ai agent design docs (project-specific)
-AGENTS.md
-CLAUDE.md
-
-agent-orchestration-system.md
+# deprecated design docs (root level only)
+/AGENTS.md
+/CLAUDE.md
+/agent-orchestration-system.md
 agents-system.md
 research.md
 legacy
