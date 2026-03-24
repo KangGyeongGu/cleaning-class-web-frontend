@@ -10,6 +10,7 @@ import {
   getPublishedReviews,
   getPublishedServicesWithImageUrls,
 } from "@/shared/lib/home";
+import { generateServiceJsonLd } from "@/shared/lib/json-ld";
 
 const Services = dynamic(
   () => import("@/components/Services").then((mod) => ({ default: mod.Services })),
@@ -87,8 +88,21 @@ export default async function Home() {
     getPublishedServicesWithImageUrls(),
   ]);
 
+  const serviceJsonLd = generateServiceJsonLd(
+    servicesWithImageUrls,
+    siteConfig?.business_name,
+  );
+
   return (
     <main className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
+      {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Service JSON-LD, 서버 생성 DB 데이터로 XSS 위험 없음 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
       <Navbar
         businessName={siteConfig?.business_name}
         blogUrl={siteConfig?.blog_url}
