@@ -1,15 +1,10 @@
-import {
-  getPublishedServicesWithImageUrls,
-  getPublishedReviews,
-} from "@/shared/lib/home";
 import { getSiteConfig } from "@/shared/lib/site-config";
-import type { ServiceWithImageUrls } from "@/shared/lib/home";
-import type { Review } from "@/shared/types/database";
 import type { SiteConfig } from "@/shared/types/database";
 
 export const revalidate = 3600;
 
 const SITE_URL = "https://www.cleaningclass.co.kr";
+const FEED_URL = `${SITE_URL}/feed.xml`;
 
 function escapeXml(text: string): string {
   return text
@@ -20,68 +15,36 @@ function escapeXml(text: string): string {
     .replace(/'/g, "&apos;");
 }
 
-function formatRfc822(dateStr: string): string {
-  return new Date(dateStr).toUTCString();
-}
-
-function buildServiceItems(services: ServiceWithImageUrls[]): string {
-  return services
-    .map(
-      (s) => `
-    <item>
-      <title>${escapeXml(s.title)}</title>
-      <link>${SITE_URL}#services</link>
-      <description>${escapeXml(s.description)}</description>
-      <pubDate>${new Date().toUTCString()}</pubDate>
-    </item>`,
-    )
-    .join("");
-}
-
-function buildReviewItems(reviews: Review[]): string {
-  return reviews
-    .map(
-      (r) => `
-    <item>
-      <title>${escapeXml(r.title)}</title>
-      <link>${escapeXml(r.link_url || SITE_URL)}</link>
-      <description>${escapeXml(r.summary)}</description>
-      <pubDate>${formatRfc822(r.created_at)}</pubDate>
-    </item>`,
-    )
-    .join("");
-}
-
-function buildRssFeed(
-  config: SiteConfig | null,
-  services: ServiceWithImageUrls[],
-  reviews: Review[],
-): string {
+function buildRssFeed(config: SiteConfig | null): string {
   const channelTitle = config?.business_name ?? "청소클라쓰";
-  const channelDescription = config?.description ?? "청소클라쓰 공식 피드";
+  const channelDescription =
+    config?.description ?? "전북 지역 전문 청소 서비스, 청소클라쓰";
   const channelLink = config?.site_url ?? SITE_URL;
-
-  const items = buildServiceItems(services) + buildReviewItems(reviews);
+  const lastBuildDate = new Date().toUTCString();
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(channelTitle)}</title>
     <link>${escapeXml(channelLink)}</link>
     <description>${escapeXml(channelDescription)}</description>
-    <language>ko</language>${items}
+    <language>ko</language>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>${escapeXml(channelTitle)}</title>
+      <link>${escapeXml(channelLink)}</link>
+      <guid>${escapeXml(channelLink)}</guid>
+      <description>${escapeXml(channelDescription)}</description>
+      <pubDate>${lastBuildDate}</pubDate>
+    </item>
   </channel>
 </rss>`;
 }
 
 export async function GET(): Promise<Response> {
-  const [config, services, reviews] = await Promise.all([
-    getSiteConfig(),
-    getPublishedServicesWithImageUrls(),
-    getPublishedReviews(),
-  ]);
-
-  const xml = buildRssFeed(config, services, reviews);
+  const config = await getSiteConfig();
+  const xml = buildRssFeed(config);
 
   return new Response(xml, {
     headers: {
