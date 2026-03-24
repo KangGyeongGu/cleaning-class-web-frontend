@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { describe, it, expect } from "vitest";
+import { readFileSync, readdirSync, statSync } from "fs";
+import { join } from "path";
 
 /**
  * 재귀적으로 디렉토리 내 모든 .tsx 파일을 찾는다
@@ -15,7 +15,7 @@ function findTsxFiles(dir: string): string[] {
 
     if (stat.isDirectory()) {
       results.push(...findTsxFiles(fullPath));
-    } else if (fullPath.endsWith('.tsx')) {
+    } else if (fullPath.endsWith(".tsx")) {
       results.push(fullPath);
     }
   }
@@ -23,27 +23,27 @@ function findTsxFiles(dir: string): string[] {
   return results;
 }
 
-describe('next/image 정책', () => {
+describe("next/image 정책", () => {
   const projectRoot = process.cwd();
-  const componentsDir = join(projectRoot, 'src/components');
+  const componentsDir = join(projectRoot, "src/components");
 
-  it('src/components 내 모든 tsx 파일에서 native <img> 태그를 사용하지 않는다', () => {
+  it("src/components 내 모든 tsx 파일에서 native <img> 태그를 사용하지 않는다", () => {
     const tsxFiles = findTsxFiles(componentsDir);
     const violations: string[] = [];
 
     for (const file of tsxFiles) {
-      const content = readFileSync(file, 'utf-8');
+      const content = readFileSync(file, "utf-8");
 
       // <img 태그 검출 (단, next/image의 Image 컴포넌트는 제외)
       // eslint-disable 주석으로 허용된 <img>는 예외 (blob URL 미리보기 등)
-      const lines = content.split('\n');
+      const lines = content.split("\n");
       let hasViolation = false;
 
       for (let i = 0; i < lines.length; i++) {
         if (/<img\s+[^>]*>/.test(lines[i])) {
           // 바로 윗줄에 eslint-disable 주석이 있으면 허용
-          const prevLine = i > 0 ? lines[i - 1] : '';
-          if (!prevLine.includes('eslint-disable')) {
+          const prevLine = i > 0 ? lines[i - 1] : "";
+          if (!prevLine.includes("eslint-disable")) {
             hasViolation = true;
             break;
           }
@@ -58,12 +58,12 @@ describe('next/image 정책', () => {
     expect(violations).toEqual([]);
   });
 
-  it('next/image의 fill 사용 시 sizes 속성이 필수로 지정된다', () => {
+  it("next/image의 fill 사용 시 sizes 속성이 필수로 지정된다", () => {
     const tsxFiles = findTsxFiles(componentsDir);
     const violations: string[] = [];
 
     for (const file of tsxFiles) {
-      const content = readFileSync(file, 'utf-8');
+      const content = readFileSync(file, "utf-8");
 
       // <Image ... fill ...> 패턴에서 sizes가 있는지 확인
       // fill과 sizes를 모두 포함하는 Image 태그를 찾는다
@@ -73,7 +73,7 @@ describe('next/image 정책', () => {
       if (matches) {
         for (const match of matches) {
           // sizes 속성이 없으면 위반
-          if (!match.includes('sizes=')) {
+          if (!match.includes("sizes=")) {
             violations.push(`${file}: <Image fill> 사용 시 sizes 속성 누락`);
             break; // 파일당 한 번만 기록
           }
@@ -84,14 +84,14 @@ describe('next/image 정책', () => {
     expect(violations).toEqual([]);
   });
 
-  it('unsplash.com URL이 코드 내에 존재하지 않는다', () => {
+  it("unsplash.com URL이 코드 내에 존재하지 않는다", () => {
     const tsxFiles = findTsxFiles(componentsDir);
     const violations: string[] = [];
 
     for (const file of tsxFiles) {
-      const content = readFileSync(file, 'utf-8');
+      const content = readFileSync(file, "utf-8");
 
-      if (content.includes('unsplash.com')) {
+      if (content.includes("unsplash.com")) {
         violations.push(`${file}: unsplash.com URL 사용 감지`);
       }
     }

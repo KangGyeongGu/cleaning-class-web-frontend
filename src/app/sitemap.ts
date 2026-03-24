@@ -19,11 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         .order("updated_at", { ascending: false })
         .limit(1)
         .single(),
-      supabase
-        .from("site_config")
-        .select("updated_at")
-        .limit(1)
-        .single(),
+      supabase.from("site_config").select("updated_at").limit(1).single(),
     ]);
 
   const dates = [

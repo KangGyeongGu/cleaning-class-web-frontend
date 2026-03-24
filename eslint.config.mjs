@@ -93,6 +93,8 @@ const eslintConfig = defineConfig([
     settings: {
       "better-tailwindcss": {
         entryPoint: "src/app/globals.css",
+        // globals.css @layer base / @theme에 직접 정의된 커스텀 클래스
+        ignore: ["scrollbar-hide", "max-w-8xl"],
       },
     },
     rules: {

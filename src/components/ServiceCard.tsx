@@ -22,7 +22,11 @@ export interface ServiceCardProps {
   showAfter?: boolean;
 }
 
-export function ServiceCard({ service, priority, showAfter = false }: ServiceCardProps) {
+export function ServiceCard({
+  service,
+  priority,
+  showAfter = false,
+}: ServiceCardProps) {
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -50,11 +54,11 @@ export function ServiceCard({ service, priority, showAfter = false }: ServiceCar
   return (
     <div
       ref={cardRef}
-      className={`group cursor-default pb-4 md:pb-0 transition-all duration-600 ease-out ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      className={`group cursor-default pb-4 transition-all duration-600 ease-out md:pb-0 ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
     >
-      <div className="aspect-square md:aspect-3/4 overflow-hidden mb-3 md:mb-5 relative bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl">
+      <div className="relative mb-3 aspect-square overflow-hidden bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl md:mb-5 md:aspect-3/4">
         {service.afterImageUrl ? (
           <>
             <Image
@@ -79,7 +83,7 @@ export function ServiceCard({ service, priority, showAfter = false }: ServiceCar
               sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
               placeholder="blur"
               blurDataURL={BLUR_PLACEHOLDER}
-              className={`object-cover absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100 ${
+              className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100 ${
                 showAfter ? "opacity-100!" : ""
               }`}
               style={{
@@ -96,19 +100,19 @@ export function ServiceCard({ service, priority, showAfter = false }: ServiceCar
             priority={priority}
             placeholder="blur"
             blurDataURL={BLUR_PLACEHOLDER}
-            className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 filter grayscale group-hover:grayscale-0"
+            className="object-cover grayscale filter transition-transform duration-700 ease-in-out group-hover:scale-110 group-hover:grayscale-0"
             style={{
               objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
             }}
           />
         )}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
+        <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
       </div>
-      <div className="text-center px-1">
-        <h3 className="text-base font-bold mb-2 text-slate-900 transition-all duration-300 origin-center group-hover:scale-110 group-hover:text-black">
+      <div className="px-1 text-center">
+        <h3 className="mb-2 origin-center text-base font-bold text-slate-900 transition-all duration-300 group-hover:scale-110 group-hover:text-black">
           {service.title}
         </h3>
-        <p className="text-slate-600 text-sm leading-tight font-medium transition-colors duration-300 group-hover:text-slate-800">
+        <p className="text-sm leading-tight font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-800">
           {service.description}
         </p>
       </div>

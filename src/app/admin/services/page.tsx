@@ -31,12 +31,12 @@ export default async function ServicesPage() {
   );
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
+    <div className="mx-auto max-w-7xl p-8">
+      <div className="mb-4 flex items-center justify-between">
         <h1 className="text-3xl font-black text-slate-900">서비스 관리</h1>
         <Link
           href="/admin/services/new"
-          className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors"
+          className="flex items-center gap-2 bg-slate-900 px-6 py-3 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800"
         >
           <Plus size={18} />
           신규 등록
@@ -52,7 +52,7 @@ export default async function ServicesPage() {
 
       {servicesWithImageUrls.length === 0 ? (
         <div className="border border-slate-200 p-12 text-center">
-          <p className="text-slate-500 font-light">등록된 서비스가 없습니다.</p>
+          <p className="font-light text-slate-500">등록된 서비스가 없습니다.</p>
         </div>
       ) : (
         <ServiceListClient

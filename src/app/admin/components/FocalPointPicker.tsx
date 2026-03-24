@@ -175,8 +175,8 @@ export function FocalPointPicker({
 
   if (!imageUrl) {
     return (
-      <div className="w-full aspect-3/4 max-w-xs border border-dashed border-slate-300 flex items-center justify-center">
-        <p className="text-slate-400 text-xs text-center">
+      <div className="flex aspect-3/4 w-full max-w-xs items-center justify-center border border-dashed border-slate-300">
+        <p className="text-center text-xs text-slate-400">
           이미지를 선택하면{"\n"}표시 영역을 지정할 수 있습니다
         </p>
       </div>
@@ -188,7 +188,7 @@ export function FocalPointPicker({
   return (
     <div className="space-y-4">
       {label && (
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+        <p className="text-xs font-bold tracking-widest text-slate-500 uppercase">
           {label} 표시 영역 설정
         </p>
       )}
@@ -196,7 +196,7 @@ export function FocalPointPicker({
       {/* 원본 이미지 + 가이드 직사각형 */}
       <div
         ref={containerRef}
-        className="relative max-w-xs select-none overflow-hidden"
+        className="relative max-w-xs overflow-hidden select-none"
         style={{ touchAction: "none" }}
       >
         <Image
@@ -204,7 +204,7 @@ export function FocalPointPicker({
           alt="표시 영역 설정"
           width={320}
           height={320}
-          className="w-full h-auto block"
+          className="block h-auto w-full"
           sizes="320px"
           // unoptimized: 관리자 전용 미리보기 이미지로 blob URL 또는
           // 아직 최적화 파이프라인을 거치지 않은 원본을 표시해야 하므로
@@ -218,17 +218,17 @@ export function FocalPointPicker({
             {/* 어두운 오버레이 (가이드 영역 바깥) - 4면 분할 */}
             {/* 위 */}
             <div
-              className="absolute left-0 right-0 top-0 bg-black/50 pointer-events-none"
+              className="pointer-events-none absolute top-0 right-0 left-0 bg-black/50"
               style={{ height: `${guide.y * 100}%` }}
             />
             {/* 아래 */}
             <div
-              className="absolute left-0 right-0 bottom-0 bg-black/50 pointer-events-none"
+              className="pointer-events-none absolute right-0 bottom-0 left-0 bg-black/50"
               style={{ height: `${(1 - guide.y - guide.h) * 100}%` }}
             />
             {/* 왼쪽 */}
             <div
-              className="absolute left-0 bg-black/50 pointer-events-none"
+              className="pointer-events-none absolute left-0 bg-black/50"
               style={{
                 top: `${guide.y * 100}%`,
                 height: `${guide.h * 100}%`,
@@ -237,7 +237,7 @@ export function FocalPointPicker({
             />
             {/* 오른쪽 */}
             <div
-              className="absolute right-0 bg-black/50 pointer-events-none"
+              className="pointer-events-none absolute right-0 bg-black/50"
               style={{
                 top: `${guide.y * 100}%`,
                 height: `${guide.h * 100}%`,
@@ -262,8 +262,8 @@ export function FocalPointPicker({
               onTouchStart={handlePointerDown}
             >
               {/* 방향 힌트 */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <p className="text-white/70 text-xs font-bold drop-shadow-md">
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <p className="text-xs font-bold text-white/70 drop-shadow-md">
                   {guide.canDragX ? "← 좌우 드래그 →" : "↑ 상하 드래그 ↓"}
                 </p>
               </div>
@@ -272,8 +272,8 @@ export function FocalPointPicker({
         )}
 
         {guide && !guide.canDragX && !guide.canDragY && naturalSize && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="text-white/70 text-xs font-bold drop-shadow-md bg-black/30 px-2 py-1">
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <p className="bg-black/30 px-2 py-1 text-xs font-bold text-white/70 drop-shadow-md">
               3:4 비율 일치
             </p>
           </div>
@@ -288,8 +288,8 @@ export function FocalPointPicker({
 
       {/* aspect-3/4 미리보기 */}
       <div>
-        <p className="text-xs text-slate-500 mb-2">실제 표시 미리보기 (3:4)</p>
-        <div className="relative w-32 aspect-3/4 overflow-hidden border border-slate-200 bg-slate-100">
+        <p className="mb-2 text-xs text-slate-500">실제 표시 미리보기 (3:4)</p>
+        <div className="relative aspect-3/4 w-32 overflow-hidden border border-slate-200 bg-slate-100">
           <Image
             src={imageUrl}
             alt="미리보기"

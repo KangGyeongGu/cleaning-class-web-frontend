@@ -13,8 +13,8 @@ export default async function NewReviewPage() {
   const nextSortOrder = (data?.sort_order ?? -1) + 1;
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-black text-slate-900 mb-8">
+    <div className="mx-auto max-w-4xl p-8">
+      <h1 className="mb-8 text-3xl font-black text-slate-900">
         리뷰 신규 등록
       </h1>
       <NewReviewForm defaultSortOrder={nextSortOrder} />

@@ -8,12 +8,12 @@ export function LoginForm() {
   const [state, formAction, isPending] = useActionState(login, null);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+    <div className="flex min-h-screen items-center justify-center bg-white px-4">
       <div className="w-full max-w-md">
-        <h1 className="text-4xl font-black text-slate-900 mb-2 text-center">
+        <h1 className="mb-2 text-center text-4xl font-black text-slate-900">
           청소클라쓰
         </h1>
-        <p className="text-center text-slate-500 font-light mb-12">
+        <p className="mb-12 text-center font-light text-slate-500">
           관리자 로그인
         </p>
 
@@ -21,7 +21,7 @@ export function LoginForm() {
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+              className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
             >
               Email
             </label>
@@ -30,7 +30,7 @@ export function LoginForm() {
               name="email"
               type="email"
               required
-              className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+              className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
               placeholder="이메일을 입력하세요"
             />
           </div>
@@ -38,7 +38,7 @@ export function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+              className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
             >
               Password
             </label>
@@ -47,23 +47,23 @@ export function LoginForm() {
               name="password"
               type="password"
               required
-              className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+              className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
               placeholder="비밀번호를 입력하세요"
             />
           </div>
 
           {state?.error && (
-            <p className="text-red-500 text-sm">{state.error}</p>
+            <p className="text-sm text-red-500">{state.error}</p>
           )}
 
           <button
             type="submit"
             disabled={isPending}
-            className="w-full px-8 py-4 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPending ? (
-              <span className="flex items-center gap-2 justify-center">
-                <Loader2 className="animate-spin w-4 h-4" /> 로그인 중...
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" /> 로그인 중...
               </span>
             ) : (
               "로그인"

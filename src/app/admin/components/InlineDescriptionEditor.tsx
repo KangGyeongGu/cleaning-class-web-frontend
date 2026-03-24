@@ -41,12 +41,12 @@ export function InlineDescriptionEditor({
 
   if (isEditing) {
     return (
-      <div className="flex items-center gap-2 mb-8">
+      <div className="mb-8 flex items-center gap-2">
         <input
           type="text"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          className="flex-1 px-3 py-2 border border-slate-300 text-sm font-light text-slate-600 focus:border-slate-900 focus:outline-none transition-colors"
+          className="flex-1 border border-slate-300 px-3 py-2 text-sm font-light text-slate-600 transition-colors focus:border-slate-900 focus:outline-none"
           placeholder={placeholder}
           autoFocus
         />
@@ -54,7 +54,7 @@ export function InlineDescriptionEditor({
           type="button"
           onClick={handleCancel}
           disabled={isSaving}
-          className="p-2 text-slate-400 hover:text-slate-900 transition-colors disabled:opacity-50"
+          className="p-2 text-slate-400 transition-colors hover:text-slate-900 disabled:opacity-50"
           title="취소"
         >
           <X size={16} />
@@ -63,7 +63,7 @@ export function InlineDescriptionEditor({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="p-2 text-slate-400 hover:text-green-600 transition-colors disabled:opacity-50"
+          className="p-2 text-slate-400 transition-colors hover:text-green-600 disabled:opacity-50"
           title="저장"
         >
           {isSaving ? (
@@ -77,12 +77,12 @@ export function InlineDescriptionEditor({
   }
 
   return (
-    <div className="flex items-center gap-2 mb-8">
+    <div className="mb-8 flex items-center gap-2">
       <p className="text-sm font-light text-slate-500">{value || emptyText}</p>
       <button
         type="button"
         onClick={() => setIsEditing(true)}
-        className="p-1 text-slate-400 hover:text-slate-900 transition-colors"
+        className="p-1 text-slate-400 transition-colors hover:text-slate-900"
         title="안내 문구 수정"
       >
         <Pencil size={14} />

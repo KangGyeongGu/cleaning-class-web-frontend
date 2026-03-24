@@ -14,9 +14,9 @@ export default function AdminError({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-100 gap-6">
+    <div className="flex min-h-100 flex-col items-center justify-center gap-6">
       <div className="text-center">
-        <h2 className="text-xl font-bold text-slate-900 mb-2">
+        <h2 className="mb-2 text-xl font-bold text-slate-900">
           오류가 발생했습니다
         </h2>
         <p className="text-sm text-slate-500">
@@ -28,7 +28,7 @@ export default function AdminError({
       <button
         type="button"
         onClick={reset}
-        className="px-6 py-3 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors"
+        className="bg-slate-900 px-6 py-3 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800"
       >
         다시 시도
       </button>

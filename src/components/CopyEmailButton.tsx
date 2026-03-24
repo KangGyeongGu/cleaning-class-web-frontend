@@ -20,7 +20,7 @@ export function CopyEmailButton({ email }: CopyEmailButtonProps) {
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         }}
-        className="p-2 inline-flex items-center justify-center min-w-11 min-h-11 text-slate-400 hover:text-slate-900 transition-colors"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-400 transition-colors hover:text-slate-900"
         title="이메일 복사"
       >
         {copied ? <Check size={14} /> : <Copy size={14} />}

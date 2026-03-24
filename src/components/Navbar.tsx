@@ -44,8 +44,8 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
     if (!overlayRef.current) return [];
     return Array.from(
       overlayRef.current.querySelectorAll<HTMLElement>(
-        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
+        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      ),
     ).filter((el) => !el.hasAttribute("disabled"));
   }, []);
 
@@ -99,11 +99,11 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
   }, [isOpen]);
 
   return (
-    <nav className="absolute top-0 left-0 right-0 z-50 py-8">
-      <div className="max-w-5xl mx-auto px-8 flex justify-between items-center">
+    <nav className="absolute top-0 right-0 left-0 z-50 py-8">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-8">
         <button
           type="button"
-          className="flex items-center gap-2 text-2xl font-black tracking-tighter text-slate-900 z-50 relative bg-transparent border-0 cursor-pointer min-h-12"
+          className="relative z-50 flex min-h-12 cursor-pointer items-center gap-2 border-0 bg-transparent text-2xl font-black tracking-tighter text-slate-900"
           aria-label="청소클라쓰 홈으로 이동"
           onClick={scrollToTop}
         >
@@ -120,13 +120,13 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
         </button>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden items-center gap-6 md:flex">
           <div className="flex items-center gap-8">
             {menuItems.map((item) => (
               <button
                 key={item.target}
                 type="button"
-                className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors bg-transparent border-0 cursor-pointer"
+                className="cursor-pointer border-0 bg-transparent text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
                 onClick={() => scrollToSection(item.target)}
               >
                 {item.label}
@@ -134,13 +134,13 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
             ))}
           </div>
           {(hasBlogUrl || hasInstagramUrl) && (
-            <div className="flex items-center gap-5 ml-2 pl-6 border-l border-slate-200">
+            <div className="ml-2 flex items-center gap-5 border-l border-slate-200 pl-6">
               {hasBlogUrl && (
                 <a
                   href={blogUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
+                  className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
                 >
                   블로그
                 </a>
@@ -150,7 +150,7 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
                   href={instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-bold tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
+                  className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
                 >
                   인스타그램
                 </a>
@@ -165,7 +165,7 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
           type="button"
           aria-label="메뉴 열기/닫기"
           aria-expanded={isOpen}
-          className="md:hidden text-slate-900 z-50 relative w-12 h-12 flex items-center justify-center"
+          className="relative z-50 flex h-12 w-12 items-center justify-center text-slate-900 md:hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X /> : <Menu />}
@@ -178,8 +178,10 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
           aria-modal="true"
           aria-label="내비게이션 메뉴"
           aria-hidden={!isOpen}
-          className={`fixed inset-0 bg-white z-40 flex flex-col items-center justify-center gap-8 transition-opacity duration-200 ${
-            isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-white transition-opacity duration-200 ${
+            isOpen
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
           }`}
         >
           {menuItems.map((item) => (
@@ -187,14 +189,14 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
               key={item.target}
               type="button"
               tabIndex={isOpen ? 0 : -1}
-              className="text-2xl font-black tracking-tighter text-slate-900 bg-transparent border-0 cursor-pointer"
+              className="cursor-pointer border-0 bg-transparent text-2xl font-black tracking-tighter text-slate-900"
               onClick={() => handleMobileMenuClick(item.target)}
             >
               {item.label}
             </button>
           ))}
           {(hasBlogUrl || hasInstagramUrl) && (
-            <div className="flex items-center gap-6 mt-2 pt-6 border-t border-slate-200">
+            <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
               {hasBlogUrl && (
                 <a
                   href={blogUrl}

@@ -1,26 +1,26 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('홈페이지', () => {
-  test('페이지가 정상 로드된다', async ({ page }) => {
-    const response = await page.goto('/');
+test.describe("홈페이지", () => {
+  test("페이지가 정상 로드된다", async ({ page }) => {
+    const response = await page.goto("/");
     expect(response?.status()).not.toBe(500);
-    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator("main")).toBeVisible();
   });
 
-  test('네비게이션이 존재한다', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('nav')).toBeVisible();
+  test("네비게이션이 존재한다", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("nav")).toBeVisible();
   });
 
-  test('히어로 섹션이 렌더링된다', async ({ page }) => {
-    await page.goto('/');
+  test("히어로 섹션이 렌더링된다", async ({ page }) => {
+    await page.goto("/");
     // Hero 컴포넌트는 section#hero 또는 첫 번째 section
-    const heroSection = page.locator('section').first();
+    const heroSection = page.locator("section").first();
     await expect(heroSection).toBeVisible();
   });
 
-  test('푸터가 존재한다', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('footer')).toBeVisible();
+  test("푸터가 존재한다", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("footer")).toBeVisible();
   });
 });

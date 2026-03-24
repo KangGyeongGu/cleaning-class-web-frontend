@@ -13,7 +13,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <AdminSidebar />
 
       {/* Main Content */}
-      <main className="md:ml-64 pt-16 md:pt-0">{children}</main>
+      <main className="pt-16 md:ml-64 md:pt-0">{children}</main>
     </div>
   );
 }

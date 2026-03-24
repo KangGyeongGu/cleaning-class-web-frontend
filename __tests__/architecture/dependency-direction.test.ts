@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync, statSync } from 'fs';
-import { join } from 'path';
+import { describe, it, expect } from "vitest";
+import { readFileSync, readdirSync, statSync } from "fs";
+import { join } from "path";
 
 /**
  * 재귀적으로 디렉토리 내 모든 .ts/.tsx 파일을 찾는다
@@ -38,22 +38,26 @@ function extractImports(content: string): string[] {
   return imports;
 }
 
-describe('의존성 방향', () => {
+describe("의존성 방향", () => {
   const projectRoot = process.cwd();
 
-  it('components는 app을 import할 수 없다', () => {
-    const componentsDir = join(projectRoot, 'src/components');
+  it("components는 app을 import할 수 없다", () => {
+    const componentsDir = join(projectRoot, "src/components");
     const componentFiles = findFiles(componentsDir, /\.(ts|tsx)$/);
 
     const violations: string[] = [];
 
     for (const file of componentFiles) {
-      const content = readFileSync(file, 'utf-8');
+      const content = readFileSync(file, "utf-8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
         // @/app 또는 ../app 형태로 app을 import하는지 확인
-        if (imp.includes('@/app') || imp.includes('../app') || imp.includes('../../app')) {
+        if (
+          imp.includes("@/app") ||
+          imp.includes("../app") ||
+          imp.includes("../../app")
+        ) {
           violations.push(`${file}: imports "${imp}"`);
         }
       }
@@ -62,8 +66,8 @@ describe('의존성 방향', () => {
     expect(violations).toEqual([]);
   });
 
-  it('shared는 app/components를 import할 수 없다', () => {
-    const sharedDir = join(projectRoot, 'src/shared');
+  it("shared는 app/components를 import할 수 없다", () => {
+    const sharedDir = join(projectRoot, "src/shared");
 
     // shared 디렉토리가 아직 없을 수 있으므로 존재 여부 확인
     try {
@@ -77,17 +81,17 @@ describe('의존성 방향', () => {
     const violations: string[] = [];
 
     for (const file of sharedFiles) {
-      const content = readFileSync(file, 'utf-8');
+      const content = readFileSync(file, "utf-8");
       const imports = extractImports(content);
 
       for (const imp of imports) {
         if (
-          imp.includes('@/app') ||
-          imp.includes('@/components') ||
-          imp.includes('../app') ||
-          imp.includes('../components') ||
-          imp.includes('../../app') ||
-          imp.includes('../../components')
+          imp.includes("@/app") ||
+          imp.includes("@/components") ||
+          imp.includes("../app") ||
+          imp.includes("../components") ||
+          imp.includes("../../app") ||
+          imp.includes("../../components")
         ) {
           violations.push(`${file}: imports "${imp}"`);
         }
