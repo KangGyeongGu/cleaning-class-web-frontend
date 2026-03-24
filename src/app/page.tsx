@@ -97,7 +97,7 @@ export default async function Home() {
 
   const serviceJsonLd = generateServiceJsonLd(
     servicesWithImageUrls,
-    siteConfig?.business_name,
+    siteConfig?.site_url,
   );
 
   return (
