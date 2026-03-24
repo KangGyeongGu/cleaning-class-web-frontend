@@ -23,13 +23,13 @@ export function Services({ services, serviceDescription }: ServicesProps) {
   }
 
   return (
-    <section id="services" className="py-16 md:py-32 bg-white relative">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <section id="services" className="relative bg-white py-16 md:py-32">
+      <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-16 text-center">
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight mb-4">
+          <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
             SERVICE
           </h2>
-          <p className="text-slate-500 text-sm md:text-base font-light tracking-wide">
+          <p className="text-sm font-light tracking-wide text-slate-500 md:text-base">
             {serviceDescription ||
               "공간의 성격에 맞는 최적의 청소 서비스를 제공합니다."}
           </p>

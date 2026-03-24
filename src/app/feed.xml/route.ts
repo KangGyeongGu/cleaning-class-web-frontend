@@ -1,4 +1,7 @@
-import { getPublishedServicesWithImageUrls, getPublishedReviews } from "@/shared/lib/home";
+import {
+  getPublishedServicesWithImageUrls,
+  getPublishedReviews,
+} from "@/shared/lib/home";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
 import type { Review } from "@/shared/types/database";
@@ -30,7 +33,7 @@ function buildServiceItems(services: ServiceWithImageUrls[]): string {
       <link>${SITE_URL}#services</link>
       <description>${escapeXml(s.description)}</description>
       <pubDate>${new Date().toUTCString()}</pubDate>
-    </item>`
+    </item>`,
     )
     .join("");
 }
@@ -44,7 +47,7 @@ function buildReviewItems(reviews: Review[]): string {
       <link>${escapeXml(r.link_url || SITE_URL)}</link>
       <description>${escapeXml(r.summary)}</description>
       <pubDate>${formatRfc822(r.created_at)}</pubDate>
-    </item>`
+    </item>`,
     )
     .join("");
 }
@@ -52,7 +55,7 @@ function buildReviewItems(reviews: Review[]): string {
 function buildRssFeed(
   config: SiteConfig | null,
   services: ServiceWithImageUrls[],
-  reviews: Review[]
+  reviews: Review[],
 ): string {
   const channelTitle = config?.business_name ?? "청소클라쓰";
   const channelDescription = config?.description ?? "청소클라쓰 공식 피드";

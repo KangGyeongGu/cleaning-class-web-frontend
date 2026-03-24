@@ -14,18 +14,18 @@ export function HeroCTA({ phone }: HeroCTAProps) {
             .getElementById("contact")
             ?.scrollIntoView({ behavior: "smooth" })
         }
-        className="group relative px-10 py-4 bg-transparent border border-slate-900 text-slate-900 text-lg font-bold overflow-hidden transition-all hover:text-white"
+        className="group relative overflow-hidden border border-slate-900 bg-transparent px-10 py-4 text-lg font-bold text-slate-900 transition-all hover:text-white"
       >
-        <span className="absolute inset-0 w-full h-full bg-slate-900 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+        <span className="absolute inset-0 h-full w-full origin-left scale-x-0 transform bg-slate-900 transition-transform duration-300 ease-out group-hover:scale-x-100" />
         <span className="relative z-10">무료 견적 받기</span>
       </button>
 
       {phone && (
-        <div className="mt-4 flex items-center justify-center gap-3 text-base font-normal text-slate-600 animate-[fadeIn_0.8s_0.9s_both]">
+        <div className="mt-4 flex animate-[fadeIn_0.8s_0.9s_both] items-center justify-center gap-3 text-base font-normal text-slate-600">
           <span>전화 상담</span>
           <a
             href={`tel:${phone}`}
-            className="inline-flex items-center gap-1.5 min-h-12 px-2 font-bold text-lg text-slate-900 tracking-tight hover:text-slate-700 transition-colors"
+            className="inline-flex min-h-12 items-center gap-1.5 px-2 text-lg font-bold tracking-tight text-slate-900 transition-colors hover:text-slate-700"
           >
             {phone}
           </a>

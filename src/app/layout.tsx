@@ -23,7 +23,9 @@ const PRETENDARD_CSS_URL =
  */
 async function getPretendardCss(): Promise<string> {
   try {
-    const res = await fetch(PRETENDARD_CSS_URL, { next: { revalidate: 86400 } });
+    const res = await fetch(PRETENDARD_CSS_URL, {
+      next: { revalidate: 86400 },
+    });
     if (!res.ok) return "";
     let css = await res.text();
     // 상대 경로를 CDN 절대 경로로 변환 (인라인 시 서버 도메인 기준 해석 방지)
@@ -140,7 +142,7 @@ export default async function RootLayout({
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
         )}
       </head>
-      <body className="antialiased font-sans">
+      <body className="font-sans antialiased">
         {/*
           JSON-LD 구조화 데이터 삽입.
           dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
@@ -175,7 +177,10 @@ export default async function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(breadcrumbListJsonLd).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(breadcrumbListJsonLd).replace(
+              /</g,
+              "\\u003c",
+            ),
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}

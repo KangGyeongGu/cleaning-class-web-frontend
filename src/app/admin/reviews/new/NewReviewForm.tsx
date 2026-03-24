@@ -82,7 +82,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="title"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           제목 (최대 100자)
         </label>
@@ -92,11 +92,11 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           type="text"
           required
           maxLength={100}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="리뷰 제목을 입력하세요"
         />
         {state && "errors" in state && state.errors?.title && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.title[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
         )}
       </div>
 
@@ -104,7 +104,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="summary"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           소개글 (최대 500자)
         </label>
@@ -114,11 +114,11 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           required
           maxLength={500}
           rows={3}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300 resize-none"
+          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="리뷰 소개글을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.summary && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.summary[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.summary[0]}</p>
         )}
       </div>
 
@@ -126,7 +126,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="link_url"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           바로가기 링크 (선택)
         </label>
@@ -134,11 +134,11 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           id="link_url"
           name="link_url"
           type="url"
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="https://blog.naver.com/..."
         />
         {state && "errors" in state && state.errors?.link_url && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="mt-1 text-xs text-red-500">
             {state.errors.link_url[0]}
           </p>
         )}
@@ -146,10 +146,10 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
 
       {/* 서비스 종류 (필수) */}
       <div>
-        <div className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3">
+        <div className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase">
           서비스 종류 <span className="text-red-500">*</span>
         </div>
-        <p className="text-xs text-slate-500 mb-3">
+        <p className="mb-3 text-xs text-slate-500">
           서비스 종류를 반드시 하나 선택해주세요. 선택한 항목은 태그로 자동
           추가됩니다.
         </p>
@@ -163,7 +163,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}
-              className={`px-4 py-2 text-sm border transition-colors ${
+              className={`border px-4 py-2 text-sm transition-colors ${
                 selectedService === type
                   ? "border-slate-900 bg-slate-900 text-white"
                   : "border-slate-200 text-slate-500 hover:border-slate-900"
@@ -179,11 +179,11 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="tagInput"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           태그
         </label>
-        <div className="flex gap-2 mb-3">
+        <div className="mb-3 flex gap-2">
           <input
             id="tagInput"
             type="text"
@@ -197,13 +197,13 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
                 }
               }
             }}
-            className="flex-1 pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light placeholder:text-slate-300"
+            className="flex-1 border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
             placeholder="태그 입력 후 추가 버튼 클릭 또는 Enter"
           />
           <button
             type="button"
             onClick={handleAddTag}
-            className="px-4 py-2 border border-slate-900 text-slate-900 font-bold text-xs hover:bg-slate-900 hover:text-white transition-colors"
+            className="border border-slate-900 px-4 py-2 text-xs font-bold text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
           >
             <Plus size={14} />
           </button>
@@ -226,7 +226,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           ))}
         </div>
         {state && "errors" in state && state.errors?.tags && (
-          <p className="text-red-500 text-xs mt-1">{state.errors.tags[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.tags[0]}</p>
         )}
       </div>
 
@@ -234,7 +234,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="image"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           이미지
         </label>
@@ -248,13 +248,13 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
         />
         <label
           htmlFor="image"
-          className="inline-flex items-center gap-2 px-6 py-3 border border-slate-200 text-slate-500 hover:border-slate-900 hover:text-slate-900 transition-colors cursor-pointer font-bold text-xs"
+          className="inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
         >
           <Plus size={16} />
           이미지 선택
         </label>
         {imagePreview && (
-          <div className="mt-4 relative w-full max-w-md h-64 border border-slate-200">
+          <div className="relative mt-4 h-64 w-full max-w-md border border-slate-200">
             <Image
               src={imagePreview}
               alt="미리보기"
@@ -271,7 +271,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       <div>
         <label
           htmlFor="sort_order"
-          className="block text-xs font-bold text-slate-900 uppercase tracking-widest mb-3"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           정렬 순서
         </label>
@@ -281,10 +281,10 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           type="number"
           min="0"
           defaultValue={defaultSortOrder}
-          className="w-full pb-3 bg-transparent border-b border-slate-200 focus:border-slate-900 transition-colors outline-none text-lg font-light"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
         />
         {state && "errors" in state && state.errors?.sort_order && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="mt-1 text-xs text-red-500">
             {state.errors.sort_order[0]}
           </p>
         )}
@@ -299,7 +299,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
             type="checkbox"
             value="true"
             defaultChecked
-            className="w-5 h-5"
+            className="h-5 w-5"
           />
           <label
             htmlFor="is_published"
@@ -308,14 +308,14 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
             즉시 게시
           </label>
         </div>
-        <p className="text-xs text-slate-400 mt-2">
+        <p className="mt-2 text-xs text-slate-400">
           체크 해제 시 저장만 되고 홈페이지에 노출되지 않습니다.
         </p>
       </div>
 
       {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
-        <p className="text-red-500 text-sm">{state.error}</p>
+        <p className="text-sm text-red-500">{state.error}</p>
       )}
 
       {/* 버튼 */}
@@ -325,11 +325,11 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           disabled={
             isPending || !!(state && "success" in state && state.success)
           }
-          className="px-8 py-4 bg-slate-900 text-white font-bold text-sm tracking-widest hover:bg-slate-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="animate-spin w-4 h-4" /> 등록 중...
+              <Loader2 className="h-4 w-4 animate-spin" /> 등록 중...
             </span>
           ) : (
             "등록"
@@ -338,7 +338,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-8 py-4 border border-slate-900 text-slate-900 font-bold text-sm tracking-widest hover:bg-slate-900 hover:text-white transition-colors"
+          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
         >
           취소
         </button>
