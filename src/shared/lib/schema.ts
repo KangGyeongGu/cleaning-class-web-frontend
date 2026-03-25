@@ -39,6 +39,9 @@ export const reviewFormSchema = z.object({
   link_url: z
     .string()
     .url("올바른 URL 형식이 아닙니다")
+    .refine((url) => /^https?:\/\//i.test(url), {
+      message: "URL은 http:// 또는 https://로 시작해야 합니다",
+    })
     .or(z.literal(""))
     .optional(),
   sort_order: z
@@ -60,13 +63,18 @@ const BUSINESS_NUMBER_REGEX = /^\d{3}-\d{2}-\d{5}$/;
 
 export const siteConfigFormSchema = z.object({
   business_name: z.string().min(1, "업체명을 입력해주세요"),
-  business_number: z
+  representative: z
     .string()
-    .regex(
-      BUSINESS_NUMBER_REGEX,
-      "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)",
-    )
-    .or(z.literal("")),
+    .max(50, "대표자명은 50자 이하여야 합니다")
+    .optional()
+    .default(""),
+  business_registration_number: z
+    .string()
+    .optional()
+    .default("")
+    .refine((v) => v === "" || BUSINESS_NUMBER_REGEX.test(v), {
+      message: "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)",
+    }),
   phone: z
     .string()
     .min(1, "전화번호를 입력해주세요")
@@ -75,9 +83,26 @@ export const siteConfigFormSchema = z.object({
       "올바른 전화번호 형식이 아닙니다 (예: 010-1234-5678, 02-1234-5678)",
     ),
   email: z.string().email("올바른 이메일 형식이 아닙니다"),
-  blog_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")),
-  instagram_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")),
-  site_url: z.string().url("올바른 URL 형식이 아닙니다"),
+  blog_url: z
+    .string()
+    .url("올바른 URL 형식이 아닙니다")
+    .refine((url) => /^https?:\/\//i.test(url), {
+      message: "URL은 http:// 또는 https://로 시작해야 합니다",
+    })
+    .or(z.literal("")),
+  instagram_url: z
+    .string()
+    .url("올바른 URL 형식이 아닙니다")
+    .refine((url) => /^https?:\/\//i.test(url), {
+      message: "URL은 http:// 또는 https://로 시작해야 합니다",
+    })
+    .or(z.literal("")),
+  site_url: z
+    .string()
+    .url("올바른 URL 형식이 아닙니다")
+    .refine((url) => /^https?:\/\//i.test(url), {
+      message: "URL은 http:// 또는 https://로 시작해야 합니다",
+    }),
   description: z.string().max(500, "설명은 500자 이하여야 합니다").optional(),
   address_region: z.string().optional().default(""),
   address_locality: z.string().optional().default(""),

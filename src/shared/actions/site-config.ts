@@ -48,7 +48,8 @@ async function updateSiteConfigField(
     }
 
     revalidatePath("/");
-    revalidatePath(FIELD_REVALIDATE_MAP[field]);
+    const adminPath = FIELD_REVALIDATE_MAP[field];
+    if (adminPath) revalidatePath(adminPath);
 
     return { success: true };
   } catch (error) {
@@ -82,47 +83,18 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     // 1. 인증 확인
     await getUser();
 
-    // 2. FormData 파싱
-    const rawData = {
-      business_name: formData.get("business_name"),
-      business_number: formData.get("business_number") || "",
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      blog_url: formData.get("blog_url") || "",
-      instagram_url: formData.get("instagram_url") || "",
-      site_url: formData.get("site_url"),
-      description: formData.get("description") || "",
-      address_region: formData.get("address_region") || "",
-      address_locality: formData.get("address_locality") || "",
-      address: formData.get("address") || "",
-    };
-
-    // 3. Zod 검증
-    const validationResult = siteConfigFormSchema.safeParse(rawData);
-    if (!validationResult.success) {
-      return {
-        success: false,
-        errors: validationResult.error.flatten().fieldErrors,
-      };
-    }
-
-    // 4. DB UPDATE (site_config는 단일 행, id 조회 후 업데이트)
+    // 2. DB에서 현재 행 조회 (클라이언트 변조 불가 필드를 서버에서 직접 읽기)
     const supabase = await createClient();
-    const configData: SiteConfigUpdate = {
-      ...validationResult.data,
-      business_number: validationResult.data.business_number || "",
-      blog_url: validationResult.data.blog_url || "",
-      instagram_url: validationResult.data.instagram_url || "",
-      description: validationResult.data.description || "",
-      address: validationResult.data.address || "",
-      updated_at: new Date().toISOString(),
-    };
-
     const { data: current, error: fetchConfigError } = await supabase
       .from("site_config")
-      .select("id")
+      .select("id, site_url, address_region, address_locality")
       .limit(1)
-      .single<{ id: string }>();
+      .single<{
+        id: string;
+        site_url: string;
+        address_region: string;
+        address_locality: string;
+      }>();
 
     if (fetchConfigError) {
       console.error("updateSiteConfig fetch error:", fetchConfigError);
@@ -131,6 +103,39 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     if (!current) {
       throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
+
+    // 3. FormData 파싱 (site_url, address_region, address_locality는 DB 값 사용)
+    const rawData = {
+      business_name: formData.get("business_name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      blog_url: formData.get("blog_url") || "",
+      instagram_url: formData.get("instagram_url") || "",
+      site_url: current.site_url,
+      description: formData.get("description") || "",
+      address_region: current.address_region,
+      address_locality: current.address_locality,
+      address: formData.get("address") || "",
+    };
+
+    // 4. Zod 검증
+    const validationResult = siteConfigFormSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      return {
+        success: false,
+        errors: validationResult.error.flatten().fieldErrors,
+      };
+    }
+
+    // 5. DB UPDATE
+    const configData: SiteConfigUpdate = {
+      ...validationResult.data,
+      blog_url: validationResult.data.blog_url || "",
+      instagram_url: validationResult.data.instagram_url || "",
+      description: validationResult.data.description || "",
+      address: validationResult.data.address || "",
+      updated_at: new Date().toISOString(),
+    };
 
     const { error } = await supabase
       .from("site_config")
@@ -142,7 +147,7 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
 
-    // 5. 캐시 무효화 (공개 페이지 즉시 반영)
+    // 6. 캐시 무효화 (공개 페이지 즉시 반영)
     revalidatePath("/");
     revalidatePath("/admin/config");
 

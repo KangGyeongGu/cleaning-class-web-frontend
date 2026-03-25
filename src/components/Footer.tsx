@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
 import type { SiteConfig } from "@/shared/types/database";
@@ -27,6 +28,9 @@ export function Footer({ siteConfig }: FooterProps) {
   const email = siteConfig?.email ?? "";
   const blogUrl = siteConfig?.blog_url;
   const instagramUrl = siteConfig?.instagram_url;
+  const businessRegistrationNumber = siteConfig?.business_registration_number ?? "";
+  const representative = siteConfig?.representative ?? "";
+  const address = siteConfig?.address ?? "";
 
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
@@ -36,14 +40,17 @@ export function Footer({ siteConfig }: FooterProps) {
       <div className="container mx-auto px-4">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
-            <h2 className="mb-6 text-3xl font-black tracking-tighter">
+            {/* SEO-003: h2 → p 전환 (시각적 스타일 유지) */}
+            <p className="mb-4 text-3xl font-black tracking-tighter">
               {businessName}
-            </h2>
-            {siteConfig?.description && (
-              <p className="max-w-sm text-sm leading-relaxed font-light text-slate-500">
-                {siteConfig.description}
-              </p>
-            )}
+            </p>
+            <ul className="space-y-1 text-sm font-light text-slate-600">
+              {representative && <li>대표 {representative}</li>}
+              {businessRegistrationNumber && (
+                <li>사업자등록번호 {businessRegistrationNumber}</li>
+              )}
+              {address && <li>{address}</li>}
+            </ul>
           </div>
 
           <div>
@@ -66,7 +73,6 @@ export function Footer({ siteConfig }: FooterProps) {
                   <CopyEmailButton email={email} />
                 </li>
               )}
-              {siteConfig?.address && <li>{siteConfig.address}</li>}
             </ul>
           </div>
 
@@ -105,11 +111,23 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between pt-8 text-xs font-medium tracking-wider text-slate-500 uppercase md:flex-row">
-          <p>
-            &copy; {new Date().getFullYear()} {businessName.toUpperCase()}. All
-            rights reserved.
-          </p>
+        {/* 하단 링크 바: 저작권 + 개인정보처리방침 + 고객센터 중앙 정렬 */}
+        <div className="flex items-center justify-center gap-0 pt-8 text-xs font-light text-slate-400">
+          <span>&copy; 청소클라쓰</span>
+          <span className="mx-3 select-none">|</span>
+          <Link
+            href="/privacy-policy"
+            className="transition-colors hover:text-slate-700"
+          >
+            개인정보처리방침
+          </Link>
+          <span className="mx-3 select-none">|</span>
+          <Link
+            href="/contact"
+            className="transition-colors hover:text-slate-700"
+          >
+            고객센터
+          </Link>
         </div>
       </div>
     </footer>
