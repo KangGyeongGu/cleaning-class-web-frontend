@@ -36,9 +36,9 @@ export function Footer({ siteConfig }: FooterProps) {
       <div className="container mx-auto px-4">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
-            <p className="mb-6 text-3xl font-black tracking-tighter">
+            <h2 className="mb-6 text-3xl font-black tracking-tighter">
               {businessName}
-            </p>
+            </h2>
             {siteConfig?.description && (
               <p className="max-w-sm text-sm leading-relaxed font-light text-slate-500">
                 {siteConfig.description}

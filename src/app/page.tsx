@@ -75,16 +75,27 @@ export const revalidate = 3600;
 
 function buildDescription(siteConfig?: SiteConfig | null): string {
   const phone = siteConfig?.phone ?? "010-6711-2964";
-  return `${phone} · 연중무휴 · 전주 청소업체 청소클라쓰 · 거주청소 · 입주청소 · 정기청소 · 특수청소 · 쓰레기집청소 · 상가청소`;
+  const full = `${phone} · 연중무휴 · 전주 청소업체 청소클라쓰 · 거주청소 · 입주청소 · 정기청소 · 특수청소 · 쓰레기집청소 · 상가청소`;
+  return full.length > 150 ? full.slice(0, 147) + "..." : full;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
   const siteConfig = await getSiteConfig();
+  const description = buildDescription(siteConfig);
+  const title = "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스";
   return {
-    title: {
-      absolute: "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스",
+    title: { absolute: title },
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
     },
-    description: buildDescription(siteConfig),
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 

@@ -9,10 +9,10 @@ export default function NotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-4">
       <div className="max-w-md text-center">
-        <h1 className="mb-4 text-9xl font-black text-slate-900">404</h1>
-        <p className="mb-8 text-lg font-light text-slate-600">
-          페이지를 찾을 수 없습니다.
-        </p>
+        <p className="mb-4 text-9xl font-black text-slate-900" aria-hidden="true">404</p>
+        <h1 className="mb-8 text-lg font-light text-slate-600">
+          요청하신 페이지를 찾을 수 없습니다
+        </h1>
         <Link
           href="/"
           className="inline-block bg-slate-900 px-8 py-3 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800"
