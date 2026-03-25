@@ -2,6 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  title: "페이지를 찾을 수 없습니다",
+  openGraph: {
+    title: "페이지를 찾을 수 없습니다 | 청소클라쓰",
+    description: "요청하신 페이지를 찾을 수 없습니다.",
+    images: ["/opengraph-image"],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
   robots: { index: false, follow: false },
 };
 

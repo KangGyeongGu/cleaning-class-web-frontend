@@ -107,6 +107,9 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     // 3. FormData 파싱 (site_url, address_region, address_locality는 DB 값 사용)
     const rawData = {
       business_name: formData.get("business_name"),
+      representative: formData.get("representative") || "",
+      business_registration_number:
+        formData.get("business_registration_number") || "",
       phone: formData.get("phone"),
       email: formData.get("email"),
       blog_url: formData.get("blog_url") || "",

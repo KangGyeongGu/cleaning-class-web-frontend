@@ -55,6 +55,7 @@ export function getReviewImageUrl(
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return "";
   const rawUrl = `${supabaseUrl}/storage/v1/object/public/review-images/${imagePath}`;
   return transform ? buildTransformUrl(rawUrl, transform) : rawUrl;
 }
@@ -74,6 +75,7 @@ export function getServiceImageUrl(
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return "";
   const rawUrl = `${supabaseUrl}/storage/v1/object/public/service-images/${imagePath}`;
   return transform ? buildTransformUrl(rawUrl, transform) : rawUrl;
 }

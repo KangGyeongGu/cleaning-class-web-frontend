@@ -32,12 +32,18 @@ export function ServiceListClient({
   const handleDelete = async (serviceId: string) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
     setDeletingId(serviceId);
-    const result = await deleteService(serviceId);
-    setDeletingId(null);
-    if (!result.success) {
-      alert(result.error || "삭제 중 오류가 발생했습니다.");
-    } else {
-      router.refresh();
+    try {
+      const result = await deleteService(serviceId);
+      if (!result.success) {
+        alert(result.error || "삭제 중 오류가 발생했습니다.");
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("서비스 삭제 중 예외 발생:", err);
+      alert("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -46,12 +52,18 @@ export function ServiceListClient({
     currentStatus: boolean,
   ) => {
     setTogglingId(serviceId);
-    const result = await toggleServicePublish(serviceId, !currentStatus);
-    setTogglingId(null);
-    if (!result.success) {
-      alert(result.error || "게시 상태 변경 중 오류가 발생했습니다.");
-    } else {
-      router.refresh();
+    try {
+      const result = await toggleServicePublish(serviceId, !currentStatus);
+      if (!result.success) {
+        alert(result.error || "게시 상태 변경 중 오류가 발생했습니다.");
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("서비스 게시 상태 변경 중 예외 발생:", err);
+      alert("게시 상태 변경 중 오류가 발생했습니다.");
+    } finally {
+      setTogglingId(null);
     }
   };
 

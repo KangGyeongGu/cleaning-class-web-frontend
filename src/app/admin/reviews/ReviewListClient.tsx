@@ -32,12 +32,18 @@ export function ReviewListClient({
   const handleDelete = async (reviewId: string) => {
     if (!confirm("정말 삭제하시겠습니까?")) return;
     setDeletingId(reviewId);
-    const result = await deleteReview(reviewId);
-    setDeletingId(null);
-    if (!result.success) {
-      alert(result.error || "삭제 중 오류가 발생했습니다.");
-    } else {
-      router.refresh();
+    try {
+      const result = await deleteReview(reviewId);
+      if (!result.success) {
+        alert(result.error || "삭제 중 오류가 발생했습니다.");
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("리뷰 삭제 중 예외 발생:", err);
+      alert("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -46,12 +52,18 @@ export function ReviewListClient({
     currentStatus: boolean,
   ) => {
     setTogglingId(reviewId);
-    const result = await toggleReviewPublish(reviewId, !currentStatus);
-    setTogglingId(null);
-    if (!result.success) {
-      alert(result.error || "게시 상태 변경 중 오류가 발생했습니다.");
-    } else {
-      router.refresh();
+    try {
+      const result = await toggleReviewPublish(reviewId, !currentStatus);
+      if (!result.success) {
+        alert(result.error || "게시 상태 변경 중 오류가 발생했습니다.");
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("리뷰 게시 상태 변경 중 예외 발생:", err);
+      alert("게시 상태 변경 중 오류가 발생했습니다.");
+    } finally {
+      setTogglingId(null);
     }
   };
 

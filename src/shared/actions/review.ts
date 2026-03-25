@@ -8,6 +8,7 @@ import { reviewFormSchema } from "@/shared/lib/schema";
 import type { ReviewInsert, ReviewUpdate } from "@/shared/types/database";
 
 const BUCKET = "review-images";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 /**
  * 리뷰 생성 Server Action
@@ -53,11 +54,12 @@ export async function createReview(prevState: unknown, formData: FormData) {
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "이미지를 선택해주세요." };
     }
+    if (imageFile.size > MAX_FILE_SIZE) {
+      return { success: false, error: "파일 크기는 10MB 이하여야 합니다" };
+    }
     let imagePath = "";
 
-    if (imageFile && imageFile.size > 0) {
-      imagePath = await uploadImage(BUCKET, imageFile);
-    }
+    imagePath = await uploadImage(BUCKET, imageFile);
 
     // 5. DB INSERT
     const supabase = await createClient();
@@ -159,6 +161,9 @@ export async function updateReview(
     let newImagePath = existingImagePath;
 
     if (imageFile && imageFile.size > 0) {
+      if (imageFile.size > MAX_FILE_SIZE) {
+        return { success: false, error: "파일 크기는 10MB 이하여야 합니다" };
+      }
       // 새 이미지 업로드 먼저 (기존 이미지는 DB UPDATE 성공 후 삭제)
       newImagePath = await uploadImage(BUCKET, imageFile);
     }

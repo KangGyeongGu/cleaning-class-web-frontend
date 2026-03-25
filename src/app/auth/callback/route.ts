@@ -17,9 +17,16 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // next 파라미터 오픈 리다이렉트 차단: /로 시작하고 //로 시작하지 않는 상대 경로만 허용
-      const safeNext =
-        next.startsWith("/") && !next.startsWith("//") ? next : "/admin";
+      // next 파라미터 오픈 리다이렉트 차단: URL 파싱 후 origin 비교로 외부 도메인 리다이렉트 방지
+      let safeNext = "/admin";
+      try {
+        const parsedUrl = new URL(next, request.url);
+        if (parsedUrl.origin === request.nextUrl.origin) {
+          safeNext = next;
+        }
+      } catch {
+        // 파싱 실패 시 기본값 유지
+      }
       return NextResponse.redirect(new URL(safeNext, request.url));
     }
   }

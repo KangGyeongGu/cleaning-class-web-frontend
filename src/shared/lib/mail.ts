@@ -80,6 +80,10 @@ function getTransporter(): Mail {
  * @param data - 문의자 정보 및 메시지
  */
 export async function sendContactEmail(data: ContactEmailData): Promise<void> {
+  // 수신 주소 미설정 시 조기 오류 — 메일 전송 시도 전에 차단
+  if (!process.env.ADMIN_EMAIL) {
+    throw new Error("ADMIN_EMAIL 환경변수가 설정되지 않았습니다");
+  }
   const transporter = getTransporter();
 
   const htmlContent = `
