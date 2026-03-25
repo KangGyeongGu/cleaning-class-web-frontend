@@ -12,6 +12,15 @@ import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
 
+// 서비스 카테고리 목록 — 어드민 폼에서 사용하는 태그와 동일하게 유지
+const SERVICE_TYPES = [
+  "거주청소",
+  "정기청소",
+  "특수청소",
+  "쓰레기집청소",
+  "상가청소",
+] as const;
+
 function NaverBlogIcon({ size = 16 }: { size?: number }) {
   return (
     <svg
@@ -61,22 +70,15 @@ function PrevArrow(props: CustomArrowProps) {
   );
 }
 
-function ReviewCard({
-  review,
-  priority = false,
-}: {
-  review: Review;
-  priority?: boolean;
-}) {
+function ReviewCard({ review }: { review: Review }) {
   return (
     <div className="flex h-full flex-col">
-      {/* Image Section */}
+      {/* 이미지 영역 — 리뷰 섹션은 폴드 아래에 위치하므로 priority 없이 지연 로드 */}
       <div className="relative mb-5 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:aspect-4/3">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
           fill
-          priority={priority}
           sizes="(max-width: 768px) 85vw, (max-width: 1280px) 33vw, 25vw"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
@@ -84,9 +86,9 @@ function ReviewCard({
         />
       </div>
 
-      {/* Content Section */}
+      {/* 콘텐츠 영역 */}
       <div className="flex flex-1 flex-col px-5 pb-6">
-        {/* Hashtags */}
+        {/* 해시태그 */}
         <div className="mb-1.5 flex min-h-5 flex-wrap gap-2">
           {review.tags.map((tag) => (
             <span
@@ -119,11 +121,9 @@ function ReviewCard({
 function ReviewCardWrapper({
   review,
   blogUrl,
-  priority = false,
 }: {
   review: Review;
   blogUrl?: string;
-  priority?: boolean;
 }) {
   const cardUrl = review.link_url || blogUrl || null;
   if (cardUrl) {
@@ -134,13 +134,13 @@ function ReviewCardWrapper({
         rel="noopener noreferrer"
         className="group block h-full overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:border-slate-400 hover:shadow-xl"
       >
-        <ReviewCard review={review} priority={priority} />
+        <ReviewCard review={review} />
       </a>
     );
   }
   return (
     <div className="group h-full overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <ReviewCard review={review} priority={priority} />
+      <ReviewCard review={review} />
     </div>
   );
 }
@@ -152,7 +152,10 @@ export function BlogReviews({
   reviewDescription,
 }: BlogReviewsProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<Slider>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  // null = '전체' 필터 (필터 미적용 상태)
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -176,8 +179,25 @@ export function BlogReviews({
     return null;
   }
 
+  // 선택된 필터에 따라 표시할 리뷰 목록 결정
+  const filteredReviews = activeFilter
+    ? reviews.filter((r) => r.tags.includes(activeFilter))
+    : reviews;
+
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
+
+  // 필터 탭 변경 시 슬라이더와 모바일 스크롤 인덱스를 초기화하는 핸들러
+  const handleFilterChange = (filter: string | null) => {
+    setActiveFilter(filter);
+    setActiveIndex(0);
+    // 데스크톱 슬라이더 첫 번째 슬라이드로 이동
+    sliderRef.current?.slickGoTo(0);
+    // 모바일 스크롤 위치 초기화
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ left: 0, behavior: "instant" });
+    }
+  };
 
   const slickSettings = {
     dots: true,
@@ -242,61 +262,91 @@ export function BlogReviews({
           </div>
         </div>
 
-        {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
-        <div
-          ref={scrollRef}
-          className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
-        >
-          {reviews.map((review, index) => (
-            <div key={review.id} className="w-[85vw] shrink-0 snap-center">
-              <ReviewCardWrapper
-                review={review}
-                blogUrl={blogUrl}
-                priority={index === 0}
-              />
-            </div>
-          ))}
-        </div>
-        {/* 모바일 인디케이터 */}
-        <div className="mt-4 flex justify-center gap-2 md:hidden">
-          {reviews.map((review, index) => (
+        {/* 서비스 카테고리 필터 탭 — 모바일에서 가로 스크롤 가능 */}
+        <div className="scrollbar-hide mb-8 flex gap-2 overflow-x-auto md:px-2">
+          <button
+            type="button"
+            onClick={() => handleFilterChange(null)}
+            className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium tracking-wide transition-colors ${
+              activeFilter === null
+                ? "border-slate-900 bg-slate-900 text-white"
+                : "border-slate-300 bg-white text-slate-600 hover:border-slate-500 hover:text-slate-900"
+            }`}
+          >
+            전체
+          </button>
+          {SERVICE_TYPES.map((type) => (
             <button
-              key={review.id}
+              key={type}
               type="button"
-              aria-label={`리뷰 ${index + 1}`}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                index === activeIndex ? "bg-slate-900" : "bg-slate-300"
+              onClick={() => handleFilterChange(type)}
+              className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium tracking-wide transition-colors ${
+                activeFilter === type
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-300 bg-white text-slate-600 hover:border-slate-500 hover:text-slate-900"
               }`}
-              onClick={() => {
-                const el = scrollRef.current;
-                if (!el) return;
-                const cardWidth = el.firstElementChild?.clientWidth ?? 0;
-                const gap = 16;
-                el.scrollTo({
-                  left: index * (cardWidth + gap),
-                  behavior: "smooth",
-                });
-              }}
-            />
+            >
+              {type}
+            </button>
           ))}
         </div>
 
-        {/* 데스크톱: slick carousel */}
-        <div className="relative hidden px-2 md:block">
-          <Slider {...slickSettings}>
-            {reviews.map((review, index) => {
-              return (
-                <div key={review.id} className="px-3 py-4">
-                  <ReviewCardWrapper
-                    review={review}
-                    blogUrl={blogUrl}
-                    priority={index === 0}
-                  />
+        {/* 필터 결과가 없을 때 빈 상태 UI */}
+        {filteredReviews.length === 0 ? (
+          <div className="flex min-h-48 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 md:px-2">
+            <p className="text-sm font-light text-slate-500">
+              해당 카테고리의 후기가 없습니다.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
+            <div
+              ref={scrollRef}
+              className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
+            >
+              {filteredReviews.map((review) => (
+                <div key={review.id} className="w-[85vw] shrink-0 snap-center">
+                  <ReviewCardWrapper review={review} blogUrl={blogUrl} />
                 </div>
-              );
-            })}
-          </Slider>
-        </div>
+              ))}
+            </div>
+            {/* 모바일 인디케이터 */}
+            <div className="mt-4 flex justify-center gap-2 md:hidden">
+              {filteredReviews.map((review, index) => (
+                <button
+                  key={review.id}
+                  type="button"
+                  aria-label={`리뷰 ${index + 1}`}
+                  className={`h-2 w-2 rounded-full transition-colors ${
+                    index === activeIndex ? "bg-slate-900" : "bg-slate-300"
+                  }`}
+                  onClick={() => {
+                    const el = scrollRef.current;
+                    if (!el) return;
+                    const cardWidth = el.firstElementChild?.clientWidth ?? 0;
+                    const gap = 16;
+                    el.scrollTo({
+                      left: index * (cardWidth + gap),
+                      behavior: "smooth",
+                    });
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* 데스크톱: slick carousel */}
+            <div className="relative hidden px-2 md:block">
+              <Slider ref={sliderRef} {...slickSettings}>
+                {filteredReviews.map((review) => (
+                  <div key={review.id} className="px-3 py-4">
+                    <ReviewCardWrapper review={review} blogUrl={blogUrl} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+          </>
+        )}
 
         {(hasBlogUrl || hasInstagramUrl) && (
           <div className="mt-12 flex flex-col items-center gap-3 text-center md:hidden">

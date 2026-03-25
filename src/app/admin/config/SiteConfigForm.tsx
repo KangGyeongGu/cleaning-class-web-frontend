@@ -39,6 +39,40 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
+      {/* 사업자번호 */}
+      <div>
+        <label
+          htmlFor="business_number"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          사업자번호 (선택)
+        </label>
+        <input
+          id="business_number"
+          name="business_number"
+          type="text"
+          defaultValue={config.business_number || ""}
+          onInput={(e) => {
+            const input = e.currentTarget;
+            const digits = input.value.replace(/\D/g, "").slice(0, 10);
+            if (digits.length <= 3) {
+              input.value = digits;
+            } else if (digits.length <= 5) {
+              input.value = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+            } else {
+              input.value = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+            }
+          }}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          placeholder="000-00-00000"
+        />
+        {state && "errors" in state && state.errors?.business_number && (
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.business_number[0]}
+          </p>
+        )}
+      </div>
+
       {/* 전화번호 */}
       <div>
         <label
@@ -58,7 +92,7 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             input.value = formatPhoneNumber(input.value);
           }}
           className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
-          placeholder="010-0000-0000"
+          placeholder="000-0000-0000 또는 0000-0000-0000"
         />
         {state && "errors" in state && state.errors?.phone && (
           <p className="mt-1 text-xs text-red-500">{state.errors.phone[0]}</p>

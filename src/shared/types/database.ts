@@ -56,7 +56,8 @@ export interface Database {
       services: {
         Row: {
           created_at: string;
-          description: string;
+          // description: TASK-STR-003 전환 전까지 하위 호환 유지 (DB 컬럼이 남아있을 수 있음)
+          description?: string;
           id: string;
           image_after_focal_x: number;
           image_after_focal_y: number;
@@ -66,12 +67,13 @@ export interface Database {
           image_path: string;
           is_published: boolean;
           sort_order: number;
+          tags: string[];
           title: string;
           updated_at: string;
         };
         Insert: {
           created_at?: string;
-          description: string;
+          description?: string;
           id?: string;
           image_after_focal_x?: number;
           image_after_focal_y?: number;
@@ -81,6 +83,7 @@ export interface Database {
           image_path?: string;
           is_published?: boolean;
           sort_order?: number;
+          tags?: string[];
           title: string;
           updated_at?: string;
         };
@@ -96,6 +99,7 @@ export interface Database {
           image_path?: string;
           is_published?: boolean;
           sort_order?: number;
+          tags?: string[];
           title?: string;
           updated_at?: string;
         };
@@ -108,6 +112,7 @@ export interface Database {
           address_region: string;
           blog_url: string;
           business_name: string;
+          business_number: string;
           description: string;
           email: string;
           id: string;
@@ -124,6 +129,7 @@ export interface Database {
           address_region?: string;
           blog_url?: string;
           business_name?: string;
+          business_number?: string;
           description?: string;
           email?: string;
           id?: string;
@@ -140,6 +146,7 @@ export interface Database {
           address_region?: string;
           blog_url?: string;
           business_name?: string;
+          business_number?: string;
           description?: string;
           email?: string;
           id?: string;

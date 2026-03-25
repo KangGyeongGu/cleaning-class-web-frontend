@@ -16,9 +16,19 @@ export async function createService(prevState: unknown, formData: FormData) {
   try {
     await getUser();
 
+    // tags FormData 직렬화 JSON 파싱 (빈 배열 fallback)
+    let parsedTags: unknown;
+    try {
+      parsedTags = formData.get("tags")
+        ? JSON.parse(formData.get("tags") as string)
+        : [];
+    } catch {
+      parsedTags = [];
+    }
+
     const rawData = {
       title: formData.get("title"),
-      description: formData.get("description"),
+      tags: parsedTags,
       sort_order: Number(formData.get("sort_order") || 0),
       is_published: formData.get("is_published") === "true",
       image_focal_x: Number(formData.get("image_focal_x") || 50),
@@ -113,9 +123,19 @@ export async function updateService(
   try {
     await getUser();
 
+    // tags FormData 직렬화 JSON 파싱 (빈 배열 fallback)
+    let parsedTagsUpdate: unknown;
+    try {
+      parsedTagsUpdate = formData.get("tags")
+        ? JSON.parse(formData.get("tags") as string)
+        : [];
+    } catch {
+      parsedTagsUpdate = [];
+    }
+
     const rawData = {
       title: formData.get("title"),
-      description: formData.get("description"),
+      tags: parsedTagsUpdate,
       sort_order: Number(formData.get("sort_order") || 0),
       is_published: formData.get("is_published") === "true",
       image_focal_x: Number(formData.get("image_focal_x") || 50),

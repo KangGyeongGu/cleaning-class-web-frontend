@@ -9,7 +9,8 @@ const BLUR_PLACEHOLDER =
 export interface ServiceCardProps {
   service: {
     title: string;
-    description: string;
+    /** 서비스 특징 태그 목록 (description 대체) */
+    tags: string[];
     imageUrl: string;
     afterImageUrl?: string;
     focalX?: number;
@@ -69,7 +70,7 @@ export function ServiceCard({
               priority={priority}
               placeholder="blur"
               blurDataURL={BLUR_PLACEHOLDER}
-              className={`object-cover grayscale transition-opacity duration-700 ease-in-out group-hover:opacity-0 ${
+              className={`object-cover transition-opacity duration-700 ease-in-out group-hover:opacity-0 ${
                 showAfter ? "opacity-0" : ""
               }`}
               style={{
@@ -112,9 +113,17 @@ export function ServiceCard({
         <h3 className="mb-2 origin-center text-base font-bold text-slate-900 transition-all duration-300 group-hover:scale-110 group-hover:text-black">
           {service.title}
         </h3>
-        <p className="text-sm leading-tight font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-800">
-          {service.description}
-        </p>
+        {/* 서비스 특징 태그 칩 목록 — 줄바꿈 방지(whitespace-nowrap) */}
+        <div className="flex flex-wrap justify-center gap-2">
+          {service.tags.map((tag) => (
+            <span
+              key={tag}
+              className="whitespace-nowrap rounded-md bg-slate-100 px-3 py-1 text-sm text-slate-600"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

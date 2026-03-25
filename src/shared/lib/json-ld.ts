@@ -60,7 +60,8 @@ interface LocalBusinessJsonLd {
 
 interface ServiceInput {
   title: string;
-  description: string;
+  /** 서비스 특징 태그 목록 — Schema.org description으로 변환됨 */
+  tags: string[];
 }
 
 interface ServiceJsonLd {
@@ -187,7 +188,8 @@ export function generateServiceJsonLd(
     "@type": "Service",
     serviceType: service.title,
     name: service.title,
-    description: service.description,
+    // tags 배열을 쉼표 구분 문자열로 변환하여 Schema.org description 필드에 매핑
+    description: service.tags.join(", "),
     provider: {
       "@type": "LocalBusiness",
       name: businessName,

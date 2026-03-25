@@ -3,7 +3,7 @@
 import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { updateService } from "@/shared/actions/service";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, X } from "lucide-react";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
 import type { Service } from "@/shared/types/database";
 
@@ -27,6 +27,9 @@ export function EditServiceForm({
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
+  // 기존 서비스의 tags 배열로 초기 상태 설정
+  const [tags, setTags] = useState<string[]>(service.tags ?? []);
+  const [tagInput, setTagInput] = useState("");
   const [focalX, setFocalX] = useState(service.image_focal_x);
   const [focalY, setFocalY] = useState(service.image_focal_y);
   const [afterFocalX, setAfterFocalX] = useState(service.image_after_focal_x);
@@ -84,11 +87,31 @@ export function EditServiceForm({
     }
   }, [state, router]);
 
+  // 태그 추가: 중복 및 최대 30자 제한 적용
+  const handleAddTag = () => {
+    const trimmed = tagInput.trim();
+    if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
+      setTags([...tags, trimmed]);
+      setTagInput("");
+    }
+  };
+
+  // 태그 삭제: 인덱스 기준으로 제거
+  const handleRemoveTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
+  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
+  const handleSubmit = async (formData: FormData) => {
+    formData.set("tags", JSON.stringify(tags));
+    await formAction(formData);
+  };
+
   const displayImageUrl = imagePreview || imageUrl;
   const displayAfterImageUrl = afterImagePreview || afterImageUrl;
 
   return (
-    <form action={formAction} className="space-y-8">
+    <form action={handleSubmit} className="space-y-8">
       {/* 서비스명 */}
       <div>
         <label
@@ -112,28 +135,61 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 설명 */}
+      {/* 서비스 태그 */}
       <div>
         <label
-          htmlFor="description"
+          htmlFor="tagInput"
           className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
-          설명 (최대 200자)
+          서비스 태그
         </label>
-        <textarea
-          id="description"
-          name="description"
-          required
-          maxLength={200}
-          rows={3}
-          defaultValue={service.description}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
-          placeholder="서비스 설명을 입력하세요"
-        ></textarea>
-        {state && "errors" in state && state.errors?.description && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.description[0]}
-          </p>
+        <div className="mb-3 flex gap-2">
+          <input
+            id="tagInput"
+            type="text"
+            value={tagInput}
+            maxLength={30}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                // 한글 조합 중 Enter 입력 무시
+                if (!e.nativeEvent.isComposing) {
+                  handleAddTag();
+                }
+              }
+            }}
+            className="flex-1 border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+            placeholder="태그 입력 후 추가 버튼 클릭 또는 Enter (최대 30자)"
+          />
+          <button
+            type="button"
+            onClick={handleAddTag}
+            className="border border-slate-900 px-4 py-2 text-xs font-bold text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+        {/* 추가된 태그 목록 (pill 형태), 기존 데이터 포함 */}
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, index) => (
+            <span
+              key={index}
+              className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() => handleRemoveTag(index)}
+                className="text-slate-500 hover:text-slate-900"
+              >
+                <X size={14} />
+              </button>
+            </span>
+          ))}
+        </div>
+        {state && "errors" in state && state.errors?.tags && (
+          <p className="mt-1 text-xs text-red-500">{state.errors.tags[0]}</p>
         )}
       </div>
 

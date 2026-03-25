@@ -50,10 +50,27 @@ export const reviewFormSchema = z.object({
 
 export type ReviewFormData = z.infer<typeof reviewFormSchema>;
 
+// 한국 전화번호 형식 정규식
+// 허용 패턴: 02-XXXX-XXXX, 010-XXXX-XXXX, 031-XXX-XXXX, 0504-XXXX-XXXX 등
+const PHONE_REGEX =
+  /^(02|01[016-9]|0[3-9]\d{1,2})-\d{3,4}-\d{4}$|^0[5-9]0[4-9]-\d{4}-\d{4}$/;
+
 // 업체 정보 폼 스키마
+const BUSINESS_NUMBER_REGEX = /^\d{3}-\d{2}-\d{5}$/;
+
 export const siteConfigFormSchema = z.object({
   business_name: z.string().min(1, "업체명을 입력해주세요"),
-  phone: z.string().min(1, "전화번호를 입력해주세요"),
+  business_number: z
+    .string()
+    .regex(BUSINESS_NUMBER_REGEX, "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)")
+    .or(z.literal("")),
+  phone: z
+    .string()
+    .min(1, "전화번호를 입력해주세요")
+    .regex(
+      PHONE_REGEX,
+      "올바른 전화번호 형식이 아닙니다 (예: 010-1234-5678, 02-1234-5678)",
+    ),
   email: z.string().email("올바른 이메일 형식이 아닙니다"),
   blog_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")),
   instagram_url: z.string().url("올바른 URL 형식이 아닙니다").or(z.literal("")),
@@ -72,10 +89,8 @@ export const serviceFormSchema = z.object({
     .string()
     .min(1, "서비스명을 입력해주세요")
     .max(50, "서비스명은 50자 이하여야 합니다"),
-  description: z
-    .string()
-    .min(1, "설명을 입력해주세요")
-    .max(200, "설명은 200자 이하여야 합니다"),
+  // description 대신 tags 배열로 전환: 서비스 특성 태그 최소 1개 필요
+  tags: z.array(z.string()).min(1, "최소 1개 이상의 태그를 입력해주세요"),
   sort_order: z
     .number()
     .int("정렬 순서는 정수여야 합니다")

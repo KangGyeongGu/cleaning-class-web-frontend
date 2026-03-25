@@ -182,11 +182,18 @@ export function ServiceListClient({
               </p>
             </div>
 
-            {/* 설명 */}
+            {/* 태그 */}
             <div className="col-span-3">
-              <p className="line-clamp-2 text-xs text-slate-500">
-                {service.description}
-              </p>
+              <div className="flex flex-wrap gap-1">
+                {(service.tags ?? []).map((tag) => (
+                  <span
+                    key={tag}
+                    className="whitespace-nowrap rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
 
             {/* 게시 상태 */}

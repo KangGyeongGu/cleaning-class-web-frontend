@@ -5,7 +5,10 @@ import type { Review, Service } from "@/shared/types/database";
 export type ServiceWithImageUrls = {
   id: string;
   title: string;
+  // description: TASK-STR-003 완료 전 하위 호환 유지 (빈 문자열 fallback)
   description: string;
+  // tags 배열: TASK-LOG-001에서 추가됨
+  tags: string[];
   imageUrl: string;
   afterImageUrl?: string;
   focalX: number;
@@ -64,7 +67,9 @@ export async function getPublishedServicesWithImageUrls(): Promise<
     return services.map((s) => ({
       id: s.id,
       title: s.title,
-      description: s.description,
+      // TASK-STR-003 완료 전 하위 호환: description이 없으면 빈 문자열 사용
+      description: s.description ?? "",
+      tags: s.tags ?? [],
       imageUrl: getServiceImageUrl(s.image_path),
       afterImageUrl: s.image_after_path
         ? getServiceImageUrl(s.image_after_path)

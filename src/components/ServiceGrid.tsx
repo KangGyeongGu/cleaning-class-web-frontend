@@ -6,7 +6,8 @@ import { ServiceCard } from "@/components/ServiceCard";
 interface ServiceItem {
   id: string;
   title: string;
-  description: string;
+  /** 서비스 특징 태그 목록 (description 대체) */
+  tags: string[];
   imageUrl: string;
   afterImageUrl?: string;
   focalX?: number;
@@ -66,11 +67,12 @@ export function ServiceGrid({ services }: { services: ServiceItem[] }) {
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-8 lg:grid-cols-5">
-      {services.map((service, index) => (
+      {/* 서비스 이미지는 폴드 아래에 위치하므로 priority preload 불필요 (IMG-W01) */}
+      {services.map((service) => (
         <ServiceCard
           key={service.id}
           service={service}
-          priority={index < 2}
+          priority={false}
           showAfter={isTouchDevice && showAfter && !!service.afterImageUrl}
         />
       ))}

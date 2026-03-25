@@ -3,7 +3,8 @@ import { ServiceGrid } from "@/components/ServiceGrid";
 interface ServiceItem {
   id: string;
   title: string;
-  description: string;
+  /** 서비스 특징 태그 목록 (description 대체) */
+  tags: string[];
   imageUrl: string;
   afterImageUrl?: string;
   focalX?: number;

@@ -85,6 +85,7 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     // 2. FormData 파싱
     const rawData = {
       business_name: formData.get("business_name"),
+      business_number: formData.get("business_number") || "",
       phone: formData.get("phone"),
       email: formData.get("email"),
       blog_url: formData.get("blog_url") || "",
@@ -109,6 +110,7 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
     const supabase = await createClient();
     const configData: SiteConfigUpdate = {
       ...validationResult.data,
+      business_number: validationResult.data.business_number || "",
       blog_url: validationResult.data.blog_url || "",
       instagram_url: validationResult.data.instagram_url || "",
       description: validationResult.data.description || "",
