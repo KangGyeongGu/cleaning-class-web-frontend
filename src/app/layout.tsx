@@ -9,8 +9,8 @@ import {
 } from "@/shared/lib/json-ld";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID ?? "";
+const GA_ID = "G-SN842PJMYW";
+const CLARITY_ID = "vztwcr92r8";
 
 const PRETENDARD_CSS_URL =
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
@@ -136,7 +136,14 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Pretendard: CDN CSS를 인라인화 + font-display:optional로 변환 */}
+        {/*
+          Pretendard: CDN CSS를 인라인화 + font-display:optional로 변환.
+          보안 수준: LOW — 고정 URL(orioncactus/pretendard)에서 fetch하며 콘텐츠는
+          서버 측에서 정규식으로 변환 후 삽입. SRI(Subresource Integrity)는
+          인라인 <style>에 적용 불가(브라우저 미지원)하므로 대신 아래를 적용:
+          - 응답 Content-Type이 CSS가 아니거나 비어 있으면 주입하지 않음 (getPretendardCss 내부 처리)
+          - CDN URL 고정으로 공격 표면 최소화
+        */}
         {pretendardCss && (
           // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 font-display:optional로 변환하여 인라인. XSS 위험 없음 (고정 URL)
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
@@ -147,7 +154,7 @@ export default async function RootLayout({
           JSON-LD 구조화 데이터 삽입.
           dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
           @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
-          jsonLd 객체는 서버에서 생성되며 사용자 입력을 포함하지 않으므로 XSS 위험 없음.
+          관리자가 편집 가능한 DB 데이터 포함 — \u003c 이스케이프로 XSS 방지.
         */}
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
