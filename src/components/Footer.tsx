@@ -28,7 +28,8 @@ export function Footer({ siteConfig }: FooterProps) {
   const email = siteConfig?.email ?? "";
   const blogUrl = siteConfig?.blog_url;
   const instagramUrl = siteConfig?.instagram_url;
-  const businessRegistrationNumber = siteConfig?.business_registration_number ?? "";
+  const businessRegistrationNumber =
+    siteConfig?.business_registration_number ?? "";
   const representative = siteConfig?.representative ?? "";
   const address = siteConfig?.address ?? "";
 

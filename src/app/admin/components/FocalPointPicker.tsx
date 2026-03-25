@@ -197,7 +197,7 @@ export function FocalPointPicker({
       {/* aspect-square로 CLS 방지: width/height prop이 h-auto에 의해 오버라이드되므로 컨테이너에서 공간 확보 */}
       <div
         ref={containerRef}
-        className="relative max-w-xs overflow-hidden select-none aspect-square"
+        className="relative aspect-square max-w-xs overflow-hidden select-none"
         style={{ touchAction: "none" }}
       >
         <Image

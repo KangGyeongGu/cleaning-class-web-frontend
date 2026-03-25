@@ -89,11 +89,13 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="000-00-00000"
         />
-        {state && "errors" in state && state.errors?.business_registration_number && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.business_registration_number[0]}
-          </p>
-        )}
+        {state &&
+          "errors" in state &&
+          state.errors?.business_registration_number && (
+            <p className="mt-1 text-xs text-red-500">
+              {state.errors.business_registration_number[0]}
+            </p>
+          )}
       </div>
 
       {/* 전화번호 */}
@@ -189,7 +191,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           </p>
         )}
       </div>
-
 
       {/* 소개글 */}
       <div>

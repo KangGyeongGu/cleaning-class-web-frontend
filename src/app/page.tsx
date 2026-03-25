@@ -74,7 +74,6 @@ const ContactForm = dynamic(
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteConfig = await getSiteConfig();
   return {
     title: {
       absolute: "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스",
