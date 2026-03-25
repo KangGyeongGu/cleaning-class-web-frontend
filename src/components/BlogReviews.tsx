@@ -248,12 +248,12 @@ export function BlogReviews({
           ref={scrollRef}
           className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
         >
-          {reviews.map((review, index) => (
-            <div key={review.id} className="w-[85vw] shrink-0 snap-center">
+          {reviews.map((review) => (
+            <div key={review.id} className="w-11/12 shrink-0 snap-center">
               <ReviewCardWrapper
                 review={review}
                 blogUrl={blogUrl}
-                priority={index === 0}
+                priority={false}
               />
             </div>
           ))}
@@ -286,13 +286,13 @@ export function BlogReviews({
         {/* 데스크톱: slick carousel */}
         <div className="relative hidden px-2 md:block">
           <Slider {...slickSettings}>
-            {reviews.map((review, index) => {
+            {reviews.map((review) => {
               return (
                 <div key={review.id} className="px-3 py-4">
                   <ReviewCardWrapper
                     review={review}
                     blogUrl={blogUrl}
-                    priority={index === 0}
+                    priority={false}
                   />
                 </div>
               );

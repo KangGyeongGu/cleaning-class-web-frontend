@@ -382,16 +382,15 @@ export async function reorderServices(
 
     const supabase = await createClient();
 
-    for (let i = 0; i < orderedIds.length; i++) {
-      const { error } = await supabase
-        .from("services")
-        .update({ sort_order: i })
-        .eq("id", orderedIds[i]);
-
-      if (error) {
-        console.error("reorderServices DB error:", error);
-        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
-      }
+    const results = await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from("services").update({ sort_order: i }).eq("id", id),
+      ),
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      console.error("reorderServices DB error:", failed.error);
+      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");

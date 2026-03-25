@@ -32,7 +32,7 @@ function buildServiceItems(services: ServiceWithImageUrls[]): string {
       <title>${escapeXml(s.title)}</title>
       <link>${SITE_URL}#services</link>
       <description>${escapeXml(s.description)}</description>
-      <pubDate>${new Date().toUTCString()}</pubDate>
+      <pubDate>${new Date(s.updated_at ?? s.created_at).toUTCString()}</pubDate>
     </item>`,
     )
     .join("");

@@ -15,6 +15,8 @@ export type ServiceWithImageUrls = {
   focalY: number;
   afterFocalX: number;
   afterFocalY: number;
+  created_at: string;
+  updated_at: string;
 };
 
 /**
@@ -78,6 +80,8 @@ export async function getPublishedServicesWithImageUrls(): Promise<
       focalY: s.image_focal_y,
       afterFocalX: s.image_after_focal_x ?? 50,
       afterFocalY: s.image_after_focal_y ?? 50,
+      created_at: s.created_at,
+      updated_at: s.updated_at,
     }));
   } catch (err) {
     console.error("[getPublishedServicesWithImageUrls] Unexpected error:", err);

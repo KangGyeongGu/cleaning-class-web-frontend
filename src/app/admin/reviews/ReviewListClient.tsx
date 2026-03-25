@@ -101,14 +101,20 @@ export function ReviewListClient({
     setDragOverIndex(null);
 
     setIsSaving(true);
-    const result = await reorderReviews(updated.map((r) => r.id));
-    setIsSaving(false);
-
-    if (!result.success) {
-      alert(result.error || "순서 변경 중 오류가 발생했습니다.");
+    try {
+      const result = await reorderReviews(updated.map((r) => r.id));
+      if (!result.success) {
+        alert(result.error || "순서 변경 중 오류가 발생했습니다.");
+        setReviews(initialReviews);
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("reorderReviews error:", err);
+      alert("순서 변경 중 오류가 발생했습니다.");
       setReviews(initialReviews);
-    } else {
-      router.refresh();
+    } finally {
+      setIsSaving(false);
     }
   };
 

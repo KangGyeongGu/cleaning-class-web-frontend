@@ -331,13 +331,13 @@ export async function reorderReviews(
 
     const supabase = await createClient();
 
-    // 배치 upsert로 sort_order를 원자적으로 일괄 갱신 — 개별 UPDATE 루프의 부분 실패 위험 제거
-    // Supabase upsert 타입 시그니처가 Insert 타입을 요구하지만, 런타임에서는 id 기준으로 기존 행만 갱신함
-    const upsertRows = orderedIds.map((id, i) => ({
-      id,
-      sort_order: i,
-    })) as unknown as ReviewInsert[];
-    const { error } = await supabase.from("reviews").upsert(upsertRows);
+    const results = await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from("reviews").update({ sort_order: i }).eq("id", id),
+      ),
+    );
+    const failed = results.find((r) => r.error);
+    const error = failed?.error;
 
     if (error) {
       console.error("reorderReviews DB error:", error);

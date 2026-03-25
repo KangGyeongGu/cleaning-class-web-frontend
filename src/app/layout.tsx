@@ -9,8 +9,16 @@ import {
 } from "@/shared/lib/json-ld";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
-const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID ?? "";
+// 스크립트 인젝션 방지: 영숫자와 하이픈만 허용
+const ANALYTICS_ID_PATTERN = /^[A-Za-z0-9-]+$/;
+const GA_ID = ANALYTICS_ID_PATTERN.test(process.env.NEXT_PUBLIC_GA_ID ?? "")
+  ? (process.env.NEXT_PUBLIC_GA_ID ?? "")
+  : "";
+const CLARITY_ID = ANALYTICS_ID_PATTERN.test(
+  process.env.NEXT_PUBLIC_CLARITY_ID ?? "",
+)
+  ? (process.env.NEXT_PUBLIC_CLARITY_ID ?? "")
+  : "";
 
 const PRETENDARD_CSS_URL =
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";

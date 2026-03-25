@@ -27,9 +27,11 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
     null,
   );
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [tags, setTags] = useState<string[]>(review.tags);
+  const [tags, setTags] = useState<string[]>(review.tags ?? []);
   const [tagInput, setTagInput] = useState("");
-  const existingService = review.tags.find((t) => SERVICE_TYPES.includes(t));
+  const existingService = (review.tags ?? []).find((t) =>
+    SERVICE_TYPES.includes(t),
+  );
   const [selectedService, setSelectedService] = useState<string>(
     existingService || "",
   );

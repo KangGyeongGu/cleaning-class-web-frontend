@@ -101,14 +101,20 @@ export function ServiceListClient({
     setDragOverIndex(null);
 
     setIsSaving(true);
-    const result = await reorderServices(updated.map((s) => s.id));
-    setIsSaving(false);
-
-    if (!result.success) {
-      alert(result.error || "순서 변경 중 오류가 발생했습니다.");
+    try {
+      const result = await reorderServices(updated.map((s) => s.id));
+      if (!result.success) {
+        alert(result.error || "순서 변경 중 오류가 발생했습니다.");
+        setServices(initialServices);
+      } else {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("reorderServices error:", err);
+      alert("순서 변경 중 오류가 발생했습니다.");
       setServices(initialServices);
-    } else {
-      router.refresh();
+    } finally {
+      setIsSaving(false);
     }
   };
 
