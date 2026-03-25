@@ -1,15 +1,9 @@
 import Link from "next/link";
-import { createClient } from "@/shared/lib/supabase/server";
+import { getAdminDashboardData } from "@/shared/lib/queries/admin";
 import { ImageIcon, Layers, Settings } from "lucide-react";
 
 export default async function AdminDashboardPage() {
-  const supabase = await createClient();
-
-  // 전체 리뷰/서비스 수 카운트
-  const [{ count: reviewCount }, { count: serviceCount }] = await Promise.all([
-    supabase.from("reviews").select("*", { count: "exact", head: true }),
-    supabase.from("services").select("*", { count: "exact", head: true }),
-  ]);
+  const { serviceCount, reviewCount } = await getAdminDashboardData();
 
   return (
     <div className="mx-auto max-w-6xl p-8">
@@ -21,17 +15,13 @@ export default async function AdminDashboardPage() {
           <p className="mb-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
             전체 서비스 수
           </p>
-          <p className="text-4xl font-black text-slate-900">
-            {serviceCount ?? 0}
-          </p>
+          <p className="text-4xl font-black text-slate-900">{serviceCount}</p>
         </div>
         <div className="border border-slate-200 p-6">
           <p className="mb-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
             전체 리뷰 수
           </p>
-          <p className="text-4xl font-black text-slate-900">
-            {reviewCount ?? 0}
-          </p>
+          <p className="text-4xl font-black text-slate-900">{reviewCount}</p>
         </div>
       </div>
 
