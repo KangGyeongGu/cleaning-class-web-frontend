@@ -21,7 +21,7 @@ export function HeroCTA({ phone }: HeroCTAProps) {
       </button>
 
       {phone && (
-        <div className="mt-4 flex animate-[fadeIn_0.8s_0.9s_both] items-center justify-center gap-3 text-base font-normal text-slate-600">
+        <div className="mt-4 flex animate-[fadeIn_0.8s_0.9s_both] items-center justify-center gap-3 text-base font-light text-slate-600">
           <span>전화 상담</span>
           <a
             href={`tel:${phone}`}

@@ -102,7 +102,7 @@ function ReviewCard({
           {review.title}
         </h3>
 
-        <p className="mb-4 line-clamp-2 min-h-10 text-sm leading-relaxed font-normal text-slate-700">
+        <p className="mb-4 line-clamp-2 min-h-10 text-sm leading-relaxed font-light text-slate-700">
           {review.summary}
         </p>
 
@@ -223,7 +223,7 @@ export function BlogReviews({
                 href={blogUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
+                className="flex items-center gap-2 text-sm font-light tracking-wide text-slate-500 transition-colors hover:text-slate-900"
               >
                 <NaverBlogIcon size={16} /> BLOG{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -234,7 +234,7 @@ export function BlogReviews({
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
+                className="flex items-center gap-2 text-sm font-light tracking-wide text-slate-500 transition-colors hover:text-slate-900"
               >
                 <Instagram size={16} /> INSTAGRAM{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />

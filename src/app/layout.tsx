@@ -24,9 +24,9 @@ const PRETENDARD_CSS_URL =
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
 
 /**
- * Pretendard CDN CSS를 fetch하여 font-display: optional로 변환.
- * - swap → optional: 폰트 미도착 시 fallback 유지, swap 없음 → LCP 재측정 차단
- * - ISR(revalidate=3600)로 캐시되므로 매 요청마다 fetch하지 않음
+ * Pretendard CDN CSS를 fetch하여 인라인 삽입.
+ * - font-display: swap 유지 → 첫 방문에서도 폰트 교체 보장 (1회성 방문 서비스 특성)
+ * - ISR(revalidate=86400)로 캐시되므로 매 요청마다 fetch하지 않음
  * - 인라인 <style>로 삽입하여 외부 CSS 요청 및 render-blocking 완전 제거
  */
 async function getPretendardCss(): Promise<string> {
@@ -46,7 +46,7 @@ async function getPretendardCss(): Promise<string> {
       /url\(\.\.\/\.\.\/\.\.\/packages\/pretendard\/dist\/web\/variable\//g,
       `url(${cdnBase}`,
     );
-    return css.replace(/font-display:\s*swap/g, "font-display:optional");
+    return css;
   } catch {
     return "";
   }
@@ -148,9 +148,9 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Pretendard: CDN CSS를 인라인화 + font-display:optional로 변환 */}
+        {/* Pretendard: CDN CSS를 인라인화 (font-display:swap 유지) */}
         {pretendardCss && (
-          // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 font-display:optional로 변환하여 인라인. XSS 위험 없음 (고정 URL)
+          // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 인라인. XSS 위험 없음 (고정 URL, Content-Type 검증 완료)
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
         )}
       </head>
