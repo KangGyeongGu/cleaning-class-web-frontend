@@ -73,6 +73,22 @@ rules:
       include:
         - /src/**/*.tsx
 
+  # ─── Zod .url() Without Protocol Validation ───────────────────
+  - id: zod-url-without-protocol-validation
+    message: >
+      z.string().url() accepts javascript: and data: URIs.
+      Add .refine() to enforce http:// or https:// protocol,
+      or use .startsWith('http') validation.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: z.string().url(...)
+      - pattern-not-inside: |
+          z.string().url(...).refine(...)
+    paths:
+      include:
+        - /src/shared/lib/schema.ts
+
   # ─── Email Template Injection ──────────────────────────────────
   - id: email-template-unescaped
     message: >

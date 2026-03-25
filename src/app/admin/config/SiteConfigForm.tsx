@@ -39,19 +39,42 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
+      {/* 대표자명 */}
+      <div>
+        <label
+          htmlFor="representative"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          대표자명 (선택)
+        </label>
+        <input
+          id="representative"
+          name="representative"
+          type="text"
+          defaultValue={config.representative ?? ""}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          placeholder="대표자명을 입력하세요"
+        />
+        {state && "errors" in state && state.errors?.representative && (
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.representative[0]}
+          </p>
+        )}
+      </div>
+
       {/* 사업자번호 */}
       <div>
         <label
-          htmlFor="business_number"
+          htmlFor="business_registration_number"
           className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
         >
           사업자번호 (선택)
         </label>
         <input
-          id="business_number"
-          name="business_number"
+          id="business_registration_number"
+          name="business_registration_number"
           type="text"
-          defaultValue={config.business_number || ""}
+          defaultValue={config.business_registration_number || ""}
           onInput={(e) => {
             const input = e.currentTarget;
             const digits = input.value.replace(/\D/g, "").slice(0, 10);
@@ -66,9 +89,9 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="000-00-00000"
         />
-        {state && "errors" in state && state.errors?.business_number && (
+        {state && "errors" in state && state.errors?.business_registration_number && (
           <p className="mt-1 text-xs text-red-500">
-            {state.errors.business_number[0]}
+            {state.errors.business_registration_number[0]}
           </p>
         )}
       </div>
@@ -167,8 +190,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 사이트 URL (수정 불가, hidden으로 기존 값 유지) */}
-      <input type="hidden" name="site_url" value={config.site_url} />
 
       {/* 소개글 */}
       <div>
@@ -193,18 +214,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           </p>
         )}
       </div>
-
-      {/* 기존 지역/시군구는 hidden으로 유지 (json-ld 호환) */}
-      <input
-        type="hidden"
-        name="address_region"
-        value={config.address_region}
-      />
-      <input
-        type="hidden"
-        name="address_locality"
-        value={config.address_locality}
-      />
 
       {/* 주소 */}
       <div>

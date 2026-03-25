@@ -1,16 +1,8 @@
+import { getNextServiceSortOrder } from "@/shared/lib/queries/service";
 import { NewServiceForm } from "@/app/admin/services/new/NewServiceForm";
-import { createClient } from "@/shared/lib/supabase/server";
 
 export default async function NewServicePage() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("services")
-    .select("sort_order")
-    .order("sort_order", { ascending: false })
-    .limit(1)
-    .single();
-
-  const nextSortOrder = (data?.sort_order ?? -1) + 1;
+  const nextSortOrder = await getNextServiceSortOrder();
 
   return (
     <div className="mx-auto max-w-4xl p-8">

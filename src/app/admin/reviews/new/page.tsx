@@ -1,16 +1,8 @@
+import { getNextReviewSortOrder } from "@/shared/lib/queries/review";
 import { NewReviewForm } from "@/app/admin/reviews/new/NewReviewForm";
-import { createClient } from "@/shared/lib/supabase/server";
 
 export default async function NewReviewPage() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("reviews")
-    .select("sort_order")
-    .order("sort_order", { ascending: false })
-    .limit(1)
-    .single();
-
-  const nextSortOrder = (data?.sort_order ?? -1) + 1;
+  const nextSortOrder = await getNextReviewSortOrder();
 
   return (
     <div className="mx-auto max-w-4xl p-8">

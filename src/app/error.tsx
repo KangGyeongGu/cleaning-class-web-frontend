@@ -8,7 +8,7 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+    <main className="flex min-h-screen items-center justify-center bg-white px-4">
       <div className="max-w-md text-center">
         <h1 className="mb-4 text-6xl font-black text-slate-900">ERROR</h1>
         <p className="mb-8 text-lg font-light text-slate-600">
@@ -27,6 +27,6 @@ export default function Error({
           다시 시도
         </button>
       </div>
-    </div>
+    </main>
   );
 }

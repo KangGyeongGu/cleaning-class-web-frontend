@@ -5,12 +5,12 @@ import { Hero } from "@/components/Hero";
 import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { Navbar } from "@/components/Navbar";
 import { getSiteConfig } from "@/shared/lib/site-config";
-import type { SiteConfig } from "@/shared/types/database";
 import {
   getPublishedReviews,
   getPublishedServicesWithImageUrls,
 } from "@/shared/lib/home";
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
+import { buildDescription } from "@/shared/lib/format";
 
 const Services = dynamic(
   () =>
@@ -73,43 +73,13 @@ const ContactForm = dynamic(
 // ISR: 1시간마다 재검증
 export const revalidate = 3600;
 
-function buildDescription(siteConfig?: SiteConfig | null): string {
-  const phone = siteConfig?.phone ?? "010-6711-2964";
-  const full = `${phone} · 연중무휴 · 전주 청소업체 청소클라쓰 · 거주청소 · 입주청소 · 정기청소 · 특수청소 · 쓰레기집청소 · 상가청소`;
-  return full.length > 150 ? full.slice(0, 147) + "..." : full;
-}
-
 export async function generateMetadata(): Promise<Metadata> {
   const siteConfig = await getSiteConfig();
-  const description = buildDescription(siteConfig);
-  const title = "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스";
   return {
-    title: { absolute: title },
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      images: [
-        {
-          url: "/opengraph-image",
-          width: 1200,
-          height: 630,
-          alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
-        },
-      ],
+    title: {
+      absolute: "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스",
     },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [
-        {
-          url: "/opengraph-image",
-          alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
-        },
-      ],
-    },
+    description: buildDescription(),
   };
 }
 

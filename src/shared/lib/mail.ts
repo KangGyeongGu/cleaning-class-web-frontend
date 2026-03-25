@@ -53,9 +53,18 @@ let cachedTransporter: Mail | null = null;
 
 function getTransporter(): Mail {
   if (!cachedTransporter) {
+    const port = Number(process.env.SMTP_PORT);
+    if (
+      !process.env.SMTP_HOST ||
+      !process.env.SMTP_USER ||
+      !process.env.SMTP_PASS ||
+      isNaN(port)
+    ) {
+      throw new Error("SMTP 환경변수가 설정되지 않았습니다");
+    }
     cachedTransporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
+      port,
       secure: true,
       auth: {
         user: process.env.SMTP_USER,

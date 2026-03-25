@@ -69,15 +69,11 @@ export async function createReview(prevState: unknown, formData: FormData) {
     const { error } = await supabase.from("reviews").insert(reviewData);
 
     if (error) {
-      console.error("createReview DB error:", error);
-      // 실패 시 업로드된 이미지 삭제 (롤백 실패해도 원래 오류를 유지)
+      // 실패 시 업로드된 이미지 삭제
       if (imagePath) {
-        try {
-          await deleteImage(BUCKET, imagePath);
-        } catch (rollbackErr) {
-          console.error("createReview: image rollback failed:", rollbackErr);
-        }
+        await deleteImage(BUCKET, imagePath);
       }
+      console.error("createReview DB error:", error);
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
@@ -180,30 +176,22 @@ export async function updateReview(
       .eq("id", reviewId);
 
     if (updateError) {
-      console.error("updateReview DB error:", updateError);
-      // 실패 시 새로 업로드된 이미지만 삭제 (기존 이미지는 건드리지 않음, 롤백 실패해도 원래 오류를 유지)
+      // 실패 시 새로 업로드된 이미지만 삭제 (기존 이미지는 건드리지 않음)
       if (newImagePath !== existingImagePath) {
-        try {
-          await deleteImage(BUCKET, newImagePath);
-        } catch (rollbackErr) {
-          console.error("updateReview: image rollback failed:", rollbackErr);
-        }
+        await deleteImage(BUCKET, newImagePath);
       }
+      console.error("updateReview DB error:", updateError);
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // DB UPDATE 성공 시 기존 이미지 삭제 (실패해도 성공 응답 유지)
+    // DB UPDATE 성공 시 기존 이미지 삭제
     if (
       imageFile &&
       imageFile.size > 0 &&
       existingImagePath &&
       newImagePath !== existingImagePath
     ) {
-      try {
-        await deleteImage(BUCKET, existingImagePath);
-      } catch (err) {
-        console.error("updateReview: old image cleanup failed:", err);
-      }
+      await deleteImage(BUCKET, existingImagePath);
     }
 
     // 7. 캐시 무효화
@@ -259,13 +247,9 @@ export async function deleteReview(reviewId: string) {
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // 4. Storage 이미지 삭제 (실패해도 성공 응답 유지)
+    // 4. Storage 이미지 삭제
     if (existingImagePath) {
-      try {
-        await deleteImage(BUCKET, existingImagePath);
-      } catch (err) {
-        console.error("deleteReview: image cleanup failed:", err);
-      }
+      await deleteImage(BUCKET, existingImagePath);
     }
 
     // 5. 캐시 무효화
@@ -342,16 +326,17 @@ export async function reorderReviews(
 
     const supabase = await createClient();
 
-    for (let i = 0; i < orderedIds.length; i++) {
-      const { error } = await supabase
-        .from("reviews")
-        .update({ sort_order: i })
-        .eq("id", orderedIds[i]);
+    // 배치 upsert로 sort_order를 원자적으로 일괄 갱신 — 개별 UPDATE 루프의 부분 실패 위험 제거
+    // Supabase upsert 타입 시그니처가 Insert 타입을 요구하지만, 런타임에서는 id 기준으로 기존 행만 갱신함
+    const upsertRows = orderedIds.map((id, i) => ({
+      id,
+      sort_order: i,
+    })) as unknown as ReviewInsert[];
+    const { error } = await supabase.from("reviews").upsert(upsertRows);
 
-      if (error) {
-        console.error("reorderReviews DB error:", error);
-        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
-      }
+    if (error) {
+      console.error("reorderReviews DB error:", error);
+      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");

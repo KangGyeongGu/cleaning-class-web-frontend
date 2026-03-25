@@ -28,7 +28,16 @@ allowed-tools: Read, Write, Bash, Agent
       - spawn #2 (fresh context + previous failure SUMMARY only — not full error log)
       - spawn #2 failure → spawn #3 (fresh context + cumulative failure summary)
       - spawn #3 failure → BLOCKED for this work item
-   c. **Wave Gate**: `npx tsc --noEmit && npx vitest run && semgrep --config=auto --config=.semgrep/ src/`
+   c. **Worktree Collect & Cleanup**: develop-worker는 `isolation: worktree`로 실행됨.
+      - 각 워커 완료 후 worktreePath가 반환되면 변경 파일을 메인 작업 디렉토리로 복사
+      - 복사 완료 후 즉시 정리:
+        ```bash
+        rm -rf .claude/worktrees/agent-*
+        git worktree prune
+        git branch --list 'worktree-agent-*' | xargs -r git branch -D
+        ```
+      - 이 정리는 Wave Gate 실행 전에 반드시 완료해야 함 (worktree 잔여물이 eslint/semgrep 스캔에 포함되는 것을 방지)
+   d. **Wave Gate**: `npx tsc --noEmit && npx vitest run && semgrep --config=auto --config=.semgrep/ src/`
       - On failure: apply Fresh Retry Protocol for affected Task
 5. **Final Gate**:
    a. `npm run build` — production build verification

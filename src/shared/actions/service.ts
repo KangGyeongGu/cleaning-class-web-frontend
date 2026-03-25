@@ -49,6 +49,13 @@ export async function createService(prevState: unknown, formData: FormData) {
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "Before 이미지를 선택해주세요." };
     }
+
+    // SEC-005: 서버 메모리 버퍼링 전 파일 크기 제한 (10MB)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
+    if (imageFile.size > MAX_FILE_SIZE) {
+      return { success: false, error: "파일 크기는 10MB 이하여야 합니다." };
+    }
+
     let imagePath = "";
 
     if (imageFile && imageFile.size > 0) {
@@ -56,6 +63,12 @@ export async function createService(prevState: unknown, formData: FormData) {
     }
 
     const imageAfterFile = formData.get("image_after") as File | null;
+
+    // SEC-005: after 이미지도 동일한 크기 제한 적용
+    if (imageAfterFile && imageAfterFile.size > MAX_FILE_SIZE) {
+      return { success: false, error: "파일 크기는 10MB 이하여야 합니다." };
+    }
+
     let imageAfterPath = "";
 
     if (imageAfterFile && imageAfterFile.size > 0) {
@@ -165,12 +178,16 @@ export async function updateService(
       return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
     }
 
-    const existing = existingService as {
-      image_path: string;
-      image_after_path: string;
-    };
+    // STR-004: as 캐스트 제거 — Supabase 추론 반환 타입을 그대로 사용
+    const existing = existingService;
+
+    // SEC-005: 서버 메모리 버퍼링 전 파일 크기 제한 (10MB)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
     const imageFile = formData.get("image") as File | null;
+    if (imageFile && imageFile.size > MAX_FILE_SIZE) {
+      return { success: false, error: "파일 크기는 10MB 이하여야 합니다." };
+    }
     let newImagePath = existing.image_path;
 
     if (imageFile && imageFile.size > 0) {
@@ -178,6 +195,11 @@ export async function updateService(
     }
 
     const imageAfterFile = formData.get("image_after") as File | null;
+
+    // SEC-005: after 이미지도 동일한 크기 제한 적용
+    if (imageAfterFile && imageAfterFile.size > MAX_FILE_SIZE) {
+      return { success: false, error: "파일 크기는 10MB 이하여야 합니다." };
+    }
     let newImageAfterPath = existing.image_after_path;
 
     if (imageAfterFile && imageAfterFile.size > 0) {
@@ -280,10 +302,8 @@ export async function deleteService(serviceId: string) {
       return { success: false, error: "서비스 삭제 중 오류가 발생했습니다." };
     }
 
-    const existing = existingService as {
-      image_path: string;
-      image_after_path: string;
-    };
+    // STR-004: as 캐스트 제거 — Supabase 추론 반환 타입을 그대로 사용
+    const existing = existingService;
 
     const { error: deleteError } = await supabase
       .from("services")
@@ -383,16 +403,17 @@ export async function reorderServices(
 
     const supabase = await createClient();
 
-    for (let i = 0; i < orderedIds.length; i++) {
-      const { error } = await supabase
-        .from("services")
-        .update({ sort_order: i })
-        .eq("id", orderedIds[i]);
+    // LOG-005: 순차 루프 대신 병렬 Promise.all로 교체 — N→동시 실행으로 총 대기 시간 최소화 및 전체 실패 감지 개선
+    const results = await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from("services").update({ sort_order: i }).eq("id", id),
+      ),
+    );
 
-      if (error) {
-        console.error("reorderServices DB error:", error);
-        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
-      }
+    const firstError = results.find((r) => r.error)?.error;
+    if (firstError) {
+      console.error("reorderServices DB error:", firstError);
+      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
     }
 
     revalidatePath("/");

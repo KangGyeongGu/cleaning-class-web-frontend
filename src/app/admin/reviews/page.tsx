@@ -1,34 +1,16 @@
 import Link from "next/link";
-import { createClient } from "@/shared/lib/supabase/server";
-import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { Plus } from "lucide-react";
+import { getReviews } from "@/shared/lib/queries/review";
+import { getSiteConfig } from "@/shared/lib/site-config";
 import { ReviewListClient } from "@/app/admin/reviews/ReviewListClient";
 import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
 import { updateReviewDescription } from "@/shared/actions/site-config";
-import type { Review, SiteConfig } from "@/shared/types/database";
 
 export default async function ReviewsPage() {
-  const supabase = await createClient();
-
-  const [reviewsResult, configResult] = await Promise.all([
-    supabase
-      .from("reviews")
-      .select("*")
-      .order("sort_order", { ascending: true }),
-    supabase.from("site_config").select("*").single(),
+  const [reviewsWithImageUrls, siteConfig] = await Promise.all([
+    getReviews(),
+    getSiteConfig(),
   ]);
-
-  if (reviewsResult.error) {
-    console.error("리뷰 목록 조회 실패:", reviewsResult.error);
-  }
-
-  const siteConfig = configResult.data as SiteConfig | null;
-  const reviewsWithImageUrls = ((reviewsResult.data as Review[]) ?? []).map(
-    (review) => ({
-      ...review,
-      imageUrl: getReviewImageUrl(review.image_path),
-    }),
-  );
 
   return (
     <div className="mx-auto max-w-7xl p-8">
@@ -55,9 +37,7 @@ export default async function ReviewsPage() {
           <p className="font-light text-slate-500">등록된 리뷰가 없습니다.</p>
         </div>
       ) : (
-        <ReviewListClient
-          reviews={reviewsWithImageUrls as (Review & { imageUrl: string })[]}
-        />
+        <ReviewListClient reviews={reviewsWithImageUrls} />
       )}
     </div>
   );

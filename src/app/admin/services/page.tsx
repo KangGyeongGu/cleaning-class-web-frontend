@@ -1,34 +1,16 @@
 import Link from "next/link";
-import { createClient } from "@/shared/lib/supabase/server";
-import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
 import { Plus } from "lucide-react";
+import { getServices } from "@/shared/lib/queries/service";
+import { getSiteConfig } from "@/shared/lib/site-config";
 import { ServiceListClient } from "@/app/admin/services/ServiceListClient";
 import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
 import { updateServiceDescription } from "@/shared/actions/site-config";
-import type { Service, SiteConfig } from "@/shared/types/database";
 
 export default async function ServicesPage() {
-  const supabase = await createClient();
-
-  const [servicesResult, configResult] = await Promise.all([
-    supabase
-      .from("services")
-      .select("*")
-      .order("sort_order", { ascending: true }),
-    supabase.from("site_config").select("*").single(),
+  const [servicesWithImageUrls, siteConfig] = await Promise.all([
+    getServices(),
+    getSiteConfig(),
   ]);
-
-  if (servicesResult.error) {
-    console.error("서비스 목록 조회 실패:", servicesResult.error);
-  }
-
-  const siteConfig = configResult.data as SiteConfig | null;
-  const servicesWithImageUrls = ((servicesResult.data as Service[]) ?? []).map(
-    (service) => ({
-      ...service,
-      imageUrl: getServiceImageUrl(service.image_path),
-    }),
-  );
 
   return (
     <div className="mx-auto max-w-7xl p-8">
@@ -55,9 +37,7 @@ export default async function ServicesPage() {
           <p className="font-light text-slate-500">등록된 서비스가 없습니다.</p>
         </div>
       ) : (
-        <ServiceListClient
-          services={servicesWithImageUrls as (Service & { imageUrl: string })[]}
-        />
+        <ServiceListClient services={servicesWithImageUrls} />
       )}
     </div>
   );

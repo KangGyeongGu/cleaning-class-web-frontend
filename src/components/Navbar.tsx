@@ -112,7 +112,6 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
             alt=""
             width={44}
             height={44}
-            priority
             sizes="44px"
             className="rounded-sm"
           />
