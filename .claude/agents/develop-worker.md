@@ -8,6 +8,8 @@ model: sonnet
 maxTurns: 25
 isolation: worktree
 permissionMode: acceptEdits
+skills:
+  - frontend-design
 ---
 
 You are a senior TypeScript developer implementing features for the cleaning-class-frontend Next.js 16 project.

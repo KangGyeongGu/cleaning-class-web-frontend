@@ -13,7 +13,7 @@ allowed-tools: Read, Bash, Write, Agent
 
 ## Instructions
 
-### Step 0 — 초기화 및 참조 문서 수집
+### Step 0 — Initialization and Reference Document Collection
 1. Read `.claude/CLAUDE.md` for project rules and tech stack.
 2. Read `agent-system.md` for system design reference.
 3. Read `.claude/known-failures.md` (if exists — failure patterns to check against during planning).
@@ -32,7 +32,7 @@ allowed-tools: Read, Bash, Write, Agent
    mkdir -p .claude/plans/workers
    ```
 
-### Step 1 — 관련 도메인 판단 및 병렬 plan-worker 조사
+### Step 1 — Determine Relevant Domains and Spawn Parallel plan-workers
 Based on the user's objective and `reference_files`, determine which domains are relevant. Spawn only the relevant `plan-worker` agents.
 
 **Available domains and when to spawn**:
@@ -58,7 +58,7 @@ Each worker independently investigates its domain and writes its report to `.cla
 
 Wait for all spawned workers to complete before proceeding.
 
-### Step 2 — 보고서 수집 및 요구사항 분류
+### Step 2 — Collect Reports and Classify Requirements
 Read all spawned worker report files from `.claude/plans/workers/`.
 
 **Validation before synthesis**: If `audit-latest.json` was in `reference_files`, verify that every item in its `open_findings` appears in at least one worker report. If any carry-forward item is missing from all worker reports, add it directly to the work_items as-is — omission is not permitted.
@@ -70,13 +70,13 @@ Read all spawned worker report files from `.claude/plans/workers/`.
 
 **Deduplication**: If the same issue appears in multiple worker reports, merge into one Task Card (keep the more specific description). Track the source domains in the `source` field.
 
-**Task Card 분해** — each Task Card:
-- `id`: `TASK-{DOMAIN}-NNN` (예: TASK-SEC-001)
-- `objective`: 단일 책임 — 한 Task Card가 여러 도메인에 걸치면 분리
-- `owned_paths`: 파일 경로 목록, Task Card 간 중복 없음
-- `depends_on`: id 참조 목록
+**Task Card decomposition** — each Task Card:
+- `id`: `TASK-{DOMAIN}-NNN` (e.g., TASK-SEC-001)
+- `objective`: single responsibility — split if a Task Card spans multiple domains
+- `owned_paths`: file path list, no overlap between Task Cards
+- `depends_on`: id reference list
 - `complexity`: low | medium | high
-- `criteria`: 완료 기준 (검증 가능한 항목). 5개 이하. 변경 파일 3개 이하 권장.
+- `criteria`: completion criteria (verifiable items). Max 5. Prefer ≤ 3 changed files.
 - `status`: "pending"
 - `source`: "structure | image | seo | logic | security | requirements | carry_forward"
 
@@ -85,9 +85,9 @@ Read all spawned worker report files from `.claude/plans/workers/`.
 2. `medium` / `warning` items
 3. `low` / `info` items
 
-Wave 규칙: `depends_on`이 없거나 같은 Wave 내 Task만 의존하는 경우 동일 Wave에 배치.
+Wave rule: items with no `depends_on` or depending only on items within the same Wave are placed in the same Wave.
 
-### Step 2.5 — Gate 검증 (자기 검증)
+### Step 2.5 — Gate Verification (self-check)
 
 Before writing output, verify the plan passes both gates:
 
@@ -104,7 +104,7 @@ Before writing output, verify the plan passes both gates:
 
 On Gate failure: fix the plan and re-verify. Do not proceed to Step 3 until both gates pass.
 
-### Step 3 — 산출물 저장
+### Step 3 — Save Artifacts
 **`.claude/plans/active/PLAN.json`**:
 ```json
 {
@@ -140,26 +140,26 @@ On Gate failure: fix the plan and re-verify. Do not proceed to Step 3 until both
 }
 ```
 
-**`.claude/plans/active/PLAN.md`** — 사용자 검토용 한국어 요약:
-- 목표, 이월 항목 수 (`carry_forward_count`)
-- 범위 / 비범위
-- **scope_decisions의 exclude 항목을 별도 표시** → 사용자 검토 요청
-- Task Card 요약 (id, objective, owned_paths, criteria, source)
-- 실행 순서 (Wave 기반)
-- 리스크, 완료 기준
+**`.claude/plans/active/PLAN.md`** — Korean summary for user review:
+- Objective, carry-forward count (`carry_forward_count`)
+- In-scope / out-of-scope
+- **Highlight excluded items from scope_decisions** — request user review
+- Task Card summary (id, objective, owned_paths, criteria, source)
+- Execution order (Wave-based)
+- Risks, completion criteria
 
-### Step 4 — 사용자 승인 대기
-PLAN.md를 사용자에게 제시하고 승인을 요청한다.
-- scope_decisions에서 exclude된 항목을 별도 표시하여 사용자 검토 요청
-- 사용자가 definite 항목도 직접 제거 가능 (scope 제외 최종 권한)
+### Step 4 — Await User Approval
+Present PLAN.md to the user and request approval.
+- Highlight excluded items from scope_decisions for user review
+- User may also remove definite items (final authority on scope exclusion)
 
-승인 시: `.claude/status.json`의 `stage: "planned"`, `approved_at` 갱신.
+On approval: update `.claude/status.json` with `stage: "planned"`, `approved_at`.
 
 ## Constraints
-- Step 1은 반드시 단일 메시지에서 모든 plan-worker를 병렬 spawn (순차 spawn 금지)
-- Current Session은 Step 1에서 코드베이스를 직접 탐색하지 않는다
-- Current Session은 plan-worker에게 체크리스트를 주입하지 않는다 — 도메인 지식은 plan-worker가 보유
-- `audit-latest.json`의 `open_findings`는 전량 포함 필수 — 임의 제외 금지
-- 구현 시작 금지
-- 소스 파일 수정 금지
-- owned_paths 중복 금지
+- Step 1 MUST spawn all plan-workers in a single message (no sequential spawning)
+- Current Session does NOT explore the codebase in Step 1
+- Current Session does NOT inject checklists into plan-workers — domain knowledge is in the worker definition
+- All `open_findings` from `audit-latest.json` must be included — arbitrary exclusion prohibited
+- No implementation — planning only
+- No source file modifications
+- No overlapping owned_paths between Task Cards
