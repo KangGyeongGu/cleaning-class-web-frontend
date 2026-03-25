@@ -12,6 +12,25 @@ rules:
       include:
         - /src/**/*.tsx
 
+  # ─── Direct Supabase Call in page.tsx ──────────────────────────
+  - id: direct-supabase-in-page
+    message: >
+      page.tsx에서 Supabase를 직접 호출하고 있습니다.
+      데이터 조회는 shared/lib/ 헬퍼 함수로 추출하세요.
+      page.tsx는 라우팅과 페이지 조합만 담당해야 합니다.
+    severity: ERROR
+    languages: [typescript]
+    pattern: |
+      import { createClient } from "@/shared/lib/supabase/server";
+    paths:
+      include:
+        - /src/app/**/page.tsx
+
+  # ─── Number(process.env) Without NaN Guard ───────────────────
+  # semgrep 한계: 동일 스코프 후속 코드의 isNaN 가드 유무를 판단 불가.
+  # 이 규칙은 의미적 리뷰어(AI)가 담당하므로 제거.
+  # 대신 mail.ts에 이미 isNaN 가드가 적용됨 (LOG-007 해소).
+
   # ─── Console.log in Production ─────────────────────────────────
   - id: console-log-in-component
     message: >
