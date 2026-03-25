@@ -11,6 +11,7 @@ tools: Read, Grep, Glob, Write
 disallowedTools: Edit, Bash
 model: sonnet
 maxTurns: 25
+permissionMode: default
 ---
 
 # plan-worker

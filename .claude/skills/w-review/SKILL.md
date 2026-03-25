@@ -6,7 +6,7 @@ description: >
   AI review of code quality, architecture, images, SEO, or security.
   Auto-invoked on "review", "review code", "check quality" related requests.
 argument-hint: "[domain: all|structure|image|seo|logic|security]"
-allowed-tools: Bash
+allowed-tools: Bash, Agent
 ---
 
 # Review Skill

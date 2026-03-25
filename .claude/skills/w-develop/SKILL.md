@@ -5,7 +5,7 @@ description: >
   approved plan and runs the verification pipeline (Wave Gate + Final Gate).
   Auto-invoked on "develop", "implement", "build" related requests.
 argument-hint: "[task-id or empty for all]"
-allowed-tools: Read, Bash, Agent
+allowed-tools: Read, Write, Bash, Agent
 ---
 
 # Develop Skill
