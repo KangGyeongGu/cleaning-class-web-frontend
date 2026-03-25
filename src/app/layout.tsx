@@ -9,8 +9,8 @@ import {
 } from "@/shared/lib/json-ld";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
-const GA_ID = "G-SN842PJMYW";
-const CLARITY_ID = "vztwcr92r8";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "";
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID ?? "";
 
 const PRETENDARD_CSS_URL =
   "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
