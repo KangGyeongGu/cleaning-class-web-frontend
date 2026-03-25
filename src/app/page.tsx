@@ -90,11 +90,25 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
+      images: [
+        {
+          url: "/opengraph-image",
+          width: 1200,
+          height: 630,
+          alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
+      images: [
+        {
+          url: "/opengraph-image",
+          alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+        },
+      ],
     },
   };
 }

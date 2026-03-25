@@ -118,7 +118,7 @@ export function ServiceCard({
           {service.tags.map((tag) => (
             <span
               key={tag}
-              className="whitespace-nowrap rounded-md bg-slate-100 px-3 py-1 text-sm text-slate-600"
+              className="rounded-md bg-slate-100 px-3 py-1 text-sm whitespace-nowrap text-slate-600"
             >
               {tag}
             </span>

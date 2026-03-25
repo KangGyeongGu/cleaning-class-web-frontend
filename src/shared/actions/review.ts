@@ -69,11 +69,15 @@ export async function createReview(prevState: unknown, formData: FormData) {
     const { error } = await supabase.from("reviews").insert(reviewData);
 
     if (error) {
-      // 실패 시 업로드된 이미지 삭제
-      if (imagePath) {
-        await deleteImage(BUCKET, imagePath);
-      }
       console.error("createReview DB error:", error);
+      // 실패 시 업로드된 이미지 삭제 (롤백 실패해도 원래 오류를 유지)
+      if (imagePath) {
+        try {
+          await deleteImage(BUCKET, imagePath);
+        } catch (rollbackErr) {
+          console.error("createReview: image rollback failed:", rollbackErr);
+        }
+      }
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
@@ -176,22 +180,30 @@ export async function updateReview(
       .eq("id", reviewId);
 
     if (updateError) {
-      // 실패 시 새로 업로드된 이미지만 삭제 (기존 이미지는 건드리지 않음)
-      if (newImagePath !== existingImagePath) {
-        await deleteImage(BUCKET, newImagePath);
-      }
       console.error("updateReview DB error:", updateError);
+      // 실패 시 새로 업로드된 이미지만 삭제 (기존 이미지는 건드리지 않음, 롤백 실패해도 원래 오류를 유지)
+      if (newImagePath !== existingImagePath) {
+        try {
+          await deleteImage(BUCKET, newImagePath);
+        } catch (rollbackErr) {
+          console.error("updateReview: image rollback failed:", rollbackErr);
+        }
+      }
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // DB UPDATE 성공 시 기존 이미지 삭제
+    // DB UPDATE 성공 시 기존 이미지 삭제 (실패해도 성공 응답 유지)
     if (
       imageFile &&
       imageFile.size > 0 &&
       existingImagePath &&
       newImagePath !== existingImagePath
     ) {
-      await deleteImage(BUCKET, existingImagePath);
+      try {
+        await deleteImage(BUCKET, existingImagePath);
+      } catch (err) {
+        console.error("updateReview: old image cleanup failed:", err);
+      }
     }
 
     // 7. 캐시 무효화
@@ -247,9 +259,13 @@ export async function deleteReview(reviewId: string) {
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // 4. Storage 이미지 삭제
+    // 4. Storage 이미지 삭제 (실패해도 성공 응답 유지)
     if (existingImagePath) {
-      await deleteImage(BUCKET, existingImagePath);
+      try {
+        await deleteImage(BUCKET, existingImagePath);
+      } catch (err) {
+        console.error("deleteReview: image cleanup failed:", err);
+      }
     }
 
     // 5. 캐시 무효화

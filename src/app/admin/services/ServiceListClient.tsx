@@ -188,7 +188,7 @@ export function ServiceListClient({
                 {(service.tags ?? []).map((tag) => (
                   <span
                     key={tag}
-                    className="whitespace-nowrap rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500"
+                    className="rounded bg-slate-100 px-2 py-0.5 text-xs whitespace-nowrap text-slate-500"
                   >
                     {tag}
                   </span>

@@ -53,7 +53,7 @@ export function LoginForm() {
                 type={showPassword ? "text" : "password"}
                 required
                 autoComplete="current-password"
-                className="w-full border-b border-slate-200 bg-transparent pb-3 pr-10 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+                className="w-full border-b border-slate-200 bg-transparent pr-10 pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
                 placeholder="비밀번호를 입력하세요"
               />
               {/* 비밀번호 표시/숨기기 토글 버튼 */}
@@ -61,7 +61,7 @@ export function LoginForm() {
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 표시"}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none"
+                className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none"
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" aria-hidden="true" />

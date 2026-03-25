@@ -62,7 +62,10 @@ export const siteConfigFormSchema = z.object({
   business_name: z.string().min(1, "업체명을 입력해주세요"),
   business_number: z
     .string()
-    .regex(BUSINESS_NUMBER_REGEX, "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)")
+    .regex(
+      BUSINESS_NUMBER_REGEX,
+      "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)",
+    )
     .or(z.literal("")),
   phone: z
     .string()
