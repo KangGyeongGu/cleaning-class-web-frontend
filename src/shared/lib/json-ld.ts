@@ -10,7 +10,9 @@
 
 import type { SiteConfig } from "@/shared/types/database";
 
-// 업체 도로명 주소 기준 좌표
+// 업체 주소 정보
+const BUSINESS_STREET_ADDRESS = "전북 전주시 덕진구 우아8길 11";
+const BUSINESS_POSTAL_CODE = "54908";
 const BUSINESS_LATITUDE = 35.850913;
 const BUSINESS_LONGITUDE = 127.157065;
 
@@ -37,6 +39,7 @@ interface OpeningHoursSpecification {
 interface LocalBusinessJsonLd {
   "@context": "https://schema.org";
   "@type": ["CleaningService", "LocalBusiness"];
+  "@id": string;
   name: string;
   description: string;
   url: string;
@@ -45,6 +48,8 @@ interface LocalBusinessJsonLd {
   image?: string;
   address: {
     "@type": "PostalAddress";
+    streetAddress: string;
+    postalCode: string;
     addressRegion: string;
     addressLocality: string;
     addressCountry: string;
@@ -72,8 +77,7 @@ interface ServiceJsonLd {
   name: string;
   description: string;
   provider: {
-    "@type": "LocalBusiness";
-    name: string;
+    "@id": string;
   };
 }
 
@@ -125,18 +129,23 @@ export function generateWebSiteJsonLd(
 export function generateLocalBusinessJsonLd(
   siteConfig?: SiteConfig | null,
 ): LocalBusinessJsonLd {
+  const siteUrl =
+    siteConfig?.site_url ?? "https://www.cleaningclass.co.kr";
   return {
     "@context": "https://schema.org",
     "@type": ["CleaningService", "LocalBusiness"],
+    "@id": `${siteUrl}/#organization`,
     name: siteConfig?.business_name ?? "청소클라쓰",
     description:
       "전주 청소업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소 전문 서비스",
-    url: siteConfig?.site_url ?? "https://www.cleaningclass.co.kr",
+    url: siteUrl,
     telephone: siteConfig?.phone,
     taxID: siteConfig?.business_registration_number ?? undefined,
     image: "https://www.cleaningclass.co.kr/opengraph-image",
     address: {
       "@type": "PostalAddress",
+      streetAddress: BUSINESS_STREET_ADDRESS,
+      postalCode: BUSINESS_POSTAL_CODE,
       addressRegion: siteConfig?.address_region ?? "전라북도",
       addressLocality: siteConfig?.address_locality ?? "전주시",
       addressCountry: "KR",
@@ -183,7 +192,7 @@ export function generateLocalBusinessJsonLd(
  */
 export function generateServiceJsonLd(
   services: ServiceInput[],
-  businessName = "청소클라쓰",
+  siteUrl = "https://www.cleaningclass.co.kr",
 ): ServiceJsonLd[] {
   return services.map((service) => ({
     "@context": "https://schema.org",
@@ -193,8 +202,7 @@ export function generateServiceJsonLd(
     // tags 배열을 쉼표 구분 문자열로 변환하여 Schema.org description 필드에 매핑
     description: service.tags.join(", "),
     provider: {
-      "@type": "LocalBusiness",
-      name: businessName,
+      "@id": `${siteUrl}/#organization`,
     },
   }));
 }

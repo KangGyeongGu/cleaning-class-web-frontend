@@ -1,15 +1,15 @@
-import {
-  getPublishedServicesWithImageUrls,
-  getPublishedReviews,
-} from "@/shared/lib/home";
 import { getSiteConfig } from "@/shared/lib/site-config";
+import {
+  getPublishedReviews,
+  getPublishedServicesWithImageUrls,
+} from "@/shared/lib/home";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
-import type { Review } from "@/shared/types/database";
-import type { SiteConfig } from "@/shared/types/database";
+import type { Review, SiteConfig } from "@/shared/types/database";
 
 export const revalidate = 3600;
 
 const SITE_URL = "https://www.cleaningclass.co.kr";
+const FEED_URL = `${SITE_URL}/feed.xml`;
 
 function escapeXml(text: string): string {
   return text
@@ -58,18 +58,20 @@ function buildRssFeed(
   reviews: Review[],
 ): string {
   const channelTitle = config?.business_name ?? "청소클라쓰";
-  const channelDescription = config?.description ?? "청소클라쓰 공식 피드";
+  const channelDescription =
+    config?.description ?? "전북 지역 전문 청소 서비스, 청소클라쓰";
   const channelLink = config?.site_url ?? SITE_URL;
-
-  const items = buildServiceItems(services) + buildReviewItems(reviews);
+  const lastBuildDate = new Date().toUTCString();
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(channelTitle)}</title>
     <link>${escapeXml(channelLink)}</link>
     <description>${escapeXml(channelDescription)}</description>
-    <language>ko</language>${items}
+    <language>ko</language>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml"/>${buildServiceItems(services)}${buildReviewItems(reviews)}
   </channel>
 </rss>`;
 }
@@ -80,7 +82,6 @@ export async function GET(): Promise<Response> {
     getPublishedServicesWithImageUrls(),
     getPublishedReviews(),
   ]);
-
   const xml = buildRssFeed(config, services, reviews);
 
   return new Response(xml, {
