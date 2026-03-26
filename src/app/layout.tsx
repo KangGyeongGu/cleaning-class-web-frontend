@@ -3,7 +3,6 @@ import Script from "next/script";
 import "@/app/globals.css";
 import {
   generateBreadcrumbListJsonLd,
-  generateFaqPageJsonLd,
   generateLocalBusinessJsonLd,
   generateWebSiteJsonLd,
 } from "@/shared/lib/json-ld";
@@ -107,17 +106,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "청소클라쓰",
-    description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
-    images: [
-      {
-        url: "/opengraph-image",
-        alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
-      },
-    ],
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -142,7 +130,6 @@ export default async function RootLayout({
   ]);
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
   const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
-  const faqPageJsonLd = generateFaqPageJsonLd();
   const breadcrumbListJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
   ]);
@@ -176,14 +163,6 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteJsonLd).replace(/</g, "\\u003c"),
-          }}
-        />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- FAQPage JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(faqPageJsonLd).replace(/</g, "\\u003c"),
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}

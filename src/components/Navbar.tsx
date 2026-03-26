@@ -3,12 +3,19 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import {
+  NaverBlogIcon,
+  InstagramIcon,
+  DaangnIcon,
+} from "@/components/icons/SocialIcons";
 
 interface NavbarProps {
   businessName?: string;
   blogUrl?: string;
   instagramUrl?: string;
+  daangnUrl?: string;
 }
 
 type MenuItem =
@@ -22,28 +29,17 @@ const menuItems: MenuItem[] = [
   { kind: "link", label: "자주묻는질문", href: "/help" },
 ];
 
-/**
- * 청소클라쓰 로고 인라인 SVG 컴포넌트
- * PNG 비트맵 원본을 SVG <image> 요소로 래핑하여 next/image 의존 없이 36×36 크기 제공
- */
+/** 청소클라쓰 로고 — next/image로 최적화 렌더링 */
 function LogoIcon(): React.JSX.Element {
   return (
-    <svg
-      width="36"
-      height="36"
-      viewBox="0 0 36 36"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
+    <Image
+      src="/images/logo-small.png"
+      alt=""
+      width={36}
+      height={36}
+      aria-hidden={true}
       className="rounded-sm"
-    >
-      <image
-        href="/images/logo-small.png"
-        x="0"
-        y="0"
-        width="36"
-        height="36"
-      />
-    </svg>
+    />
   );
 }
 
@@ -56,7 +52,12 @@ function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
+export function Navbar({
+  businessName,
+  blogUrl,
+  instagramUrl,
+  daangnUrl,
+}: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -65,6 +66,7 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
 
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
+  const hasDaangnUrl = daangnUrl && daangnUrl.trim() !== "";
 
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -190,16 +192,18 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
                 ),
               )}
             </div>
-            {(hasBlogUrl || hasInstagramUrl) && (
-              <div className="ml-2 flex items-center gap-5 border-l border-slate-200 pl-6">
+            {(hasBlogUrl || hasInstagramUrl || hasDaangnUrl) && (
+              <div className="ml-2 flex items-center gap-4 border-l border-slate-200 pl-6">
                 {hasBlogUrl && (
                   <a
                     href={blogUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                    aria-label="네이버 블로그"
+                    title="네이버 블로그"
+                    className="text-slate-400 transition-colors hover:text-slate-900"
                   >
-                    블로그
+                    <NaverBlogIcon size={20} />
                   </a>
                 )}
                 {hasInstagramUrl && (
@@ -207,9 +211,23 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
                     href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                    aria-label="인스타그램"
+                    title="인스타그램"
+                    className="text-slate-400 transition-colors hover:text-slate-900"
                   >
-                    인스타그램
+                    <InstagramIcon size={20} />
+                  </a>
+                )}
+                {hasDaangnUrl && (
+                  <a
+                    href={daangnUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="당근마켓"
+                    title="당근마켓"
+                    className="text-slate-400 transition-colors hover:text-slate-900"
+                  >
+                    <DaangnIcon size={20} />
                   </a>
                 )}
               </div>
@@ -266,7 +284,7 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
             </button>
           ),
         )}
-        {(hasBlogUrl || hasInstagramUrl) && (
+        {(hasBlogUrl || hasInstagramUrl || hasDaangnUrl) && (
           <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
             {hasBlogUrl && (
               <a
@@ -275,9 +293,10 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
                 rel="noopener noreferrer"
                 tabIndex={isOpen ? 0 : -1}
                 onClick={() => setIsOpen(false)}
-                className="text-lg font-bold tracking-tight text-slate-500"
+                aria-label="네이버 블로그"
+                className="text-slate-400 transition-colors hover:text-slate-900"
               >
-                블로그
+                <NaverBlogIcon size={28} />
               </a>
             )}
             {hasInstagramUrl && (
@@ -287,9 +306,23 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
                 rel="noopener noreferrer"
                 tabIndex={isOpen ? 0 : -1}
                 onClick={() => setIsOpen(false)}
-                className="text-lg font-bold tracking-tight text-slate-500"
+                aria-label="인스타그램"
+                className="text-slate-400 transition-colors hover:text-slate-900"
               >
-                인스타그램
+                <InstagramIcon size={28} />
+              </a>
+            )}
+            {hasDaangnUrl && (
+              <a
+                href={daangnUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={isOpen ? 0 : -1}
+                onClick={() => setIsOpen(false)}
+                aria-label="당근마켓"
+                className="text-slate-400 transition-colors hover:text-slate-900"
+              >
+                <DaangnIcon size={28} />
               </a>
             )}
           </div>

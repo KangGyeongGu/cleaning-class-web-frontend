@@ -254,7 +254,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           이미지 선택
         </label>
         {imagePreview && (
-          <div className="relative mt-4 h-64 w-full max-w-md border border-slate-200">
+          <div className="relative mt-4 aspect-video w-full max-w-md border border-slate-200">
             <Image
               src={imagePreview}
               alt="미리보기"

@@ -143,6 +143,7 @@ export interface Database {
           blog_url: string;
           business_name: string;
           business_registration_number: string | null;
+          daangn_url: string;
           description: string;
           email: string;
           id: string;
@@ -162,6 +163,7 @@ export interface Database {
           blog_url?: string;
           business_name?: string;
           business_registration_number?: string | null;
+          daangn_url?: string;
           description?: string;
           email?: string;
           id?: string;
@@ -181,6 +183,7 @@ export interface Database {
           blog_url?: string;
           business_name?: string;
           business_registration_number?: string | null;
+          daangn_url?: string;
           description?: string;
           email?: string;
           id?: string;

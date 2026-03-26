@@ -182,7 +182,7 @@ export function ServiceListClient({
 
             {/* 이미지 */}
             <div className="col-span-1">
-              <div className="relative h-16 w-16 border border-slate-200">
+              <div className="relative aspect-square h-16 w-16 border border-slate-200">
                 <Image
                   src={service.imageUrl}
                   alt={service.title}

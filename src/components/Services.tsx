@@ -1,7 +1,5 @@
 import { getSiteConfig } from "@/shared/lib/site-config";
-import {
-  getPublishedServicesWithImageUrls,
-} from "@/shared/lib/home";
+import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
 import { ServiceGrid } from "@/components/ServiceGrid";
 
