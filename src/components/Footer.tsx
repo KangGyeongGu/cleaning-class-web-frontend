@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Instagram } from "lucide-react";
-import { CopyEmailButton } from "@/components/CopyEmailButton";
+
 import type { SiteConfig } from "@/shared/types/database";
 
 // 네이버블로그 아이콘 (lucide-react에 없으므로 직접 구현)
@@ -71,7 +71,12 @@ export function Footer({ siteConfig }: FooterProps) {
               )}
               {email && (
                 <li>
-                  <CopyEmailButton email={email} />
+                  <a
+                    href={`mailto:${email}`}
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-slate-900"
+                  >
+                    {email}
+                  </a>
                 </li>
               )}
             </ul>
@@ -130,10 +135,7 @@ export function Footer({ siteConfig }: FooterProps) {
             이용약관
           </Link>
           <span className="mx-3 select-none">|</span>
-          <Link
-            href="/contact"
-            className="transition-colors hover:text-slate-700"
-          >
+          <Link href="/help" className="transition-colors hover:text-slate-700">
             고객센터
           </Link>
         </div>

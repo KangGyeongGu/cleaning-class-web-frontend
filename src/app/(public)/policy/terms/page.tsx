@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: "https://www.cleaningclass.co.kr/policy/terms",
   },
   openGraph: {
-    title: "이용약관",
+    title: "이용약관 | 청소클라쓰",
     description:
       "청소클라쓰 웹사이트 이용약관 — 서비스 이용조건, 권리의무, 면책사항 안내",
     url: "https://www.cleaningclass.co.kr/policy/terms",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "이용약관",
+    title: "이용약관 | 청소클라쓰",
     description:
       "청소클라쓰 웹사이트 이용약관 — 서비스 이용조건, 권리의무, 면책사항 안내",
   },
@@ -42,7 +42,7 @@ export default function TermsPage() {
   ]);
 
   return (
-    <article className="mx-auto max-w-3xl px-6 py-32">
+    <article className="mx-auto max-w-3xl px-6 pt-16 pb-20 md:pt-20 md:pb-24">
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"

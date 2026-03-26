@@ -55,7 +55,7 @@ function CustomDropdown({
 
   return (
     <div className="group" ref={dropdownRef}>
-      <label className="mb-3 block text-xs font-bold tracking-wider text-slate-900">
+      <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
       </label>
@@ -63,7 +63,7 @@ function CustomDropdown({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex min-h-12 w-full items-center justify-between border-b border-slate-200 bg-transparent py-3 text-left text-lg font-light transition-colors outline-none focus:border-slate-900"
+          className="flex min-h-9 w-full items-center justify-between border-b border-slate-200 bg-transparent py-2 text-left text-sm font-light transition-colors outline-none focus:border-slate-900"
         >
           <span className={value ? "text-slate-900" : "text-slate-400"}>
             {value || placeholder || "선택해주세요"}
@@ -77,7 +77,7 @@ function CustomDropdown({
                 key={option}
                 type="button"
                 onClick={() => handleSelect(option)}
-                className="w-full px-4 py-3 text-left text-lg font-light transition-colors hover:bg-slate-50"
+                className="w-full px-3 py-2 text-left text-sm font-light transition-colors hover:bg-slate-50"
               >
                 {option}
               </button>
@@ -233,14 +233,14 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="bg-white py-16 md:py-32">
-      <div className="container mx-auto max-w-2xl px-4">
+    <section ref={sectionRef} id="contact" className="bg-white py-10 md:py-16">
+      <div className="container mx-auto max-w-lg px-4">
         <div
-          className={`mb-16 text-center transition-all duration-700 ${
+          className={`mb-8 text-center transition-all duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
+          <h2 className="mb-3 text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
             CONTACT
           </h2>
           {phone && (
@@ -248,7 +248,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               유선상담{" "}
               <a
                 href={`tel:${phone}`}
-                className="inline-flex min-h-12 items-center px-1 font-bold text-slate-900 hover:underline"
+                className="inline-flex items-center px-1 font-bold text-slate-900 hover:underline"
               >
                 {phone}
               </a>
@@ -258,16 +258,16 @@ export function ContactForm({ phone }: ContactFormProps) {
 
         <form
           action={formAction}
-          className={`space-y-12 transition-all delay-200 duration-700 ${
+          className={`space-y-6 transition-all delay-200 duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="group">
                 <label
                   htmlFor="name"
-                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
                 >
                   성함
                   <span className="ml-1 text-red-500">*</span>
@@ -278,7 +278,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                   name="name"
                   type="text"
                   required
-                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="w-full border-b border-slate-200 bg-transparent pb-2 text-sm font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
                   placeholder="이름을 입력하세요"
                   onInput={checkFormValidity}
                 />
@@ -291,7 +291,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               <div className="group">
                 <label
                   htmlFor="phone"
-                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
+                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
                 >
                   연락처
                   <span className="ml-1 text-red-500">*</span>
@@ -307,7 +307,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                     input.value = formatPhoneNumber(input.value);
                     checkFormValidity();
                   }}
-                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="w-full border-b border-slate-200 bg-transparent pb-2 text-sm font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
                   placeholder="010-0000-0000"
                 />
                 {state?.errors?.phone && (
@@ -372,7 +372,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             <div className="group">
               <label
                 htmlFor="message"
-                className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
+                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
               >
                 문의사항
                 <span className="ml-1 text-red-500">*</span>
@@ -381,7 +381,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                 ref={messageRef}
                 id="message"
                 name="message"
-                rows={6}
+                rows={3}
                 maxLength={1000}
                 required
                 className="w-full resize-none overflow-y-auto border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
@@ -405,7 +405,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               </div>
 
               {/* 이미지 첨부 */}
-              <div className="mt-8">
+              <div className="mt-4">
                 <div className="flex items-center gap-4">
                   {/* 이미지 미리보기 그리드 */}
                   {images.length > 0 && (
@@ -460,11 +460,11 @@ export function ContactForm({ phone }: ContactFormProps) {
             </div>
           </div>
 
-          <div className="pt-8 text-center">
+          <div className="pt-4 text-center">
             <button
               type="submit"
               disabled={isPending || !formValid}
-              className={`px-12 py-4 text-sm font-bold tracking-widest transition-all disabled:cursor-not-allowed ${
+              className={`px-10 py-3 text-sm font-bold tracking-widest transition-all disabled:cursor-not-allowed ${
                 formValid && !isPending
                   ? "bg-slate-900 text-white hover:bg-slate-800"
                   : "border border-slate-200 bg-slate-200 text-slate-400"

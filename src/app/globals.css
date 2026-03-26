@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --header-height: 60px;
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
@@ -70,6 +71,7 @@
 
   html {
     font-size: var(--font-size);
+    scroll-padding-top: var(--header-height);
   }
 
   h1 {

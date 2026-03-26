@@ -131,3 +131,22 @@ export const serviceFormSchema = z.object({
 });
 
 export type ServiceFormData = z.infer<typeof serviceFormSchema>;
+
+// FAQ 폼 스키마
+export const faqFormSchema = z.object({
+  question: z
+    .string()
+    .min(1, "질문을 입력해주세요")
+    .max(300, "질문은 300자 이하여야 합니다"),
+  answer: z
+    .string()
+    .min(1, "답변을 입력해주세요")
+    .max(2000, "답변은 2000자 이하여야 합니다"),
+  display_order: z
+    .number()
+    .int("표시 순서는 정수여야 합니다")
+    .min(0, "표시 순서는 0 이상이어야 합니다"),
+  is_active: z.boolean(),
+});
+
+export type FaqFormData = z.infer<typeof faqFormSchema>;

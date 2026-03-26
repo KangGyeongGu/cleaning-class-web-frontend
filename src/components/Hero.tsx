@@ -1,15 +1,16 @@
+import { getSiteConfig } from "@/shared/lib/site-config";
 import { HeroCTA } from "@/components/HeroCTA";
 
-interface HeroProps {
-  businessName?: string;
-  phone?: string;
-  description?: string;
-}
+export async function Hero() {
+  // 사이트 설정을 서버에서 직접 조회 (React cache()로 중복 요청 방지)
+  const siteConfig = await getSiteConfig();
 
-export function Hero({ businessName, phone, description }: HeroProps) {
-  const displayName = businessName ?? "청소클라쓰";
+  const displayName = siteConfig?.business_name ?? "청소클라쓰";
+  const description = siteConfig?.description ?? undefined;
+  const phone = siteConfig?.phone;
+
   return (
-    <section className="relative flex min-h-svh w-full flex-col items-center justify-center overflow-hidden bg-white py-16 text-slate-900 md:py-24">
+    <section className="relative flex min-h-[calc(100svh-var(--header-height))] w-full flex-col items-center justify-center overflow-hidden bg-white py-12 text-slate-900 md:py-16">
       {/* Background Abstract Elements */}
       <div className="pointer-events-none absolute top-0 left-0 h-full w-full bg-linear-to-br from-slate-100 via-white to-white opacity-5" />
 

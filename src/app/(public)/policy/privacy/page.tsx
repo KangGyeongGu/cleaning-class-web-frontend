@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: "https://www.cleaningclass.co.kr/policy/privacy",
   },
   openGraph: {
-    title: "개인정보처리방침",
+    title: "개인정보처리방침 | 청소클라쓰",
     description:
       "청소클라쓰 개인정보처리방침 — 수집 항목, 보유기간, 파기 절차 및 정보주체 권리 안내",
     url: "https://www.cleaningclass.co.kr/policy/privacy",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "개인정보처리방침",
+    title: "개인정보처리방침 | 청소클라쓰",
     description:
       "청소클라쓰 개인정보처리방침 — 수집 항목, 보유기간, 파기 절차 및 정보주체 권리 안내",
   },
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
   ]);
 
   return (
-    <article className="mx-auto max-w-3xl px-6 py-32">
+    <article className="mx-auto max-w-3xl px-6 pt-16 pb-20 md:pt-20 md:pb-24">
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"
@@ -113,32 +113,50 @@ export default function PrivacyPage() {
         </p>
         <ol className="space-y-1 text-sm font-light text-slate-600">
           <li>
-            <a href="#article-1" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-1"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               1. 개인정보의 처리 목적, 수집 항목, 보유기간
             </a>
           </li>
           <li>
-            <a href="#article-2" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-2"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               2. 개인정보의 파기 절차 및 방법
             </a>
           </li>
           <li>
-            <a href="#article-3" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-3"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               3. 정보주체와 법정대리인의 권리·의무 및 행사방법
             </a>
           </li>
           <li>
-            <a href="#article-4" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-4"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               4. 개인정보의 안전성 확보조치
             </a>
           </li>
           <li>
-            <a href="#article-5" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-5"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               5. 개인정보 보호책임자 및 고충사항을 처리하는 부서
             </a>
           </li>
           <li>
-            <a href="#article-6" className="transition-all hover:font-medium hover:text-slate-900">
+            <a
+              href="#article-6"
+              className="transition-all hover:font-medium hover:text-slate-900"
+            >
               6. 개인정보 처리방침의 변경
             </a>
           </li>

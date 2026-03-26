@@ -8,12 +8,13 @@ import type { SiteConfigUpdate } from "@/shared/types/database";
 
 /** site_config의 단일 필드를 수정하는 공통 내부 함수 */
 const FIELD_REVALIDATE_MAP: Record<string, string> = {
+  faq_description: "/admin/faq",
   review_description: "/admin/reviews",
   service_description: "/admin/services",
 };
 
 async function updateSiteConfigField(
-  field: "review_description" | "service_description",
+  field: "faq_description" | "review_description" | "service_description",
   value: string,
 ) {
   try {
@@ -59,6 +60,13 @@ async function updateSiteConfigField(
       error: "설정 처리 중 오류가 발생했습니다.",
     };
   }
+}
+
+/**
+ * FAQ 안내 문구 수정 Server Action
+ */
+export async function updateFaqDescription(description: string) {
+  return updateSiteConfigField("faq_description", description);
 }
 
 /**

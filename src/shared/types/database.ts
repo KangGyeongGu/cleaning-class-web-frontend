@@ -105,6 +105,36 @@ export interface Database {
         };
         Relationships: [];
       };
+      faqs: {
+        Row: {
+          answer: string;
+          created_at: string;
+          display_order: number;
+          id: string;
+          is_active: boolean;
+          question: string;
+          updated_at: string;
+        };
+        Insert: {
+          answer: string;
+          created_at?: string;
+          display_order?: number;
+          id?: string;
+          is_active?: boolean;
+          question: string;
+          updated_at?: string;
+        };
+        Update: {
+          answer?: string;
+          created_at?: string;
+          display_order?: number;
+          id?: string;
+          is_active?: boolean;
+          question?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       site_config: {
         Row: {
           address: string;
@@ -119,6 +149,7 @@ export interface Database {
           instagram_url: string;
           phone: string;
           representative: string;
+          faq_description: string | null;
           review_description: string | null;
           service_description: string | null;
           site_url: string;
@@ -137,6 +168,7 @@ export interface Database {
           instagram_url?: string;
           phone?: string;
           representative?: string;
+          faq_description?: string | null;
           review_description?: string | null;
           service_description?: string | null;
           site_url?: string;
@@ -155,6 +187,7 @@ export interface Database {
           instagram_url?: string;
           phone?: string;
           representative?: string;
+          faq_description?: string | null;
           review_description?: string | null;
           service_description?: string | null;
           site_url?: string;
@@ -196,3 +229,7 @@ export type ServiceUpdate = Database["public"]["Tables"]["services"]["Update"];
 export type SiteConfig = SiteConfigRow;
 export type Review = ReviewRow;
 export type Service = ServiceRow;
+
+export type FaqRow = Database["public"]["Tables"]["faqs"]["Row"];
+export type FaqInsert = Database["public"]["Tables"]["faqs"]["Insert"];
+export type FaqUpdate = Database["public"]["Tables"]["faqs"]["Update"];

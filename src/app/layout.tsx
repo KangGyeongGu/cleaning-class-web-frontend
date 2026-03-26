@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/app/globals.css";
 import {
+  generateBreadcrumbListJsonLd,
   generateFaqPageJsonLd,
   generateLocalBusinessJsonLd,
   generateWebSiteJsonLd,
@@ -45,6 +46,8 @@ async function getPretendardCss(): Promise<string> {
       /url\(\.\.\/\.\.\/\.\.\/packages\/pretendard\/dist\/web\/variable\//g,
       `url(${cdnBase}`,
     );
+    // </style> 및 <!-- 시퀀스 이스케이프: CDN 응답이 style 태그 탈출이나 HTML 주석 주입을 시도하는 경우 방어
+    css = css.replace(/<\/style/gi, "<\\/style").replace(/<!--/g, "<\\!--");
     return css;
   } catch {
     return "";
@@ -140,6 +143,10 @@ export default async function RootLayout({
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
   const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
   const faqPageJsonLd = generateFaqPageJsonLd();
+  const breadcrumbListJsonLd = generateBreadcrumbListJsonLd([
+    { name: "홈", url: "https://www.cleaningclass.co.kr" },
+  ]);
+
   return (
     <html lang="ko">
       <head>
@@ -180,7 +187,17 @@ export default async function RootLayout({
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* BreadcrumbList JSON-LD는 각 페이지에서 개별 관리 (중복 방지) */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbListJsonLd).replace(
+              /</g,
+              "\\u003c",
+            ),
+          }}
+        />
+        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
         {children}
         {/* GA_ID가 설정된 경우에만 Google Analytics 스크립트 삽입 */}
         {GA_ID && (

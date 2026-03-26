@@ -238,10 +238,9 @@ const DEFAULT_FAQ_ITEMS: QuestionItem[] = [
   },
 ];
 
-export function generateFaqPageJsonLd(
-  additionalItems: QuestionItem[] = [],
-): FaqPageJsonLd {
-  const allItems = [...DEFAULT_FAQ_ITEMS, ...additionalItems];
+export function generateFaqPageJsonLd(items?: QuestionItem[]): FaqPageJsonLd {
+  // DB FAQ가 전달되면 DB 데이터만 사용, 없으면 정적 기본 항목 사용 (fallback)
+  const allItems = items && items.length > 0 ? items : DEFAULT_FAQ_ITEMS;
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
