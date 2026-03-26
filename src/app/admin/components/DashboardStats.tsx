@@ -6,8 +6,7 @@
 import { getAdminDashboardData } from "@/shared/lib/queries/admin";
 
 export async function DashboardStats(): Promise<React.ReactElement> {
-  const { serviceCount, reviewCount, faqCount } =
-    await getAdminDashboardData();
+  const { serviceCount, reviewCount, faqCount } = await getAdminDashboardData();
 
   return (
     <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">

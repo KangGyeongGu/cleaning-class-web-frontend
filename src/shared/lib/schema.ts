@@ -97,6 +97,13 @@ export const siteConfigFormSchema = z.object({
       message: "URL은 http:// 또는 https://로 시작해야 합니다",
     })
     .or(z.literal("")),
+  daangn_url: z
+    .string()
+    .url("올바른 URL 형식이 아닙니다")
+    .refine((url) => /^https?:\/\//i.test(url), {
+      message: "URL은 http:// 또는 https://로 시작해야 합니다",
+    })
+    .or(z.literal("")),
   site_url: z
     .string()
     .url("올바른 URL 형식이 아닙니다")

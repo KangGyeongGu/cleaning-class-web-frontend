@@ -192,6 +192,29 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
+      {/* 당근마켓 URL */}
+      <div>
+        <label
+          htmlFor="daangn_url"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          당근마켓 URL (선택)
+        </label>
+        <input
+          id="daangn_url"
+          name="daangn_url"
+          type="url"
+          defaultValue={config.daangn_url || ""}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          placeholder="https://www.daangn.com/..."
+        />
+        {state && "errors" in state && state.errors?.daangn_url && (
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.daangn_url[0]}
+          </p>
+        )}
+      </div>
+
       {/* 소개글 */}
       <div>
         <label

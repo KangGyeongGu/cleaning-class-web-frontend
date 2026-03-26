@@ -269,7 +269,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
           <Plus size={16} />
           {imagePreview ? "이미지 변경" : "새 이미지 선택"}
         </label>
-        <div className="relative mt-4 h-64 w-full max-w-md border border-slate-200">
+        <div className="relative mt-4 aspect-video w-full max-w-md border border-slate-200">
           <Image
             src={displayImageUrl}
             alt="미리보기"

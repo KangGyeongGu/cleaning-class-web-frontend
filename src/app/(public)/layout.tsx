@@ -16,6 +16,7 @@ export default async function PublicLayout({ children }: PublicLayoutProps) {
         businessName={siteConfig?.business_name}
         blogUrl={siteConfig?.blog_url}
         instagramUrl={siteConfig?.instagram_url}
+        daangnUrl={siteConfig?.daangn_url}
       />
       <main>{children}</main>
       <Footer siteConfig={siteConfig} />

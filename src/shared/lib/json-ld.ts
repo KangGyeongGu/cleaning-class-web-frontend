@@ -62,6 +62,8 @@ interface LocalBusinessJsonLd {
   };
   serviceType: string[];
   priceRange: string;
+  /** 소셜 프로필 URL 목록 — Schema.org sameAs 프로퍼티 */
+  sameAs?: string[];
 }
 
 interface ServiceInput {
@@ -130,6 +132,16 @@ export function generateLocalBusinessJsonLd(
   siteConfig?: SiteConfig | null,
 ): LocalBusinessJsonLd {
   const siteUrl = siteConfig?.site_url ?? "https://www.cleaningclass.co.kr";
+
+  // 소셜 프로필 URL을 sameAs 배열로 구성 (빈 값/undefined 필터링)
+  const sameAs = [
+    siteConfig?.blog_url,
+    siteConfig?.instagram_url,
+    siteConfig?.daangn_url,
+  ].filter(
+    (url): url is string => typeof url === "string" && url.trim() !== "",
+  );
+
   return {
     "@context": "https://schema.org",
     "@type": ["CleaningService", "LocalBusiness"],
@@ -183,6 +195,8 @@ export function generateLocalBusinessJsonLd(
       "상가청소",
     ],
     priceRange: "$$",
+    // sameAs는 URL이 하나 이상 존재할 때만 포함
+    ...(sameAs.length > 0 && { sameAs }),
   };
 }
 

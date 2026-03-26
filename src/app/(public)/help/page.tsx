@@ -24,13 +24,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "고객센터 | 청소클라쓰",
-    description:
-      "청소클라쓰 고객센터 — 청소 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
-    images: ["/opengraph-image"],
-  },
 };
 
 // BreadcrumbList JSON-LD — 홈 → 고객센터 경로 구조화 (정적 데이터로 page.tsx에 유지)
