@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
 interface NavbarProps {
@@ -10,11 +11,41 @@ interface NavbarProps {
   instagramUrl?: string;
 }
 
-const menuItems = [
-  { label: "서비스", target: "services" },
-  { label: "후기", target: "reviews" },
-  { label: "견적의뢰", target: "contact" },
+type MenuItem =
+  | { kind: "scroll"; label: string; target: string }
+  | { kind: "link"; label: string; href: string };
+
+const menuItems: MenuItem[] = [
+  { kind: "scroll", label: "서비스", target: "services" },
+  { kind: "scroll", label: "작업후기", target: "reviews" },
+  { kind: "scroll", label: "견적문의", target: "contact" },
+  { kind: "link", label: "자주묻는질문", href: "/help" },
 ];
+
+/**
+ * 청소클라쓰 로고 인라인 SVG 컴포넌트
+ * PNG 비트맵 원본을 SVG <image> 요소로 래핑하여 next/image 의존 없이 36×36 크기 제공
+ */
+function LogoIcon(): React.JSX.Element {
+  return (
+    <svg
+      width="36"
+      height="36"
+      viewBox="0 0 36 36"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      className="rounded-sm"
+    >
+      <image
+        href="/images/logo-small.png"
+        x="0"
+        y="0"
+        width="36"
+        height="36"
+      />
+    </svg>
+  );
+}
 
 function scrollToSection(targetId: string) {
   const element = document.getElementById(targetId);
@@ -26,8 +57,11 @@ function scrollToTop() {
 }
 
 export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const displayName = businessName ?? "청소클라쓰";
+  const isHome = pathname === "/";
 
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
@@ -35,9 +69,29 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const handleMobileMenuClick = (targetId: string) => {
+  /** 로고 클릭 — 홈이면 스크롤 top, 다른 페이지면 홈으로 이동 */
+  const handleLogoClick = (): void => {
+    if (isHome) {
+      scrollToTop();
+    } else {
+      router.push("/");
+    }
+  };
+
+  /** 메뉴 클릭 — scroll 타입은 홈이면 스크롤, 다른 페이지면 해시 네비게이션 */
+  const handleMenuClick = (item: MenuItem): void => {
+    if (item.kind === "link") {
+      router.push(item.href);
+    } else if (isHome) {
+      scrollToSection(item.target);
+    } else {
+      window.location.assign(`/#${item.target}`);
+    }
+  };
+
+  const handleMobileMenuClick = (item: MenuItem): void => {
     setIsOpen(false);
-    scrollToSection(targetId);
+    handleMenuClick(item);
   };
 
   const getFocusableElements = useCallback((): HTMLElement[] => {
@@ -99,131 +153,148 @@ export function Navbar({ businessName, blogUrl, instagramUrl }: NavbarProps) {
   }, [isOpen]);
 
   return (
-    <nav className="absolute top-0 right-0 left-0 z-50 py-8">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-8">
-        <button
-          type="button"
-          className="relative z-50 flex min-h-12 cursor-pointer items-center gap-2 border-0 bg-transparent text-2xl font-black tracking-tighter text-slate-900"
-          aria-label="청소클라쓰 홈으로 이동"
-          onClick={scrollToTop}
-        >
-          <Image
-            src="/images/logo-small.png"
-            alt=""
-            width={44}
-            height={44}
-            sizes="44px"
-            className="rounded-sm"
-          />
-          {displayName}
-        </button>
+    <>
+      <nav className="sticky top-0 right-0 left-0 z-[60] bg-white/80 py-4 backdrop-blur-md">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-6">
+          <button
+            type="button"
+            className="relative flex min-h-10 cursor-pointer items-center gap-2 border-0 bg-transparent text-xl font-black tracking-tighter text-slate-900"
+            aria-label="청소클라쓰 홈으로 이동"
+            onClick={handleLogoClick}
+          >
+            <LogoIcon />
+            {displayName}
+          </button>
 
-        {/* Desktop Menu */}
-        <div className="hidden items-center gap-6 md:flex">
-          <div className="flex items-center gap-8">
-            {menuItems.map((item) => (
-              <button
-                key={item.target}
-                type="button"
-                className="cursor-pointer border-0 bg-transparent text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
-                onClick={() => scrollToSection(item.target)}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-          {(hasBlogUrl || hasInstagramUrl) && (
-            <div className="ml-2 flex items-center gap-5 border-l border-slate-200 pl-6">
-              {hasBlogUrl && (
-                <a
-                  href={blogUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
-                >
-                  블로그
-                </a>
-              )}
-              {hasInstagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
-                >
-                  인스타그램
-                </a>
+          {/* Desktop Menu */}
+          <div className="hidden items-center gap-6 md:flex">
+            <div className="flex items-center gap-8">
+              {menuItems.map((item) =>
+                item.kind === "link" ? (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className="cursor-pointer border-0 bg-transparent text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                    onClick={() => handleMenuClick(item)}
+                  >
+                    {item.label}
+                  </button>
+                ),
               )}
             </div>
-          )}
+            {(hasBlogUrl || hasInstagramUrl) && (
+              <div className="ml-2 flex items-center gap-5 border-l border-slate-200 pl-6">
+                {hasBlogUrl && (
+                  <a
+                    href={blogUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                  >
+                    블로그
+                  </a>
+                )}
+                {hasInstagramUrl && (
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                  >
+                    인스타그램
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            ref={hamburgerRef}
+            type="button"
+            aria-label="메뉴 열기/닫기"
+            aria-expanded={isOpen}
+            className="relative flex h-12 w-12 items-center justify-center text-slate-900 md:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X /> : <Menu />}
+          </button>
         </div>
+      </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          ref={hamburgerRef}
-          type="button"
-          aria-label="메뉴 열기/닫기"
-          aria-expanded={isOpen}
-          className="relative z-50 flex h-12 w-12 items-center justify-center text-slate-900 md:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X /> : <Menu />}
-        </button>
-
-        {/* Mobile Menu Overlay */}
-        <div
-          ref={overlayRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="내비게이션 메뉴"
-          aria-hidden={!isOpen}
-          className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-white transition-opacity duration-200 ${
-            isOpen
-              ? "pointer-events-auto opacity-100"
-              : "pointer-events-none opacity-0"
-          }`}
-        >
-          {menuItems.map((item) => (
+      {/* 모바일 메뉴 오버레이 — nav 외부에 배치하여 backdrop-blur 스태킹 컨텍스트 회피 */}
+      <div
+        ref={overlayRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="내비게이션 메뉴"
+        aria-hidden={!isOpen}
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-white transition-opacity duration-200 md:hidden ${
+          isOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      >
+        {menuItems.map((item) =>
+          item.kind === "link" ? (
+            <Link
+              key={item.label}
+              href={item.href}
+              tabIndex={isOpen ? 0 : -1}
+              onClick={() => setIsOpen(false)}
+              className="text-2xl font-black tracking-tighter text-slate-900"
+            >
+              {item.label}
+            </Link>
+          ) : (
             <button
-              key={item.target}
+              key={item.label}
               type="button"
               tabIndex={isOpen ? 0 : -1}
               className="cursor-pointer border-0 bg-transparent text-2xl font-black tracking-tighter text-slate-900"
-              onClick={() => handleMobileMenuClick(item.target)}
+              onClick={() => handleMobileMenuClick(item)}
             >
               {item.label}
             </button>
-          ))}
-          {(hasBlogUrl || hasInstagramUrl) && (
-            <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
-              {hasBlogUrl && (
-                <a
-                  href={blogUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={isOpen ? 0 : -1}
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-bold tracking-tight text-slate-500"
-                >
-                  블로그
-                </a>
-              )}
-              {hasInstagramUrl && (
-                <a
-                  href={instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  tabIndex={isOpen ? 0 : -1}
-                  onClick={() => setIsOpen(false)}
-                  className="text-lg font-bold tracking-tight text-slate-500"
-                >
-                  인스타그램
-                </a>
-              )}
-            </div>
-          )}
-        </div>
+          ),
+        )}
+        {(hasBlogUrl || hasInstagramUrl) && (
+          <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
+            {hasBlogUrl && (
+              <a
+                href={blogUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={isOpen ? 0 : -1}
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-bold tracking-tight text-slate-500"
+              >
+                블로그
+              </a>
+            )}
+            {hasInstagramUrl && (
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={isOpen ? 0 : -1}
+                onClick={() => setIsOpen(false)}
+                className="text-lg font-bold tracking-tight text-slate-500"
+              >
+                인스타그램
+              </a>
+            )}
+          </div>
+        )}
       </div>
-    </nav>
+    </>
   );
 }

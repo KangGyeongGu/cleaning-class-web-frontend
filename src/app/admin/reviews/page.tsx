@@ -1,16 +1,17 @@
+/**
+ * 리뷰 관리 페이지 (composition-only)
+ * 인증 확인 후 섹션 서버 컴포넌트들을 조합합니다.
+ */
+
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getReviews } from "@/shared/lib/queries/review";
-import { getSiteConfig } from "@/shared/lib/site-config";
-import { ReviewListClient } from "@/app/admin/reviews/ReviewListClient";
-import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
-import { updateReviewDescription } from "@/shared/actions/site-config";
+import { getUser } from "@/shared/lib/supabase/auth";
+import { ReviewDescriptionSection } from "@/app/admin/reviews/ReviewDescriptionSection";
+import { ReviewListSection } from "@/app/admin/reviews/ReviewListSection";
 
-export default async function ReviewsPage() {
-  const [reviewsWithImageUrls, siteConfig] = await Promise.all([
-    getReviews(),
-    getSiteConfig(),
-  ]);
+export default async function ReviewsPage(): Promise<React.ReactElement> {
+  // 인증 확인: 미인증 시 getUser 내부에서 리다이렉트
+  await getUser();
 
   return (
     <div className="mx-auto max-w-7xl p-8">
@@ -25,20 +26,11 @@ export default async function ReviewsPage() {
         </Link>
       </div>
 
-      <InlineDescriptionEditor
-        initialValue={siteConfig?.review_description ?? ""}
-        placeholder="리뷰 섹션 안내 문구를 입력하세요"
-        emptyText="리뷰 섹션 안내 문구가 없습니다."
-        onSave={updateReviewDescription}
-      />
+      {/* 안내 문구 편집기 — site_config 조회는 ReviewDescriptionSection에서 처리 */}
+      <ReviewDescriptionSection />
 
-      {reviewsWithImageUrls.length === 0 ? (
-        <div className="border border-slate-200 p-12 text-center">
-          <p className="font-light text-slate-500">등록된 리뷰가 없습니다.</p>
-        </div>
-      ) : (
-        <ReviewListClient reviews={reviewsWithImageUrls} />
-      )}
+      {/* 리뷰 목록 — 데이터 조회는 ReviewListSection에서 처리 */}
+      <ReviewListSection />
     </div>
   );
 }

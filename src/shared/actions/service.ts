@@ -39,11 +39,9 @@ export async function createService(prevState: unknown, formData: FormData) {
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "Before 이미지를 선택해주세요." };
     }
-    let imagePath = "";
 
-    if (imageFile && imageFile.size > 0) {
-      imagePath = await uploadImage(BUCKET, imageFile);
-    }
+    // 위 가드에서 imageFile이 유효함이 보장되므로 바로 업로드
+    const imagePath = await uploadImage(BUCKET, imageFile);
 
     const imageAfterFile = formData.get("image_after") as File | null;
     let imageAfterPath = "";
@@ -382,15 +380,16 @@ export async function reorderServices(
 
     const supabase = await createClient();
 
-    const results = await Promise.all(
-      orderedIds.map((id, i) =>
-        supabase.from("services").update({ sort_order: i }).eq("id", id),
-      ),
-    );
-    const failed = results.find((r) => r.error);
-    if (failed?.error) {
-      console.error("reorderServices DB error:", failed.error);
-      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+    // 첫 실패 시 즉시 반환하여 불일치 범위를 최소화 (순차 실행)
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("services")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+      if (error) {
+        console.error("reorderServices DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
     }
 
     revalidatePath("/");

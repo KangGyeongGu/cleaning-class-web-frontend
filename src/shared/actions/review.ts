@@ -331,17 +331,16 @@ export async function reorderReviews(
 
     const supabase = await createClient();
 
-    const results = await Promise.all(
-      orderedIds.map((id, i) =>
-        supabase.from("reviews").update({ sort_order: i }).eq("id", id),
-      ),
-    );
-    const failed = results.find((r) => r.error);
-    const error = failed?.error;
-
-    if (error) {
-      console.error("reorderReviews DB error:", error);
-      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+    // 첫 실패 시 즉시 반환하여 불일치 범위를 최소화 (순차 실행)
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("reviews")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+      if (error) {
+        console.error("reorderReviews DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
     }
 
     revalidatePath("/");

@@ -203,9 +203,8 @@ export function FocalPointPicker({
         <Image
           src={imageUrl}
           alt="표시 영역 설정"
-          width={320}
-          height={320}
-          className="block h-auto w-full"
+          fill
+          className="object-contain"
           sizes="320px"
           // unoptimized: 관리자 전용 미리보기 이미지로 blob URL 또는
           // 아직 최적화 파이프라인을 거치지 않은 원본을 표시해야 하므로

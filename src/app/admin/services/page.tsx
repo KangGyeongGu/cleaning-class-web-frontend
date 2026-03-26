@@ -1,16 +1,17 @@
+/**
+ * 서비스 관리 페이지 (composition-only)
+ * 인증 확인 후 섹션 서버 컴포넌트들을 조합합니다.
+ */
+
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getServices } from "@/shared/lib/queries/service";
-import { getSiteConfig } from "@/shared/lib/site-config";
-import { ServiceListClient } from "@/app/admin/services/ServiceListClient";
-import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
-import { updateServiceDescription } from "@/shared/actions/site-config";
+import { getUser } from "@/shared/lib/supabase/auth";
+import { ServiceDescriptionSection } from "@/app/admin/services/ServiceDescriptionSection";
+import { ServiceListSection } from "@/app/admin/services/ServiceListSection";
 
-export default async function ServicesPage() {
-  const [servicesWithImageUrls, siteConfig] = await Promise.all([
-    getServices(),
-    getSiteConfig(),
-  ]);
+export default async function ServicesPage(): Promise<React.ReactElement> {
+  // 인증 확인: 미인증 시 getUser 내부에서 리다이렉트
+  await getUser();
 
   return (
     <div className="mx-auto max-w-7xl p-8">
@@ -25,20 +26,11 @@ export default async function ServicesPage() {
         </Link>
       </div>
 
-      <InlineDescriptionEditor
-        initialValue={siteConfig?.service_description ?? ""}
-        placeholder="서비스 섹션 안내 문구를 입력하세요"
-        emptyText="서비스 섹션 안내 문구가 없습니다."
-        onSave={updateServiceDescription}
-      />
+      {/* 안내 문구 편집기 — site_config 조회는 ServiceDescriptionSection에서 처리 */}
+      <ServiceDescriptionSection />
 
-      {servicesWithImageUrls.length === 0 ? (
-        <div className="border border-slate-200 p-12 text-center">
-          <p className="font-light text-slate-500">등록된 서비스가 없습니다.</p>
-        </div>
-      ) : (
-        <ServiceListClient services={servicesWithImageUrls} />
-      )}
+      {/* 서비스 목록 — 데이터 조회는 ServiceListSection에서 처리 */}
+      <ServiceListSection />
     </div>
   );
 }
