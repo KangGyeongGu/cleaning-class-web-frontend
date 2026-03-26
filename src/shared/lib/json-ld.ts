@@ -129,8 +129,7 @@ export function generateWebSiteJsonLd(
 export function generateLocalBusinessJsonLd(
   siteConfig?: SiteConfig | null,
 ): LocalBusinessJsonLd {
-  const siteUrl =
-    siteConfig?.site_url ?? "https://www.cleaningclass.co.kr";
+  const siteUrl = siteConfig?.site_url ?? "https://www.cleaningclass.co.kr";
   return {
     "@context": "https://schema.org",
     "@type": ["CleaningService", "LocalBusiness"],

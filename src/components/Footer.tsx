@@ -112,15 +112,22 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
         </div>
 
-        {/* 하단 링크 바: 저작권 + 개인정보처리방침 + 고객센터 중앙 정렬 */}
+        {/* 하단 링크 바: 저작권 + 개인정보처리방침 + 이용약관 + 고객센터 중앙 정렬 */}
         <div className="flex items-center justify-center gap-0 pt-8 text-xs font-light text-slate-400">
           <span>&copy; 청소클라쓰</span>
           <span className="mx-3 select-none">|</span>
           <Link
-            href="/privacy-policy"
+            href="/policy/privacy"
             className="transition-colors hover:text-slate-700"
           >
             개인정보처리방침
+          </Link>
+          <span className="mx-3 select-none">|</span>
+          <Link
+            href="/policy/terms"
+            className="transition-colors hover:text-slate-700"
+          >
+            이용약관
           </Link>
           <span className="mx-3 select-none">|</span>
           <Link

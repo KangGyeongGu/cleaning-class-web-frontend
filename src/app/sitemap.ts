@@ -53,5 +53,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 1.0,
     },
+    // 정책 페이지: 변경 빈도가 낮으므로 yearly, 낮은 우선순위 적용
+    {
+      url: "https://www.cleaningclass.co.kr/policy/privacy",
+      lastModified: new Date("2026-03-23T00:00:00.000Z"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: "https://www.cleaningclass.co.kr/policy/terms",
+      lastModified: new Date("2026-03-23T00:00:00.000Z"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
   ];
 }
