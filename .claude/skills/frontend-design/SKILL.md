@@ -18,14 +18,14 @@ Design skills produce generic output without project context. You MUST have conf
 
 **Gathering order:**
 1. **Check current instructions (instant)**: If your loaded instructions already contain a **Design Context** section, proceed immediately.
-2. **Check .impeccable.md (fast)**: If not in instructions, read `.impeccable.md` from the project root. If it exists and contains the required context, proceed.
+2. **Check .claude/rules/design-context.md (fast)**: If not in instructions, read `.claude/rules/design-context.md` from the project root. If it exists and contains the required context, proceed.
 3. **Run teach-impeccable (REQUIRED)**: If neither source has context, you MUST run /teach-impeccable NOW before doing anything else.
 
 ---
 
 ## Design Direction
 
-**CRITICAL**: This project follows a **trust-driven minimalist** direction. Read `.impeccable.md` for the full design context. Key principles:
+**CRITICAL**: This project follows a **trust-driven minimalist** direction. Read `.claude/rules/design-context.md` for the full design context. Key principles:
 
 - **Purpose**: Local cleaning service landing page targeting Korean homeowners
 - **Tone**: Professional, trustworthy, clean — NOT bold, experimental, or flashy

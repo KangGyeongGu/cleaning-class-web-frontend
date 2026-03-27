@@ -56,12 +56,18 @@ next-env.d.ts
 .idea/
 .vscode/
 
-# deprecated design docs (root level only)
+# ai 작업 산출물 (프로젝트 루트에 노출 불필요)
 /CLAUDE.md
 /agent-orchestration-system.md
+/.impeccable.md
 agent-system.md
 research.md
 legacy
 policy.md
 seo-maximize.md
 seo-research.md
+deploy-guide.md
+lighthouserc.json
+.lighthouseci/
+.playwright-mcp/
+.mcp.json
