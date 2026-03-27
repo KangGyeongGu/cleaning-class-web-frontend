@@ -2,7 +2,6 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import type { FaqRow } from "@/shared/types/database";
 
-// 공개 읽기 전용 — cookies() 없는 정적 클라이언트 사용
 export async function getActiveFaqs(): Promise<FaqRow[]> {
   const supabase = createStaticClient();
   const { data, error } = await supabase

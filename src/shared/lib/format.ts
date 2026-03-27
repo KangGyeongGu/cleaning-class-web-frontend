@@ -14,5 +14,5 @@ export function formatPhoneNumber(value: string): string {
  * Google 스니펫 채택률을 높이기 위해 자연스러운 문장형으로 작성.
  */
 export function buildDescription(): string {
-  return "청소클라쓰는 거주·입주·정기·상가·특수 청소 등 다양한 공간과 환경에 전문 맞춤 청소 서비스를 제공하는 전주 1등 청소업체입니다.";
+  return "청소클라쓰는 거주·입주·정기·상가·특수 청소부터 원룸·포장·반포장 이사까지 전문 맞춤 서비스를 제공하는 전주 1등 청소·이사업체입니다.";
 }

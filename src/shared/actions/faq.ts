@@ -52,7 +52,7 @@ export async function createFaq(prevState: unknown, formData: FormData) {
 
     if (error) {
       console.error("createFaq DB error:", error);
-      throw new Error("FAQ 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "FAQ 처리 중 오류가 발생했습니다." };
     }
 
     revalidateFaqPaths();
@@ -111,7 +111,7 @@ export async function updateFaq(
 
     if (error) {
       console.error("updateFaq DB error:", error);
-      throw new Error("FAQ 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "FAQ 처리 중 오류가 발생했습니다." };
     }
 
     revalidateFaqPaths();
@@ -145,7 +145,7 @@ export async function deleteFaq(
 
     if (error) {
       console.error("deleteFaq DB error:", error);
-      throw new Error("FAQ 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "FAQ 처리 중 오류가 발생했습니다." };
     }
 
     revalidateFaqPaths();
@@ -190,7 +190,7 @@ export async function toggleFaqActive(
 
     if (error) {
       console.error("toggleFaqActive DB error:", error);
-      throw new Error("FAQ 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "FAQ 처리 중 오류가 발생했습니다." };
     }
 
     revalidateFaqPaths();

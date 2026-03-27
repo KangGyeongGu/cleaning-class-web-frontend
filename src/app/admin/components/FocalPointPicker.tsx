@@ -9,9 +9,11 @@ interface FocalPointPickerProps {
   focalY: number;
   onChange: (x: number, y: number) => void;
   label?: string;
+  /** 표시 영역의 목표 비율 (width/height). 기본값 3/4 (세로) */
+  targetRatio?: number;
 }
 
-const TARGET_RATIO = 3 / 4; // 3:4 세로
+const DEFAULT_targetRatio = 3 / 4; // 3:4 세로
 
 /**
  * imageUrl 변경 시 naturalSize 리셋이 필요합니다.
@@ -24,6 +26,7 @@ export function FocalPointPicker({
   focalY,
   onChange,
   label,
+  targetRatio = DEFAULT_targetRatio,
 }: FocalPointPickerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [naturalSize, setNaturalSize] = useState<{
@@ -54,14 +57,14 @@ export function FocalPointPicker({
     let guideW: number; // 0~1 비율
     let guideH: number;
 
-    if (imageRatio > TARGET_RATIO) {
+    if (imageRatio > targetRatio) {
       // 이미지가 더 넓음 → 세로 꽉참, 가로만 잘림
       guideH = 1;
-      guideW = TARGET_RATIO / imageRatio;
-    } else if (imageRatio < TARGET_RATIO) {
+      guideW = targetRatio / imageRatio;
+    } else if (imageRatio < targetRatio) {
       // 이미지가 더 높음 → 가로 꽉참, 세로만 잘림
       guideW = 1;
-      guideH = imageRatio / TARGET_RATIO;
+      guideH = imageRatio / targetRatio;
     } else {
       // 정확히 3:4 → 잘림 없음
       return { x: 0, y: 0, w: 1, h: 1, canDragX: false, canDragY: false };
@@ -81,7 +84,7 @@ export function FocalPointPicker({
       canDragX: maxOffsetX > 0.001,
       canDragY: maxOffsetY > 0.001,
     };
-  }, [naturalSize, focalX, focalY]);
+  }, [naturalSize, focalX, focalY, targetRatio]);
 
   const handlePointerDown = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
@@ -107,11 +110,11 @@ export function FocalPointPicker({
     const containerRect = container.getBoundingClientRect();
     const imageRatio = naturalSize.w / naturalSize.h;
 
-    const canDragX = imageRatio > TARGET_RATIO;
-    const canDragY = imageRatio < TARGET_RATIO;
+    const canDragX = imageRatio > targetRatio;
+    const canDragY = imageRatio < targetRatio;
 
-    const guideW = canDragX ? TARGET_RATIO / imageRatio : 1;
-    const guideH = canDragY ? imageRatio / TARGET_RATIO : 1;
+    const guideW = canDragX ? targetRatio / imageRatio : 1;
+    const guideH = canDragY ? imageRatio / targetRatio : 1;
     const maxOffsetX = 1 - guideW;
     const maxOffsetY = 1 - guideH;
 
@@ -167,11 +170,19 @@ export function FocalPointPicker({
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleUp);
     };
-  }, [dragging, naturalSize, onChange]);
+  }, [dragging, naturalSize, onChange, targetRatio]);
+
+  const ratioLabel =
+    targetRatio >= 1
+      ? `${Math.round(targetRatio * 10) / 10}:1`
+      : `1:${Math.round((1 / targetRatio) * 10) / 10}`;
 
   if (!imageUrl) {
     return (
-      <div className="flex aspect-3/4 w-full max-w-xs items-center justify-center border border-dashed border-slate-300">
+      <div
+        className="flex w-full max-w-xs items-center justify-center border border-dashed border-slate-300"
+        style={{ aspectRatio: targetRatio }}
+      >
         <p className="text-center text-xs text-slate-400">
           이미지를 선택하면{"\n"}표시 영역을 지정할 수 있습니다
         </p>
@@ -189,7 +200,7 @@ export function FocalPointPicker({
         </p>
       )}
 
-      {/* aspect-square로 CLS 방지: width/height prop이 h-auto에 의해 오버라이드되므로 컨테이너에서 공간 확보 */}
+      {/* aspect-square로 CLS 방지: next/image의 fill 모드에서 컨테이너가 공간을 확보해야 함 */}
       <div
         ref={containerRef}
         className="relative aspect-square max-w-xs overflow-hidden select-none"
@@ -262,7 +273,7 @@ export function FocalPointPicker({
         {guide && !guide.canDragX && !guide.canDragY && naturalSize && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <p className="bg-black/30 px-2 py-1 text-xs font-bold text-white/70 drop-shadow-md">
-              3:4 비율 일치
+              {ratioLabel} 비율 일치
             </p>
           </div>
         )}
@@ -275,8 +286,13 @@ export function FocalPointPicker({
       )}
 
       <div>
-        <p className="mb-2 text-xs text-slate-500">실제 표시 미리보기 (3:4)</p>
-        <div className="relative aspect-3/4 w-32 overflow-hidden border border-slate-200 bg-slate-100">
+        <p className="mb-2 text-xs text-slate-500">
+          실제 표시 미리보기 ({ratioLabel})
+        </p>
+        <div
+          className="relative w-32 overflow-hidden border border-slate-200 bg-slate-100"
+          style={{ aspectRatio: targetRatio }}
+        >
           <Image
             src={imageUrl}
             alt="미리보기"

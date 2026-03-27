@@ -29,7 +29,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
     existingService || "",
   );
 
-  // blob URL 메모리 누수 방지: ref로 최신 URL 추적
+  // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -68,12 +68,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
   };
 
   const handleSubmit = async (formData: FormData) => {
-    // 태그를 JSON 문자열로 추가
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
   };
 
-  // 성공 시 리다이렉트
   useEffect(() => {
     if (state && "success" in state && state.success) {
       router.push("/admin/reviews");
@@ -84,7 +82,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
 
   return (
     <form action={handleSubmit} className="space-y-8">
-      {/* 제목 */}
       <div>
         <label
           htmlFor="title"
@@ -107,7 +104,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         )}
       </div>
 
-      {/* 소개글 */}
       <div>
         <label
           htmlFor="summary"
@@ -130,7 +126,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         )}
       </div>
 
-      {/* 바로가기 링크 */}
       <div>
         <label
           htmlFor="link_url"
@@ -153,7 +148,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         )}
       </div>
 
-      {/* 서비스 종류 (필수) */}
       <div>
         <div className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase">
           서비스 종류 <span className="text-red-500">*</span>
@@ -168,7 +162,9 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
               key={type}
               type="button"
               onClick={() => {
-                const filtered = tags.filter((t) => !(SERVICE_TYPES as readonly string[]).includes(t));
+                const filtered = tags.filter(
+                  (t) => !(SERVICE_TYPES as readonly string[]).includes(t),
+                );
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}
@@ -184,7 +180,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         </div>
       </div>
 
-      {/* 태그 */}
       <div>
         <label
           htmlFor="tagInput"
@@ -239,7 +234,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         )}
       </div>
 
-      {/* 이미지 업로드 */}
       <div>
         <label
           htmlFor="image"
@@ -274,7 +268,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         </div>
       </div>
 
-      {/* 정렬 순서 */}
       <div>
         <label
           htmlFor="sort_order"
@@ -297,7 +290,6 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         )}
       </div>
 
-      {/* 게시 여부 */}
       <div className="flex items-center gap-3">
         <input
           id="is_published"
@@ -315,12 +307,10 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
         </label>
       </div>
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

@@ -19,9 +19,6 @@ const CLARITY_ID = ANALYTICS_ID_PATTERN.test(
   ? (process.env.NEXT_PUBLIC_CLARITY_ID ?? "")
   : "";
 
-
-export const revalidate = 3600;
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -42,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | 청소클라쓰",
   },
   description:
-    "전주 청소업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소 전문 서비스",
+    "전주 청소·이사업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소 전문",
   keywords: [
     "전주 청소업체",
     "전주 입주청소",
@@ -53,6 +50,14 @@ export const metadata: Metadata = {
     "전주 상가청소",
     "전북 청소",
     "전주 청소",
+    "전주 이사",
+    "전북 이사업체",
+    "이사청소",
+    "원룸이사",
+    "포장이사",
+    "반포장이사",
+    "전주 원룸이사",
+    "전주 포장이사",
     "청소클라쓰",
   ],
   openGraph: {
@@ -62,15 +67,21 @@ export const metadata: Metadata = {
     siteName: "청소클라쓰",
     title: "청소클라쓰",
     description:
-      "전주 청소업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소",
+      "전주 청소·이사업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+        alt: "청소클라쓰 — 전북 전주 전문 청소·이사 서비스",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "청소클라쓰",
+    description:
+      "전주 청소·이사업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소",
   },
   appleWebApp: {
     capable: true,
@@ -100,29 +111,23 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <link
-          rel="stylesheet"
-          href="/fonts/pretendard/pretendard.css"
-        />
+        {/* eslint-disable-next-line @next/next/no-css-tags -- public 셀프 호스팅 폰트, CSS 모듈 import 불가 */}
+        <link rel="stylesheet" href="/fonts/pretendard/pretendard.css" />
       </head>
       <body className="font-sans antialiased">
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- JSON-LD 구조화 데이터, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- WebSite JSON-LD, 서버 생성 데이터로 XSS 위험 없음 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

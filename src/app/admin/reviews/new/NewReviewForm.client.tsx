@@ -19,7 +19,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
   const [tagInput, setTagInput] = useState("");
   const [selectedService, setSelectedService] = useState<string>("");
 
-  // blob URL 메모리 누수 방지: ref로 최신 URL 추적
+  // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -136,7 +136,9 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
               key={type}
               type="button"
               onClick={() => {
-                const filtered = tags.filter((t) => !(SERVICE_TYPES as readonly string[]).includes(t));
+                const filtered = tags.filter(
+                  (t) => !(SERVICE_TYPES as readonly string[]).includes(t),
+                );
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}
