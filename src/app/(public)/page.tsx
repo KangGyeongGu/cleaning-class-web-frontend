@@ -10,7 +10,7 @@ import { buildDescription } from "@/shared/lib/format";
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스";
+  const title = "전주 청소·이사업체 청소클라쓰 | 전북 전주 전문 청소·이사 서비스";
   const description = buildDescription();
 
   return {
@@ -26,9 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/opengraph-image",
           width: 1200,
           height: 630,
-          alt: "청소클라쓰",
+          alt: "청소클라쓰 — 전북 전주 전문 청소·이사 서비스",
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }

@@ -9,14 +9,14 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "고객센터",
   description:
-    "청소클라쓰 고객센터 — 청소 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
+    "청소클라쓰 고객센터 — 청소·이사 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
   alternates: {
     canonical: "https://www.cleaningclass.co.kr/help",
   },
   openGraph: {
     title: "고객센터 | 청소클라쓰",
     description:
-      "청소클라쓰 고객센터 — 청소 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
+      "청소클라쓰 고객센터 — 청소·이사 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
     url: "https://www.cleaningclass.co.kr/help",
     images: [
       {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "고객센터 | 청소클라쓰",
     description:
-      "청소클라쓰 고객센터 — 청소 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
+      "청소클라쓰 고객센터 — 청소·이사 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
   },
 };
 

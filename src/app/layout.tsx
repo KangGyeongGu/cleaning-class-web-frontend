@@ -53,6 +53,11 @@ export const metadata: Metadata = {
     "전주 이사",
     "전북 이사업체",
     "이사청소",
+    "원룸이사",
+    "포장이사",
+    "반포장이사",
+    "전주 원룸이사",
+    "전주 포장이사",
     "청소클라쓰",
   ],
   openGraph: {
@@ -68,9 +73,15 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
+        alt: "청소클라쓰 — 전북 전주 전문 청소·이사 서비스",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "청소클라쓰",
+    description:
+      "전주 청소·이사업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소",
   },
   appleWebApp: {
     capable: true,

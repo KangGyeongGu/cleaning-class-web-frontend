@@ -27,7 +27,7 @@ interface OpeningHoursSpecification {
 
 interface LocalBusinessJsonLd {
   "@context": "https://schema.org";
-  "@type": ["CleaningService", "LocalBusiness"];
+  "@type": ["CleaningService", "MovingCompany", "LocalBusiness"];
   "@id": string;
   name: string;
   description: string;
@@ -130,7 +130,7 @@ export function generateLocalBusinessJsonLd(
 
   return {
     "@context": "https://schema.org",
-    "@type": ["CleaningService", "LocalBusiness"],
+    "@type": ["CleaningService", "MovingCompany", "LocalBusiness"],
     "@id": `${siteUrl}/#organization`,
     name: siteConfig?.business_name ?? "청소클라쓰",
     description:
@@ -181,6 +181,11 @@ export function generateLocalBusinessJsonLd(
       "상가청소",
       "이사청소",
       "이사",
+      "원룸이사",
+      "일반이사",
+      "반포장이사",
+      "포장이사",
+      "부분이사",
     ],
     priceRange: "$$",
     ...(sameAs.length > 0 && { sameAs }),
@@ -228,6 +233,11 @@ const DEFAULT_FAQ_ITEMS: QuestionItem[] = [
     question: "쓰레기집(특수청소)도 가능한가요?",
     answer:
       "네, 쓰레기집 정리, 폐기물 처리, 방역·소독 등 특수청소도 전문적으로 처리합니다. 현장 상태에 따라 맞춤 견적을 제공하오니 사진과 함께 문의해 주시면 더 정확한 안내가 가능합니다.",
+  },
+  {
+    question: "이사 서비스도 제공하나요?",
+    answer:
+      "네, 원룸이사, 일반이사, 반포장이사, 포장이사, 부분이사 등 다양한 이사 서비스를 제공합니다. 이사와 청소를 함께 의뢰하시면 한 번에 처리해 드립니다.",
   },
 ];
 
