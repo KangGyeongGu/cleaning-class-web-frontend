@@ -1,11 +1,15 @@
 import nodemailer from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 
+// inquiryType에 따라 분기되는 이메일 데이터 구조
 interface ContactEmailData {
+  inquiryType: "cleaning" | "moving";
   name: string;
   phone: string;
   serviceType: string;
-  region: string;
+  region?: string; // 청소의뢰 전용
+  departure?: string; // 이사의뢰 전용 — 출발지
+  destination?: string; // 이사의뢰 전용 — 도착지
   message: string;
   images?: Array<{ filename: string; content: Buffer }>;
 }
@@ -71,13 +75,11 @@ function getTransporter(): Mail {
   return cachedTransporter;
 }
 
-export async function sendContactEmail(data: ContactEmailData): Promise<void> {
-  if (!process.env.ADMIN_EMAIL) {
-    throw new Error("ADMIN_EMAIL 환경변수가 설정되지 않았습니다");
-  }
-  const transporter = getTransporter();
-
-  const htmlContent = `
+/**
+ * 청소의뢰 HTML 본문 생성 — 지역 필드 포함
+ */
+function buildCleaningHtml(data: ContactEmailData): string {
+  return `
     <!DOCTYPE html>
     <html>
       <head>
@@ -108,7 +110,7 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
             </div>
             <div class="field">
               <div class="label">지역</div>
-              <div class="value">${escapeHtml(data.region)}</div>
+              <div class="value">${escapeHtml(data.region ?? "")}</div>
             </div>
             <div class="field">
               <div class="label">서비스 유형</div>
@@ -123,21 +125,117 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
       </body>
     </html>
   `;
+}
 
-  await transporter.sendMail({
-    from: `"청소클라쓰 견적문의" <${process.env.SMTP_USER}>`,
-    to: process.env.ADMIN_EMAIL,
-    subject: `[청소클라쓰] 새 견적문의 - ${sanitizeHeader(data.name)}`,
-    html: htmlContent,
-    text: `
+/**
+ * 이사의뢰 HTML 본문 생성 — 출발지/도착지 필드 포함
+ */
+function buildMovingHtml(data: ContactEmailData): string {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background-color: #0f172a; color: white; padding: 20px; text-align: center; }
+          .badge { display: inline-block; background-color: #334155; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; margin-top: 8px; }
+          .content { background-color: #f8fafc; padding: 30px; border: 1px solid #e2e8f0; }
+          .field { margin-bottom: 20px; }
+          .label { font-weight: bold; color: #475569; margin-bottom: 5px; }
+          .value { background-color: white; padding: 10px; border-left: 3px solid #0f172a; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>청소클라쓰 이사 견적 문의</h1>
+            <div class="badge">이사의뢰</div>
+          </div>
+          <div class="content">
+            <div class="field">
+              <div class="label">이름</div>
+              <div class="value">${escapeHtml(data.name)}</div>
+            </div>
+            <div class="field">
+              <div class="label">연락처</div>
+              <div class="value">${escapeHtml(data.phone)}</div>
+            </div>
+            <div class="field">
+              <div class="label">서비스 유형</div>
+              <div class="value">${escapeHtml(data.serviceType)}</div>
+            </div>
+            <div class="field">
+              <div class="label">출발지</div>
+              <div class="value">${escapeHtml(data.departure ?? "미입력")}</div>
+            </div>
+            <div class="field">
+              <div class="label">도착지</div>
+              <div class="value">${escapeHtml(data.destination ?? "미입력")}</div>
+            </div>
+            <div class="field">
+              <div class="label">문의 내용</div>
+              <div class="value">${escapeHtml(data.message).replace(/\n/g, "<br>")}</div>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+/**
+ * 견적문의 이메일 발송
+ * inquiryType에 따라 제목과 본문 포맷을 분기:
+ * - cleaning: 기존 청소의뢰 포맷 (지역 표시)
+ * - moving: 이사의뢰 포맷 (출발지/도착지 표시, 별도 제목)
+ */
+export async function sendContactEmail(data: ContactEmailData): Promise<void> {
+  if (!process.env.ADMIN_EMAIL) {
+    throw new Error("ADMIN_EMAIL 환경변수가 설정되지 않았습니다");
+  }
+  const transporter = getTransporter();
+
+  const isMoving = data.inquiryType === "moving";
+  const subject = isMoving
+    ? `[청소클라쓰] 새 이사 견적문의 - ${sanitizeHeader(data.name)}`
+    : `[청소클라쓰] 새 견적문의 - ${sanitizeHeader(data.name)}`;
+
+  const htmlContent = isMoving
+    ? buildMovingHtml(data)
+    : buildCleaningHtml(data);
+
+  // 이사의뢰 일반 텍스트 — 출발지/도착지 포함
+  const movingPlainText = `
+[이사의뢰]
 이름: ${data.name}
 연락처: ${data.phone}
-지역: ${data.region}
+서비스 유형: ${data.serviceType}
+출발지: ${data.departure ?? "미입력"}
+도착지: ${data.destination ?? "미입력"}
+
+문의 내용:
+${data.message}
+  `.trim();
+
+  // 청소의뢰 일반 텍스트 — 지역 포함
+  const cleaningPlainText = `
+이름: ${data.name}
+연락처: ${data.phone}
+지역: ${data.region ?? ""}
 서비스 유형: ${data.serviceType}
 
 문의 내용:
 ${data.message}
-    `.trim(),
+  `.trim();
+
+  await transporter.sendMail({
+    from: `"청소클라쓰 견적문의" <${process.env.SMTP_USER}>`,
+    to: process.env.ADMIN_EMAIL,
+    subject,
+    html: htmlContent,
+    text: isMoving ? movingPlainText : cleaningPlainText,
     ...(data.images && data.images.length > 0
       ? {
           attachments: data.images.map((img) => ({

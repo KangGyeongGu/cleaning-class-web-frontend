@@ -20,7 +20,12 @@ interface ServiceItem {
  * 서비스 카드 그리드 — 모바일 전용 동기화 타이머 관리
  * 모든 카드의 before/after 전환이 동시에 발생하도록 단일 인터벌 사용
  */
-export function ServiceGrid({ services }: { services: ServiceItem[] }) {
+interface ServiceGridProps {
+  services: ServiceItem[];
+  phone: string;
+}
+
+export function ServiceGrid({ services, phone }: ServiceGridProps) {
   const [showAfter, setShowAfter] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
@@ -71,6 +76,7 @@ export function ServiceGrid({ services }: { services: ServiceItem[] }) {
         <ServiceCard
           key={service.id}
           service={service}
+          phone={phone}
           priority={false}
           showAfter={isTouchDevice && showAfter && !!service.afterImageUrl}
         />

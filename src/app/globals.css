@@ -163,6 +163,28 @@
     to { opacity: 1; }
   }
 
+  /* Hero 배경이미지 등장 애니메이션 */
+  @keyframes heroImageReveal {
+    from { opacity: 0; transform: scale(1.08); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes heroImageSlideLeft {
+    from { opacity: 0; transform: scale(1.05) translateX(-3%); }
+    to { opacity: 1; transform: scale(1) translateX(0); }
+  }
+
+  @keyframes heroImageSlideRight {
+    from { opacity: 0; transform: scale(1.05) translateX(3%); }
+    to { opacity: 1; transform: scale(1) translateX(0); }
+  }
+
+  /* Hero 오버레이 — 이미지가 먼저 드러난 뒤 서서히 어두워짐 */
+  @keyframes heroOverlayFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   /* react-slick 균등 높이 */
   .slick-track {
     display: flex !important;
@@ -188,6 +210,28 @@
     &::-webkit-scrollbar { width: 0.375rem; }
     &::-webkit-scrollbar-thumb { border-radius: 9999px; background-color: var(--color-slate-300, #cbd5e1); }
     &::-webkit-scrollbar-track { background-color: transparent; }
+  }
+
+  /* 스크롤 진입 애니메이션 — IntersectionObserver에서 .is-visible 토글로 작동 */
+  /* 초기 상태: 아래에서 위로 fadeIn. JavaScript 없는 환경에서는 opacity 0 고착 방지를 위해 */
+  /* prefers-reduced-motion 미디어 쿼리로 모션 억제 사용자 배려 */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 }
 
@@ -298,6 +342,6 @@
   /* ── 태그 ── */
 
   .tag-pill {
-    @apply rounded-md bg-slate-100 px-3 py-1 text-sm whitespace-nowrap text-slate-600;
+    @apply text-xs whitespace-nowrap text-slate-400;
   }
 }

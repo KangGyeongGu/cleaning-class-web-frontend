@@ -11,12 +11,16 @@ interface EditServiceFormProps {
   service: Service;
   imageUrl: string;
   afterImageUrl?: string;
+  detailImageUrl?: string;
+  detailAfterImageUrl?: string;
 }
 
 export function EditServiceForm({
   service,
   imageUrl,
   afterImageUrl,
+  detailImageUrl,
+  detailAfterImageUrl,
 }: EditServiceFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
@@ -27,6 +31,8 @@ export function EditServiceForm({
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
+  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(null);
+  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<string | null>(null);
   // 기존 서비스의 tags 배열로 초기 상태 설정
   const [tags, setTags] = useState<string[]>(service.tags ?? []);
   const [tagInput, setTagInput] = useState("");
@@ -132,6 +138,50 @@ export function EditServiceForm({
         />
         {state && "errors" in state && state.errors?.title && (
           <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
+        )}
+      </div>
+
+      {/* 카테고리 */}
+      <div>
+        <label
+          htmlFor="category"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          카테고리
+        </label>
+        <select
+          id="category"
+          name="category"
+          defaultValue={service.category}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
+        >
+          <option value="cleaning">청소 서비스</option>
+          <option value="moving">이사 서비스</option>
+        </select>
+        {state && "errors" in state && state.errors?.category && (
+          <p className="mt-1 text-xs text-red-500">{state.errors.category[0]}</p>
+        )}
+      </div>
+
+      {/* 서비스 설명 */}
+      <div>
+        <label
+          htmlFor="description"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          서비스 설명 (최대 500자, 선택)
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          maxLength={500}
+          rows={3}
+          defaultValue={service.description}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base font-light leading-relaxed transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          placeholder="서비스 소개 페이지에 표시될 설명을 입력하세요"
+        />
+        {state && "errors" in state && state.errors?.description && (
+          <p className="mt-1 text-xs text-red-500">{state.errors.description[0]}</p>
         )}
       </div>
 
@@ -267,6 +317,79 @@ export function EditServiceForm({
           />
           <input type="hidden" name="image_after_focal_x" value={afterFocalX} />
           <input type="hidden" name="image_after_focal_y" value={afterFocalY} />
+        </div>
+      </div>
+
+      {/* 상세페이지용 Before/After 이미지 업로드 */}
+      <div>
+        <p className="mb-4 text-xs font-bold tracking-widest text-slate-900 uppercase">
+          서비스 소개 페이지용 이미지 (선택)
+        </p>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div>
+            <label
+              htmlFor="detail_image"
+              className="mb-3 block text-xs font-bold text-slate-500"
+            >
+              Before 이미지
+            </label>
+            <input
+              id="detail_image"
+              name="detail_image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setDetailImagePreview(URL.createObjectURL(file));
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="detail_image"
+              className="inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
+            >
+              <Plus size={16} />
+              {detailImagePreview ? "이미지 변경" : "새 이미지 선택"}
+            </label>
+            {(detailImagePreview ?? detailImageUrl) && (
+              <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
+                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 또는 외부 URL 미리보기 전용 */}
+                <img src={detailImagePreview ?? detailImageUrl} alt="상세 Before 미리보기" className="h-full w-full object-cover" />
+              </div>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="detail_image_after"
+              className="mb-3 block text-xs font-bold text-slate-500"
+            >
+              After 이미지
+            </label>
+            <input
+              id="detail_image_after"
+              name="detail_image_after"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setDetailAfterImagePreview(URL.createObjectURL(file));
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="detail_image_after"
+              className="inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
+            >
+              <Plus size={16} />
+              {detailAfterImagePreview ? "이미지 변경" : "새 이미지 선택"}
+            </label>
+            {(detailAfterImagePreview ?? detailAfterImageUrl) && (
+              <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
+                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 또는 외부 URL 미리보기 전용 */}
+                <img src={detailAfterImagePreview ?? detailAfterImageUrl} alt="상세 After 미리보기" className="h-full w-full object-cover" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

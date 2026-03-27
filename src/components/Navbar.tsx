@@ -18,15 +18,17 @@ interface NavbarProps {
   daangnUrl?: string;
 }
 
-type MenuItem =
-  | { kind: "scroll"; label: string; target: string }
-  | { kind: "link"; label: string; href: string };
+// 모든 메뉴가 전용 페이지로 전환되어 link 타입만 사용
+interface MenuItem {
+  label: string;
+  href: string;
+}
 
 const menuItems: MenuItem[] = [
-  { kind: "scroll", label: "서비스", target: "services" },
-  { kind: "scroll", label: "작업후기", target: "reviews" },
-  { kind: "scroll", label: "견적문의", target: "contact" },
-  { kind: "link", label: "자주묻는질문", href: "/help" },
+  { label: "서비스", href: "/services" },
+  { label: "작업후기", href: "/reviews" },
+  { label: "견적문의", href: "/contact" },
+  { label: "자주묻는질문", href: "/help" },
 ];
 
 function LogoIcon(): React.JSX.Element {
@@ -40,11 +42,6 @@ function LogoIcon(): React.JSX.Element {
       className="rounded-sm"
     />
   );
-}
-
-function scrollToSection(targetId: string) {
-  const element = document.getElementById(targetId);
-  element?.scrollIntoView({ behavior: "smooth" });
 }
 
 function scrollToTop() {
@@ -77,22 +74,6 @@ export function Navbar({
     } else {
       router.push("/");
     }
-  };
-
-  /** 메뉴 클릭 — scroll 타입은 홈이면 스크롤, 다른 페이지면 해시 네비게이션 */
-  const handleMenuClick = (item: MenuItem): void => {
-    if (item.kind === "link") {
-      router.push(item.href);
-    } else if (isHome) {
-      scrollToSection(item.target);
-    } else {
-      window.location.assign(`/#${item.target}`);
-    }
-  };
-
-  const handleMobileMenuClick = (item: MenuItem): void => {
-    setIsOpen(false);
-    handleMenuClick(item);
   };
 
   const getFocusableElements = useCallback((): HTMLElement[] => {
@@ -169,26 +150,15 @@ export function Navbar({
 
           <div className="hidden items-center gap-6 md:flex">
             <div className="flex items-center gap-8">
-              {menuItems.map((item) =>
-                item.kind === "link" ? (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <button
-                    key={item.label}
-                    type="button"
-                    className="cursor-pointer border-0 bg-transparent text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
-                    onClick={() => handleMenuClick(item)}
-                  >
-                    {item.label}
-                  </button>
-                ),
-              )}
+              {menuItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
             {(hasBlogUrl || hasInstagramUrl || hasDaangnUrl) && (
               <div className="ml-2 flex items-center gap-4 border-l border-slate-200 pl-6">
@@ -258,29 +228,17 @@ export function Navbar({
             : "pointer-events-none opacity-0"
         }`}
       >
-        {menuItems.map((item) =>
-          item.kind === "link" ? (
-            <Link
-              key={item.label}
-              href={item.href}
-              tabIndex={isOpen ? 0 : -1}
-              onClick={() => setIsOpen(false)}
-              className="text-2xl font-black tracking-tighter text-slate-900"
-            >
-              {item.label}
-            </Link>
-          ) : (
-            <button
-              key={item.label}
-              type="button"
-              tabIndex={isOpen ? 0 : -1}
-              className="cursor-pointer border-0 bg-transparent text-2xl font-black tracking-tighter text-slate-900"
-              onClick={() => handleMobileMenuClick(item)}
-            >
-              {item.label}
-            </button>
-          ),
-        )}
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            href={item.href}
+            tabIndex={isOpen ? 0 : -1}
+            onClick={() => setIsOpen(false)}
+            className="text-2xl font-black tracking-tighter text-slate-900"
+          >
+            {item.label}
+          </Link>
+        ))}
         {(hasBlogUrl || hasInstagramUrl || hasDaangnUrl) && (
           <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
             {hasBlogUrl && (

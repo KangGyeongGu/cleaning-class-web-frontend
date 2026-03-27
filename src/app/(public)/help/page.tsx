@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
+import { getSiteConfig } from "@/shared/lib/site-config";
 import { FaqSection } from "@/components/FaqSection";
 
 export const revalidate = 3600;
@@ -25,6 +27,12 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "고객센터 | 청소클라쓰",
+    description:
+      "청소클라쓰 고객센터 — 청소 예약, 서비스 지역, 결제 방법 등 자주 묻는 질문(FAQ) 안내",
+  },
 };
 
 const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
@@ -32,9 +40,16 @@ const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
   { name: "고객센터", url: "https://www.cleaningclass.co.kr/help" },
 ]);
 
-export default function HelpPage() {
+const DEFAULT_FAQ_DESCRIPTION =
+  "자주 묻는 질문을 확인하세요.\n궁금한 내용이 해결되지 않으면 전화로 문의해 주세요.";
+
+export default async function HelpPage() {
+  const siteConfig = await getSiteConfig();
+  const faqDescription =
+    siteConfig?.faq_description?.trim() || DEFAULT_FAQ_DESCRIPTION;
+
   return (
-    <article className="mx-auto max-w-3xl px-6 pt-16 pb-20 md:pt-20 md:pb-24">
+    <>
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"
@@ -44,9 +59,42 @@ export default function HelpPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      <h1 className="text-heading-1 mb-4 tracking-tighter">고객센터</h1>
+      <div className="min-h-screen bg-white">
+        {/* 페이지 헤더 */}
+        <section className="pt-12 pb-10 md:pt-16 md:pb-12">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            {/* 브레드크럼 */}
+            <nav aria-label="현재 위치" className="mb-8">
+              <ol className="flex items-center gap-2 text-xs text-slate-400">
+                <li>
+                  <Link
+                    href="/"
+                    className="transition-colors hover:text-slate-600"
+                  >
+                    홈
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li className="text-slate-900" aria-current="page">
+                  고객센터
+                </li>
+              </ol>
+            </nav>
 
-      <FaqSection />
-    </article>
+            <h1 className="text-heading-1 mb-4">고객센터</h1>
+            <p className="text-body-sm max-w-lg whitespace-pre-line text-slate-500">
+              {faqDescription}
+            </p>
+          </div>
+        </section>
+
+        {/* FAQ 섹션 */}
+        <section className="py-10 md:py-14">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <FaqSection />
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

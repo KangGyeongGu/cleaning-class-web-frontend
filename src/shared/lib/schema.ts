@@ -1,18 +1,63 @@
 import { z } from "zod";
+import {
+  CLEANING_SERVICE_TYPES,
+  MOVING_SERVICE_TYPES,
+} from "@/shared/lib/constants";
 
-export const contactFormSchema = z.object({
+// 청소의뢰 서비스 유형 enum — CLEANING_SERVICE_TYPES + "기타 문의"
+const cleaningServiceTypeEnum = z.enum([
+  ...CLEANING_SERVICE_TYPES,
+  "기타 문의",
+] as [string, ...string[]]);
+
+// 이사의뢰 서비스 유형 enum — MOVING_SERVICE_TYPES + "기타 문의"
+const movingServiceTypeEnum = z.enum([
+  ...MOVING_SERVICE_TYPES,
+  "기타 문의",
+] as [string, ...string[]]);
+
+// 청소의뢰 분기 스키마 — 기존 지역 필드 유지
+const cleaningContactSchema = z.object({
+  inquiryType: z.literal("cleaning"),
   name: z.string().min(1, "이름을 입력해주세요"),
   phone: z
     .string()
     .min(1, "연락처를 입력해주세요")
     .regex(/^[0-9-]+$/, "올바른 전화번호 형식이 아닙니다"),
-  serviceType: z.string().min(1, "서비스 유형을 선택해주세요"),
+  serviceType: cleaningServiceTypeEnum,
   region: z.string().min(1, "지역을 선택해주세요"),
   message: z
     .string()
     .min(1, "문의 내용을 입력해주세요")
     .max(1000, "문의 내용은 1000자 이하로 작성해주세요"),
 });
+
+// 이사의뢰 분기 스키마 — 출발지/도착지 필드 추가
+const movingContactSchema = z.object({
+  inquiryType: z.literal("moving"),
+  name: z.string().min(1, "이름을 입력해주세요"),
+  phone: z
+    .string()
+    .min(1, "연락처를 입력해주세요")
+    .regex(/^[0-9-]+$/, "올바른 전화번호 형식이 아닙니다"),
+  serviceType: movingServiceTypeEnum,
+  departure: z.string().optional(),
+  destination: z.string().optional(),
+  message: z
+    .string()
+    .min(1, "문의 내용을 입력해주세요")
+    .max(1000, "문의 내용은 1000자 이하로 작성해주세요"),
+});
+
+/**
+ * 견적문의 폼 스키마 — inquiryType 기반 discriminated union
+ * cleaning: 청소의뢰 (serviceType = 청소 카테고리, region 필드)
+ * moving: 이사의뢰 (serviceType = 이사 카테고리, departure/destination 필드)
+ */
+export const contactFormSchema = z.discriminatedUnion("inquiryType", [
+  cleaningContactSchema,
+  movingContactSchema,
+]);
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 
@@ -114,11 +159,52 @@ export const siteConfigFormSchema = z.object({
 
 export type SiteConfigFormData = z.infer<typeof siteConfigFormSchema>;
 
+/**
+ * 이사업체 정보 폼 스키마 — site_config moving_* 컬럼과 대응
+ */
+export const movingSiteConfigSchema = z.object({
+  moving_representative: z
+    .string()
+    .max(50, "대표자명은 50자 이하여야 합니다")
+    .optional()
+    .default(""),
+  moving_phone: z
+    .string()
+    .optional()
+    .default("")
+    .refine((v) => v === "" || PHONE_REGEX.test(v), {
+      message:
+        "올바른 전화번호 형식이 아닙니다 (예: 010-1234-5678, 02-1234-5678)",
+    }),
+  moving_business_registration_number: z
+    .string()
+    .optional()
+    .default("")
+    .refine((v) => v === "" || BUSINESS_NUMBER_REGEX.test(v), {
+      message: "올바른 사업자번호 형식이 아닙니다 (예: 000-00-00000)",
+    }),
+  moving_address: z
+    .string()
+    .max(200, "주소는 200자 이하여야 합니다")
+    .optional()
+    .default(""),
+});
+
+export type MovingSiteConfigData = z.infer<typeof movingSiteConfigSchema>;
+
 export const serviceFormSchema = z.object({
   title: z
     .string()
     .min(1, "서비스명을 입력해주세요")
     .max(50, "서비스명은 50자 이하여야 합니다"),
+  description: z
+    .string()
+    .max(500, "서비스 설명은 500자 이하여야 합니다")
+    .optional()
+    .default(""),
+  category: z.enum(["cleaning", "moving"], {
+    errorMap: () => ({ message: "카테고리를 선택해주세요" }),
+  }),
   tags: z.array(z.string()).min(1, "최소 1개 이상의 태그를 입력해주세요"),
   sort_order: z
     .number()
@@ -150,3 +236,24 @@ export const faqFormSchema = z.object({
 });
 
 export type FaqFormData = z.infer<typeof faqFormSchema>;
+
+/**
+ * 고객 리뷰 제출 폼 스키마 — 토큰 기반 단회성 리뷰 등록
+ * token: UUID 형식의 검증 토큰
+ * rating: 1~5점 정수 별점
+ * comment: 1~500자 리뷰 내용
+ */
+export const customerReviewFormSchema = z.object({
+  token: z.string().uuid("유효하지 않은 토큰 형식입니다"),
+  rating: z
+    .number()
+    .int("별점은 정수여야 합니다")
+    .min(1, "별점은 최소 1점이어야 합니다")
+    .max(5, "별점은 최대 5점이어야 합니다"),
+  comment: z
+    .string()
+    .min(1, "리뷰 내용을 입력해주세요")
+    .max(500, "리뷰 내용은 500자 이하로 작성해주세요"),
+});
+
+export type CustomerReviewFormData = z.infer<typeof customerReviewFormSchema>;

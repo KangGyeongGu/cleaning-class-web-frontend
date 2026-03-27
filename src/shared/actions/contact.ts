@@ -21,10 +21,13 @@ export async function submitContactForm(
   formData: FormData,
 ) {
   const rawData = {
+    inquiryType: formData.get("inquiryType") ?? "cleaning",
     name: formData.get("name"),
     phone: formData.get("phone"),
     serviceType: formData.get("serviceType"),
     region: formData.get("region"),
+    departure: formData.get("departure"),
+    destination: formData.get("destination"),
     message: formData.get("message"),
   };
 
@@ -93,12 +96,20 @@ export async function submitContactForm(
       }),
     );
 
+    // inquiryType 분기 — cleaning은 region, moving은 출발지/도착지 전달
+    const data = validationResult.data;
+
     await sendContactEmail({
-      name: validationResult.data.name,
-      phone: validationResult.data.phone,
-      serviceType: validationResult.data.serviceType,
-      region: validationResult.data.region,
-      message: validationResult.data.message,
+      inquiryType: data.inquiryType,
+      name: data.name,
+      phone: data.phone,
+      serviceType: data.serviceType,
+      region: data.inquiryType === "cleaning" ? (data.region ?? "") : undefined,
+      departure:
+        data.inquiryType === "moving" ? (data.departure ?? "") : undefined,
+      destination:
+        data.inquiryType === "moving" ? (data.destination ?? "") : undefined,
+      message: data.message,
       images: imageAttachments.length > 0 ? imageAttachments : undefined,
     });
 

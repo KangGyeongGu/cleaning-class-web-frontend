@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { NaverBlogIcon } from "@/components/icons/SocialIcons";
-import { SERVICE_TYPES } from "@/shared/lib/constants";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
@@ -151,9 +151,16 @@ export function BlogReviews({
     return null;
   }
 
+  // 청소 카테고리 리뷰만 표시 — 태그에 CLEANING_SERVICE_TYPES 중 하나 이상 포함된 리뷰
+  const cleaningReviews = reviews.filter((r) =>
+    r.tags.some((tag) =>
+      (CLEANING_SERVICE_TYPES as readonly string[]).includes(tag),
+    ),
+  );
+
   const filteredReviews = activeFilter
-    ? reviews.filter((r) => r.tags.includes(activeFilter))
-    : reviews;
+    ? cleaningReviews.filter((r) => r.tags.includes(activeFilter))
+    : cleaningReviews;
 
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
@@ -236,7 +243,7 @@ export function BlogReviews({
           >
             전체
           </button>
-          {SERVICE_TYPES.map((type) => (
+          {CLEANING_SERVICE_TYPES.map((type) => (
             <button
               key={type}
               type="button"

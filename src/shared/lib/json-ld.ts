@@ -134,7 +134,7 @@ export function generateLocalBusinessJsonLd(
     "@id": `${siteUrl}/#organization`,
     name: siteConfig?.business_name ?? "청소클라쓰",
     description:
-      "전주 청소업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소 전문 서비스",
+      "전주 청소·이사업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소 전문",
     url: siteUrl,
     telephone: siteConfig?.phone,
     taxID: siteConfig?.business_registration_number ?? undefined,
@@ -179,6 +179,8 @@ export function generateLocalBusinessJsonLd(
       "특수청소",
       "쓰레기집청소",
       "상가청소",
+      "이사청소",
+      "이사",
     ],
     priceRange: "$$",
     ...(sameAs.length > 0 && { sameAs }),

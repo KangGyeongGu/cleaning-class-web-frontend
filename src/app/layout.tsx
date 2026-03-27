@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s | 청소클라쓰",
   },
   description:
-    "전주 청소업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소 전문 서비스",
+    "전주 청소·이사업체 청소클라쓰 — 전북 전주 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소 전문",
   keywords: [
     "전주 청소업체",
     "전주 입주청소",
@@ -53,6 +53,9 @@ export const metadata: Metadata = {
     "전주 상가청소",
     "전북 청소",
     "전주 청소",
+    "전주 이사",
+    "전북 이사업체",
+    "이사청소",
     "청소클라쓰",
   ],
   openGraph: {
@@ -62,7 +65,7 @@ export const metadata: Metadata = {
     siteName: "청소클라쓰",
     title: "청소클라쓰",
     description:
-      "전주 청소업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 특수청소, 쓰레기집청소, 상가청소",
+      "전주 청소·이사업체 청소클라쓰 — 거주청소, 입주청소, 정기청소, 이사청소, 특수청소, 상가청소",
     images: [
       {
         url: "/opengraph-image",

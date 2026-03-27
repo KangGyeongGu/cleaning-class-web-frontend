@@ -1,14 +1,17 @@
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
-import type { Review, Service } from "@/shared/types/database";
+import type { CustomerReviewRow, Review, Service } from "@/shared/types/database";
 
 export type ServiceWithImageUrls = {
   id: string;
   title: string;
   description: string;
+  category: string;
   tags: string[];
   imageUrl: string;
   afterImageUrl?: string;
+  detailImageUrl?: string;
+  detailAfterImageUrl?: string;
   focalX: number;
   focalY: number;
   afterFocalX: number;
@@ -59,11 +62,18 @@ export async function getPublishedServicesWithImageUrls(): Promise<
     return services.map((s) => ({
       id: s.id,
       title: s.title,
-      description: s.description ?? "",
+      description: s.description,
+      category: s.category,
       tags: s.tags ?? [],
       imageUrl: getServiceImageUrl(s.image_path),
       afterImageUrl: s.image_after_path
         ? getServiceImageUrl(s.image_after_path)
+        : undefined,
+      detailImageUrl: s.detail_image_path
+        ? getServiceImageUrl(s.detail_image_path)
+        : undefined,
+      detailAfterImageUrl: s.detail_image_after_path
+        ? getServiceImageUrl(s.detail_image_after_path)
         : undefined,
       focalX: s.image_focal_x,
       focalY: s.image_focal_y,
@@ -74,6 +84,30 @@ export async function getPublishedServicesWithImageUrls(): Promise<
     }));
   } catch (err) {
     console.error("[getPublishedServicesWithImageUrls] Unexpected error:", err);
+    return [];
+  }
+}
+
+/**
+ * 고객 리뷰 전체 조회 — ISR 호환 (createStaticClient 사용)
+ * 최신순(created_at DESC) 정렬
+ */
+export async function getCustomerReviews(): Promise<CustomerReviewRow[]> {
+  try {
+    const supabase = createStaticClient();
+    const { data, error } = await supabase
+      .from("customer_reviews")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("[getCustomerReviews] DB error:", error);
+      return [];
+    }
+
+    return (data as CustomerReviewRow[] | null) ?? [];
+  } catch (err) {
+    console.error("[getCustomerReviews] Unexpected error:", err);
     return [];
   }
 }

@@ -42,11 +42,29 @@ export function getServiceImageUrl(
   transform?: ImageTransformOptions,
 ): string {
   if (!imagePath || imagePath.trim() === "") {
-    return "/images/services/residential.webp";
+    return "";
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!supabaseUrl) return "";
   const rawUrl = `${supabaseUrl}/storage/v1/object/public/service-images/${imagePath}`;
+  return transform ? buildTransformUrl(rawUrl, transform) : rawUrl;
+}
+
+/**
+ * 히어로 배경이미지 URL 반환 — hero-images 버킷 사용
+ * imagePath가 없거나 비어있으면 빈 문자열 반환 (폴백은 호출부에서 처리)
+ */
+export function getHeroImageUrl(
+  imagePath: string,
+  transform?: ImageTransformOptions,
+): string {
+  if (!imagePath || imagePath.trim() === "") {
+    return "";
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!supabaseUrl) return "";
+  const rawUrl = `${supabaseUrl}/storage/v1/object/public/hero-images/${imagePath}`;
   return transform ? buildTransformUrl(rawUrl, transform) : rawUrl;
 }
