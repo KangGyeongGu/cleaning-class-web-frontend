@@ -174,7 +174,7 @@ export function Navbar({
                   <Link
                     key={item.label}
                     href={item.href}
-                    className="text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                    className="text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
                   >
                     {item.label}
                   </Link>
@@ -182,7 +182,7 @@ export function Navbar({
                   <button
                     key={item.label}
                     type="button"
-                    className="cursor-pointer border-0 bg-transparent text-xs font-bold tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                    className="cursor-pointer border-0 bg-transparent text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
                     onClick={() => handleMenuClick(item)}
                   >
                     {item.label}

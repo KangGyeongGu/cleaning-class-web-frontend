@@ -53,7 +53,7 @@ function CustomDropdown({
 
   return (
     <div className="group" ref={dropdownRef}>
-      <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900">
+      <label className="form-label-sm">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
       </label>
@@ -84,7 +84,7 @@ function CustomDropdown({
         )}
         <input type="hidden" name={name} value={value} />
       </div>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   );
 }
@@ -228,9 +228,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <h2 className="mb-3 text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
-            CONTACT
-          </h2>
+          <h2 className="text-heading-1 mb-3">CONTACT</h2>
           {phone && (
             <p className="mt-3 text-sm text-slate-600">
               유선상담{" "}
@@ -253,10 +251,7 @@ export function ContactForm({ phone }: ContactFormProps) {
           <div className="space-y-5">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="group">
-                <label
-                  htmlFor="name"
-                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
-                >
+                <label htmlFor="name" className="form-label-sm">
                   성함
                   <span className="ml-1 text-red-500">*</span>
                 </label>
@@ -266,21 +261,16 @@ export function ContactForm({ phone }: ContactFormProps) {
                   name="name"
                   type="text"
                   required
-                  className="w-full border-b border-slate-200 bg-transparent pb-2 text-sm font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="form-input"
                   placeholder="이름을 입력하세요"
                   onInput={checkFormValidity}
                 />
                 {state?.errors?.name && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {state.errors.name[0]}
-                  </p>
+                  <p className="form-error">{state.errors.name[0]}</p>
                 )}
               </div>
               <div className="group">
-                <label
-                  htmlFor="phone"
-                  className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
-                >
+                <label htmlFor="phone" className="form-label-sm">
                   연락처
                   <span className="ml-1 text-red-500">*</span>
                 </label>
@@ -295,13 +285,11 @@ export function ContactForm({ phone }: ContactFormProps) {
                     input.value = formatPhoneNumber(input.value);
                     checkFormValidity();
                   }}
-                  className="w-full border-b border-slate-200 bg-transparent pb-2 text-sm font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="form-input"
                   placeholder="010-0000-0000"
                 />
                 {state?.errors?.phone && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {state.errors.phone[0]}
-                  </p>
+                  <p className="form-error">{state.errors.phone[0]}</p>
                 )}
               </div>
             </div>
@@ -358,10 +346,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             />
 
             <div className="group">
-              <label
-                htmlFor="message"
-                className="mb-1.5 block text-xs font-bold tracking-wider text-slate-900"
-              >
+              <label htmlFor="message" className="form-label-sm">
                 문의사항
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -372,7 +357,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                 rows={3}
                 maxLength={1000}
                 required
-                className="w-full resize-none overflow-y-auto border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
+                className="form-input resize-none overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
                 placeholder="문의 내용을 자유롭게 작성해주세요"
                 onInput={(e) => {
                   setMessageLength(e.currentTarget.value.length);
@@ -382,9 +367,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               <div className="mt-1 flex justify-between">
                 <div>
                   {state?.errors?.message && (
-                    <p className="text-xs text-red-500">
-                      {state.errors.message[0]}
-                    </p>
+                    <p className="form-error">{state.errors.message[0]}</p>
                   )}
                 </div>
                 <span className="text-xs text-slate-400">
@@ -449,11 +432,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             <button
               type="submit"
               disabled={isPending || !formValid}
-              className={`px-10 py-3 text-sm font-bold tracking-widest transition-all disabled:cursor-not-allowed ${
-                formValid && !isPending
-                  ? "bg-slate-900 text-white hover:bg-slate-800"
-                  : "border border-slate-200 bg-slate-200 text-slate-400"
-              }`}
+              className="btn-primary px-10 py-3"
             >
               {isPending ? (
                 <span className="flex items-center justify-center gap-2">
@@ -468,11 +447,9 @@ export function ContactForm({ phone }: ContactFormProps) {
               )}
             </button>
             {showSuccess && state?.message && (
-              <p className="mt-4 text-sm text-green-600">{state.message}</p>
+              <p className="form-success mt-4">{state.message}</p>
             )}
-            {state?.error && (
-              <p className="mt-4 text-sm text-red-600">{state.error}</p>
-            )}
+            {state?.error && <p className="form-error mt-4">{state.error}</p>}
           </div>
         </form>
       </div>

@@ -22,10 +22,7 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
   return (
     <form action={formAction} className="space-y-8">
       <div>
-        <label
-          htmlFor="question"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="question" className="form-label">
           질문 (최대 300자)
         </label>
         <textarea
@@ -35,21 +32,16 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
           maxLength={300}
           rows={3}
           disabled={isPending}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg resize-none placeholder:text-slate-300 disabled:opacity-50"
           placeholder="자주 묻는 질문을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.question && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.question[0]}
-          </p>
+          <p className="form-error">{state.errors.question[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="answer"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="answer" className="form-label">
           답변 (최대 2000자)
         </label>
         <textarea
@@ -59,19 +51,16 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
           maxLength={2000}
           rows={8}
           disabled={isPending}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg resize-none placeholder:text-slate-300 disabled:opacity-50"
           placeholder="답변을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.answer && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.answer[0]}</p>
+          <p className="form-error">{state.errors.answer[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="display_order"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="display_order" className="form-label">
           표시 순서
         </label>
         <input
@@ -81,12 +70,10 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
           min="0"
           defaultValue={defaultDisplayOrder}
           disabled={isPending}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg disabled:opacity-50"
         />
         {state && "errors" in state && state.errors?.display_order && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.display_order[0]}
-          </p>
+          <p className="form-error">{state.errors.display_order[0]}</p>
         )}
       </div>
 
@@ -114,7 +101,7 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
       </div>
 
       {state && "error" in state && state.error && (
-        <p className="text-sm text-red-500">{state.error}</p>
+        <p className="form-error text-sm">{state.error}</p>
       )}
 
       <div className="flex gap-4 pt-4">
@@ -123,7 +110,7 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
           disabled={
             isPending || !!(state && "success" in state && state.success)
           }
-          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary px-8 py-4"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
@@ -136,7 +123,7 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+          className="btn-outline px-8 py-4"
         >
           취소
         </button>

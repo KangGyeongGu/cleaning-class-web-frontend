@@ -42,9 +42,7 @@ export default function HelpPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      <h1 className="mb-4 text-3xl font-black tracking-tighter text-slate-900">
-        고객센터
-      </h1>
+      <h1 className="text-heading-1 mb-4 tracking-tighter">고객센터</h1>
 
       <FaqSection />
     </article>

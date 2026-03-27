@@ -25,11 +25,11 @@ export async function Hero() {
 
       {/* CSS animation 사용: motion 미사용으로 JS 무관하게 SSR 즉시 표시, LCP 최적화 */}
       <div className="z-10 mx-auto max-w-5xl px-4 text-center">
-        <h1 className="mb-8 animate-[slideUp_1s_cubic-bezier(0.16,1,0.3,1)_both] text-4xl leading-tight font-semibold tracking-tighter text-slate-900 md:text-6xl">
+        <h1 className="text-display mb-8 animate-[slideUp_1s_cubic-bezier(0.16,1,0.3,1)_both]">
           {displayName}.
         </h1>
 
-        <p className="mb-12 animate-[slideUp_1s_0.3s_cubic-bezier(0.16,1,0.3,1)_both] text-xl font-light tracking-wide text-slate-600 md:text-2xl">
+        <p className="text-subtitle mb-12 animate-[slideUp_1s_0.3s_cubic-bezier(0.16,1,0.3,1)_both]">
           {description ?? "완벽함을 넘어선 쾌적함을 선사합니다."}
         </p>
 

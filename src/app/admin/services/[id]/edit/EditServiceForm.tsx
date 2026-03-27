@@ -108,10 +108,7 @@ export function EditServiceForm({
   return (
     <form action={handleSubmit} className="space-y-8">
       <div>
-        <label
-          htmlFor="title"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="title" className="form-label">
           서비스명 (최대 50자)
         </label>
         <input
@@ -121,19 +118,16 @@ export function EditServiceForm({
           required
           maxLength={50}
           defaultValue={service.title}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="form-input-lg placeholder:text-slate-300"
           placeholder="서비스명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.title && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
+          <p className="form-error">{state.errors.title[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="tagInput"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="tagInput" className="form-label">
           서비스 태그
         </label>
         <div className="mb-3 flex gap-2">
@@ -152,7 +146,7 @@ export function EditServiceForm({
                 }
               }
             }}
-            className="flex-1 border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+            className="form-input-lg flex-1 placeholder:text-slate-300"
             placeholder="태그 입력 후 추가 버튼 클릭 또는 Enter (최대 30자)"
           />
           <button
@@ -181,16 +175,13 @@ export function EditServiceForm({
           ))}
         </div>
         {state && "errors" in state && state.errors?.tags && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.tags[0]}</p>
+          <p className="form-error">{state.errors.tags[0]}</p>
         )}
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
-          <label
-            htmlFor="image"
-            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-          >
+          <label htmlFor="image" className="form-label">
             Before 이미지 (작업 전)
           </label>
           <input
@@ -224,10 +215,7 @@ export function EditServiceForm({
         </div>
 
         <div>
-          <label
-            htmlFor="image_after"
-            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-          >
+          <label htmlFor="image_after" className="form-label">
             After 이미지 (작업 후, 선택)
           </label>
           <input
@@ -262,10 +250,7 @@ export function EditServiceForm({
       </div>
 
       <div>
-        <label
-          htmlFor="sort_order"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="sort_order" className="form-label">
           정렬 순서
         </label>
         <input
@@ -274,12 +259,10 @@ export function EditServiceForm({
           type="number"
           min="0"
           defaultValue={service.sort_order}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
+          className="form-input-lg"
         />
         {state && "errors" in state && state.errors?.sort_order && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.sort_order[0]}
-          </p>
+          <p className="form-error">{state.errors.sort_order[0]}</p>
         )}
       </div>
 
@@ -308,7 +291,7 @@ export function EditServiceForm({
         <button
           type="submit"
           disabled={isPending}
-          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary px-8 py-4"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
@@ -321,7 +304,7 @@ export function EditServiceForm({
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+          className="btn-outline px-8 py-4"
         >
           취소
         </button>

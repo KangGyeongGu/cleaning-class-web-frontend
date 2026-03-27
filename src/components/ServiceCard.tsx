@@ -109,15 +109,12 @@ export function ServiceCard({
         <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
       </div>
       <div className="px-1 text-center">
-        <h3 className="mb-2 origin-center text-base font-bold text-slate-900 transition-all duration-300 group-hover:scale-110 group-hover:text-black">
+        <h3 className="text-heading-4 mb-2 origin-center transition-all duration-300 group-hover:scale-110 group-hover:text-black">
           {service.title}
         </h3>
         <div className="flex flex-wrap justify-center gap-2">
           {service.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-md bg-slate-100 px-3 py-1 text-sm whitespace-nowrap text-slate-600"
-            >
+            <span key={tag} className="tag-pill">
               {tag}
             </span>
           ))}

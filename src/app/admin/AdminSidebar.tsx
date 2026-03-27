@@ -24,6 +24,11 @@ const navItems = [
   { href: "/admin/config", label: "업체 정보", icon: Settings },
 ];
 
+const navItemBase =
+  "flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest transition-colors";
+const navItemActive = "bg-slate-100 text-slate-900";
+const navItemInactive = "text-slate-500 hover:bg-slate-50 hover:text-slate-900";
+
 export function AdminSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
@@ -65,11 +70,7 @@ export function AdminSidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest transition-colors ${
-                    isActive
-                      ? "bg-slate-100 text-slate-900"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                  className={`${navItemBase} ${isActive ? navItemActive : navItemInactive}`}
                 >
                   <Icon size={18} />
                   {item.label}
@@ -80,7 +81,7 @@ export function AdminSidebar() {
               <Link
                 href="/"
                 target="_blank"
-                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                className={`${navItemBase} ${navItemInactive}`}
               >
                 <ExternalLink size={18} />
                 홈페이지
@@ -88,7 +89,7 @@ export function AdminSidebar() {
               <form action={handleLogout}>
                 <button
                   type="submit"
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                  className={`w-full ${navItemBase} ${navItemInactive}`}
                 >
                   <LogOut size={18} />
                   로그아웃
@@ -112,11 +113,7 @@ export function AdminSidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest transition-colors ${
-                    isActive
-                      ? "bg-slate-100 text-slate-900"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                  className={`${navItemBase} ${isActive ? navItemActive : navItemInactive}`}
                 >
                   <Icon size={18} />
                   {item.label}
@@ -128,7 +125,7 @@ export function AdminSidebar() {
                 href="/"
                 target="_blank"
                 onClick={() => setIsSidebarOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                className={`${navItemBase} ${navItemInactive}`}
               >
                 <ExternalLink size={18} />
                 홈페이지
@@ -136,7 +133,7 @@ export function AdminSidebar() {
               <form action={handleLogout}>
                 <button
                   type="submit"
-                  className="flex w-full items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                  className={`w-full ${navItemBase} ${navItemInactive}`}
                 >
                   <LogOut size={18} />
                   로그아웃

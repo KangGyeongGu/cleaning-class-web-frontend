@@ -31,12 +31,12 @@ export async function FaqSection() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      <p className="mb-16 text-sm leading-relaxed font-light text-slate-600">
+      <p className="text-body-sm mb-16 leading-relaxed tracking-wide text-slate-600 md:text-base">
         {faqDescription}
       </p>
 
       <section aria-labelledby="faq-heading">
-        <h2 id="faq-heading" className="mb-8 text-lg font-bold text-slate-900">
+        <h2 id="faq-heading" className="text-heading-1 mb-8">
           자주 묻는 질문
         </h2>
         <FaqAccordion faqs={faqs} />

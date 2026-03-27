@@ -26,10 +26,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
   return (
     <form action={formAction} className="space-y-8">
       <div>
-        <label
-          htmlFor="question"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="question" className="form-label">
           질문 (최대 300자)
         </label>
         <textarea
@@ -40,7 +37,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           rows={3}
           defaultValue={faq.question}
           disabled={isPending}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg w-full resize-none"
           placeholder="자주 묻는 질문을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.question && (
@@ -51,10 +48,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="answer"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="answer" className="form-label">
           답변 (최대 2000자)
         </label>
         <textarea
@@ -65,7 +59,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           rows={8}
           defaultValue={faq.answer}
           disabled={isPending}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg w-full resize-none"
           placeholder="답변을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.answer && (
@@ -74,10 +68,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="display_order"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="display_order" className="form-label">
           표시 순서
         </label>
         <input
@@ -87,7 +78,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           min="0"
           defaultValue={faq.display_order}
           disabled={isPending}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900 disabled:opacity-50"
+          className="form-input-lg w-full"
         />
         {state && "errors" in state && state.errors?.display_order && (
           <p className="mt-1 text-xs text-red-500">
@@ -127,7 +118,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary px-8 py-4 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
@@ -140,7 +131,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+          className="btn-outline px-8 py-4"
         >
           취소
         </button>

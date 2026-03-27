@@ -122,22 +122,16 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
       )}
 
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          순서
-        </div>
-        <div className="col-span-4 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          질문
-        </div>
-        <div className="col-span-3 text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">순서</div>
+        <div className="text-label col-span-4 text-slate-500">질문</div>
+        <div className="text-label col-span-3 text-slate-500">
           답변 미리보기
         </div>
-        <div className="col-span-1 text-center text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-center text-slate-500">
           활성
         </div>
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          등록일
-        </div>
-        <div className="col-span-2 text-right text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">등록일</div>
+        <div className="text-label col-span-2 text-right text-slate-500">
           작업
         </div>
       </div>

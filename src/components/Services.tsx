@@ -33,10 +33,8 @@ export async function Services() {
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
       <div className="container mx-auto max-w-7xl px-4">
         <div className="mb-16 text-center">
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
-            SERVICE
-          </h2>
-          <p className="text-sm font-light tracking-wide text-slate-500 md:text-base">
+          <h2 className="text-heading-1 mb-4">SERVICE</h2>
+          <p className="text-body-sm tracking-wide text-slate-500 md:text-base">
             {serviceDescription ||
               "공간의 성격에 맞는 최적의 청소 서비스를 제공합니다."}
           </p>

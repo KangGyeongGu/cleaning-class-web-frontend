@@ -32,7 +32,7 @@ export function Footer({ siteConfig }: FooterProps) {
       <div className="container mx-auto px-4">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
-            <p className="mb-4 text-3xl font-black tracking-tighter">
+            <p className="text-heading-1 mb-4 tracking-tighter">
               {businessName}
             </p>
             <ul className="space-y-1 text-sm font-light text-slate-600">
@@ -45,9 +45,7 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
 
           <div>
-            <p className="mb-6 text-xs font-bold tracking-widest uppercase">
-              Contact
-            </p>
+            <p className="text-label mb-6 text-slate-900">Contact</p>
             <ul className="space-y-4 text-sm font-light text-slate-600">
               {phone && (
                 <li>
@@ -73,9 +71,7 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
 
           <div>
-            <p className="mb-6 text-xs font-bold tracking-widest uppercase">
-              Social
-            </p>
+            <p className="text-label mb-6 text-slate-900">Social</p>
             <ul className="space-y-4 text-sm font-light text-slate-600">
               {hasBlogUrl && (
                 <li>

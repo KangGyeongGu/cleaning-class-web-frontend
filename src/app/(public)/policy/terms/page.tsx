@@ -45,14 +45,14 @@ export default function TermsPage() {
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
       <header className="mb-12">
-        <h1 className="mb-4 text-3xl font-black tracking-tighter text-slate-900">
+        <h1 className="text-heading-1 mb-4 tracking-tighter">
           청소클라쓰 이용약관
         </h1>
       </header>
 
       <div className="space-y-12">
         <section aria-labelledby="article-1">
-          <h2 id="article-1" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-1" className="text-heading-3 mb-4">
             제1조 (목적)
           </h2>
           <p className="text-sm leading-relaxed font-light text-slate-700">
@@ -64,7 +64,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-2">
-          <h2 id="article-2" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-2" className="text-heading-3 mb-4">
             제2조 (정의)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -89,7 +89,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-3">
-          <h2 id="article-3" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-3" className="text-heading-3 mb-4">
             제3조 (약관의 효력 및 변경)
           </h2>
           <ol className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -121,7 +121,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-4">
-          <h2 id="article-4" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-4" className="text-heading-3 mb-4">
             제4조 (서비스의 제공)
           </h2>
           <ol className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -138,7 +138,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-5">
-          <h2 id="article-5" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-5" className="text-heading-3 mb-4">
             제5조 (서비스의 변경 및 중단)
           </h2>
           <ol className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -166,7 +166,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-6">
-          <h2 id="article-6" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-6" className="text-heading-3 mb-4">
             제6조 (견적문의)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -187,7 +187,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-7">
-          <h2 id="article-7" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-7" className="text-heading-3 mb-4">
             제7조 (이용자의 의무)
           </h2>
           <p className="mb-3 text-sm leading-relaxed font-light text-slate-700">
@@ -204,7 +204,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-8">
-          <h2 id="article-8" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-8" className="text-heading-3 mb-4">
             제8조 (회사의 의무)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -224,7 +224,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-9">
-          <h2 id="article-9" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-9" className="text-heading-3 mb-4">
             제9조 (저작권 및 지적재산권)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -240,7 +240,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-10">
-          <h2 id="article-10" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-10" className="text-heading-3 mb-4">
             제10조 (면책사항)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -265,7 +265,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="article-11">
-          <h2 id="article-11" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-11" className="text-heading-3 mb-4">
             제11조 (분쟁해결 및 관할법원)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
@@ -281,7 +281,7 @@ export default function TermsPage() {
         </section>
 
         <section aria-labelledby="addendum">
-          <h2 id="addendum" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="addendum" className="text-heading-3 mb-4">
             부칙
           </h2>
           <p className="text-sm leading-relaxed font-light text-slate-700">

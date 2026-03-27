@@ -45,7 +45,7 @@ export default function PrivacyPage() {
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
       <header className="mb-12">
-        <h1 className="mb-4 text-3xl font-black tracking-tighter text-slate-900">
+        <h1 className="text-heading-1 mb-4 tracking-tighter">
           청소클라쓰 개인정보처리방침
         </h1>
         <p className="text-sm leading-relaxed font-light text-slate-600">
@@ -62,10 +62,7 @@ export default function PrivacyPage() {
         aria-labelledby="key-info-label"
         className="mb-12 rounded-sm border border-slate-200 bg-slate-50 p-6"
       >
-        <p
-          id="key-info-label"
-          className="mb-4 text-xs font-bold tracking-widest text-slate-500 uppercase"
-        >
+        <p id="key-info-label" className="text-label mb-4 text-slate-500">
           주요 개인정보 처리 표시
         </p>
         <ul className="space-y-2 text-sm font-light text-slate-700">
@@ -97,9 +94,7 @@ export default function PrivacyPage() {
       </section>
 
       <nav aria-label="개인정보처리방침 목차" className="mb-12">
-        <p className="mb-4 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          목차
-        </p>
+        <p className="text-label mb-4 text-slate-500">목차</p>
         <ol className="space-y-1 text-sm font-light text-slate-600">
           <li>
             <a
@@ -154,7 +149,7 @@ export default function PrivacyPage() {
 
       <div className="space-y-12">
         <section aria-labelledby="article-1">
-          <h2 id="article-1" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-1" className="text-heading-3 mb-4">
             제1조 (개인정보의 처리 목적, 수집 항목, 보유기간)
           </h2>
           <p className="mb-6 text-sm leading-relaxed font-light text-slate-700">
@@ -255,7 +250,7 @@ export default function PrivacyPage() {
         </section>
 
         <section aria-labelledby="article-2">
-          <h2 id="article-2" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-2" className="text-heading-3 mb-4">
             제2조 (개인정보의 파기 절차 및 방법)
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -287,7 +282,7 @@ export default function PrivacyPage() {
         </section>
 
         <section aria-labelledby="article-3">
-          <h2 id="article-3" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-3" className="text-heading-3 mb-4">
             제3조 (정보주체와 법정대리인의 권리·의무 및 행사방법)
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -321,7 +316,7 @@ export default function PrivacyPage() {
         </section>
 
         <section aria-labelledby="article-4">
-          <h2 id="article-4" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-4" className="text-heading-3 mb-4">
             제4조 (개인정보의 안전성 확보조치)
           </h2>
           <p className="mb-4 text-sm leading-relaxed font-light text-slate-700">
@@ -356,7 +351,7 @@ export default function PrivacyPage() {
         </section>
 
         <section aria-labelledby="article-5">
-          <h2 id="article-5" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-5" className="text-heading-3 mb-4">
             제5조 (개인정보 보호책임자 및 고충사항을 처리하는 부서)
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
@@ -484,7 +479,7 @@ export default function PrivacyPage() {
         </section>
 
         <section aria-labelledby="article-6">
-          <h2 id="article-6" className="mb-4 text-lg font-bold text-slate-900">
+          <h2 id="article-6" className="text-heading-3 mb-4">
             제6조 (개인정보 처리방침의 변경)
           </h2>
           <div className="space-y-4 text-sm leading-relaxed font-light text-slate-700">

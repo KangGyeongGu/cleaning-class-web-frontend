@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
+import { NaverBlogIcon } from "@/components/icons/SocialIcons";
 
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
@@ -20,20 +21,6 @@ const SERVICE_TYPES = [
   "쓰레기집청소",
   "상가청소",
 ] as const;
-
-function NaverBlogIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845Z" />
-    </svg>
-  );
-}
 
 interface BlogReviewsProps {
   reviews: Review[];
@@ -48,7 +35,7 @@ function NextArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="다음 리뷰"
-      className="absolute top-1/2 -right-4 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center rounded-full border border-slate-200 bg-white text-slate-900 shadow-lg transition-all hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-right-8 lg:-right-12"
+      className="btn-icon absolute top-1/2 -right-4 z-20 flex -translate-y-1/2 items-center justify-center hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-right-8 lg:-right-12"
       onClick={onClick}
     >
       <ArrowRight className="h-5 w-5" />
@@ -62,7 +49,7 @@ function PrevArrow(props: CustomArrowProps) {
     <button
       type="button"
       aria-label="이전 리뷰"
-      className="absolute top-1/2 -left-4 z-20 flex h-12 w-12 -translate-y-1/2 transform items-center justify-center rounded-full border border-slate-200 bg-white text-slate-900 shadow-lg transition-all hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-left-8 lg:-left-12"
+      className="btn-icon absolute top-1/2 -left-4 z-20 flex -translate-y-1/2 items-center justify-center hover:border-slate-900 hover:bg-slate-900 hover:text-white md:-left-8 lg:-left-12"
       onClick={onClick}
     >
       <ArrowLeft className="h-5 w-5" />
@@ -88,16 +75,13 @@ function ReviewCard({ review }: { review: Review }) {
       <div className="flex flex-1 flex-col px-5 pb-6">
         <div className="mb-1.5 flex min-h-5 flex-wrap gap-2">
           {review.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-xs tracking-wider text-slate-600 uppercase"
-            >
+            <span key={tag} className="tag-pill">
               {tag}
             </span>
           ))}
         </div>
 
-        <h3 className="mb-2 line-clamp-2 min-h-13 text-lg leading-snug font-bold text-slate-900 transition-colors group-hover:text-slate-700">
+        <h3 className="text-heading-3 mb-2 line-clamp-2 min-h-12 leading-snug transition-colors group-hover:text-slate-700">
           {review.title}
         </h3>
 
@@ -106,7 +90,7 @@ function ReviewCard({ review }: { review: Review }) {
         </p>
 
         <div className="mt-auto flex justify-end">
-          <div className="flex w-fit items-center gap-2 border-b border-transparent pb-1 text-xs font-bold tracking-widest text-slate-900 uppercase transition-all group-hover:border-slate-900">
+          <div className="text-label flex w-fit items-center gap-2 border-b border-transparent pb-1 text-slate-900 transition-all group-hover:border-slate-900">
             More <ArrowUpRight size={12} aria-hidden="true" />
           </div>
         </div>
@@ -219,10 +203,8 @@ export function BlogReviews({
       <div className="max-w-8xl container mx-auto px-4 md:px-20 lg:px-24">
         <div className="mb-10 flex flex-col items-start justify-between md:flex-row md:items-end md:px-2">
           <div>
-            <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
-              REVIEW
-            </h2>
-            <p className="max-w-lg text-sm font-light tracking-wide text-slate-500 md:text-base">
+            <h2 className="text-heading-1 mb-4">REVIEW</h2>
+            <p className="text-body-sm max-w-lg tracking-wide text-slate-500 md:text-base">
               {reviewDescription ||
                 "의뢰 전 업체의 작업 방식을 확인할 수 있는 후기들을 확인해보세요."}
             </p>
@@ -258,11 +240,7 @@ export function BlogReviews({
           <button
             type="button"
             onClick={() => handleFilterChange(null)}
-            className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium tracking-wide transition-colors ${
-              activeFilter === null
-                ? "border-slate-900 bg-slate-900 text-white"
-                : "border-slate-300 bg-white text-slate-600 hover:border-slate-500 hover:text-slate-900"
-            }`}
+            className={`btn-filter shrink-0 ${activeFilter === null ? "btn-filter-active" : "btn-filter-inactive"}`}
           >
             전체
           </button>
@@ -271,11 +249,7 @@ export function BlogReviews({
               key={type}
               type="button"
               onClick={() => handleFilterChange(type)}
-              className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium tracking-wide transition-colors ${
-                activeFilter === type
-                  ? "border-slate-900 bg-slate-900 text-white"
-                  : "border-slate-300 bg-white text-slate-600 hover:border-slate-500 hover:text-slate-900"
-              }`}
+              className={`btn-filter shrink-0 ${activeFilter === type ? "btn-filter-active" : "btn-filter-inactive"}`}
             >
               {type}
             </button>

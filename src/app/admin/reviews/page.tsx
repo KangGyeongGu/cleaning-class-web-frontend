@@ -10,10 +10,10 @@ export default async function ReviewsPage(): Promise<React.ReactElement> {
   return (
     <div className="mx-auto max-w-7xl p-8">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-3xl font-black text-slate-900">리뷰 관리</h1>
+        <h1 className="text-heading-1">리뷰 관리</h1>
         <Link
           href="/admin/reviews/new"
-          className="flex items-center gap-2 bg-slate-900 px-6 py-3 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800"
+          className="btn-primary flex items-center gap-2 px-6 py-3"
         >
           <Plus size={18} />
           신규 등록

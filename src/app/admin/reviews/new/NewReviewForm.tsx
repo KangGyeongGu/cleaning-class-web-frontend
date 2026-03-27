@@ -78,10 +78,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
   return (
     <form action={handleSubmit} className="space-y-8">
       <div>
-        <label
-          htmlFor="title"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="title" className="form-label">
           제목 (최대 100자)
         </label>
         <input
@@ -90,19 +87,16 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           type="text"
           required
           maxLength={100}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="form-input-lg placeholder:text-slate-300"
           placeholder="리뷰 제목을 입력하세요"
         />
         {state && "errors" in state && state.errors?.title && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
+          <p className="form-error">{state.errors.title[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="summary"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="summary" className="form-label">
           소개글 (최대 500자)
         </label>
         <textarea
@@ -111,37 +105,32 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           required
           maxLength={500}
           rows={3}
-          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="form-input-lg resize-none placeholder:text-slate-300"
           placeholder="리뷰 소개글을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.summary && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.summary[0]}</p>
+          <p className="form-error">{state.errors.summary[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="link_url"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="link_url" className="form-label">
           바로가기 링크 (선택)
         </label>
         <input
           id="link_url"
           name="link_url"
           type="url"
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="form-input-lg placeholder:text-slate-300"
           placeholder="https://blog.naver.com/..."
         />
         {state && "errors" in state && state.errors?.link_url && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.link_url[0]}
-          </p>
+          <p className="form-error">{state.errors.link_url[0]}</p>
         )}
       </div>
 
       <div>
-        <div className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase">
+        <div className="form-label">
           서비스 종류 <span className="text-red-500">*</span>
         </div>
         <p className="mb-3 text-xs text-slate-500">
@@ -171,10 +160,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="tagInput"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="tagInput" className="form-label">
           태그
         </label>
         <div className="mb-3 flex gap-2">
@@ -191,7 +177,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
                 }
               }
             }}
-            className="flex-1 border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+            className="form-input-lg flex-1 placeholder:text-slate-300"
             placeholder="태그 입력 후 추가 버튼 클릭 또는 Enter"
           />
           <button
@@ -220,15 +206,12 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           ))}
         </div>
         {state && "errors" in state && state.errors?.tags && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.tags[0]}</p>
+          <p className="form-error">{state.errors.tags[0]}</p>
         )}
       </div>
 
       <div>
-        <label
-          htmlFor="image"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="image" className="form-label">
           이미지
         </label>
         <input
@@ -261,10 +244,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
       </div>
 
       <div>
-        <label
-          htmlFor="sort_order"
-          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
-        >
+        <label htmlFor="sort_order" className="form-label">
           정렬 순서
         </label>
         <input
@@ -273,12 +253,10 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           type="number"
           min="0"
           defaultValue={defaultSortOrder}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
+          className="form-input-lg"
         />
         {state && "errors" in state && state.errors?.sort_order && (
-          <p className="mt-1 text-xs text-red-500">
-            {state.errors.sort_order[0]}
-          </p>
+          <p className="form-error">{state.errors.sort_order[0]}</p>
         )}
       </div>
 
@@ -314,7 +292,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
           disabled={
             isPending || !!(state && "success" in state && state.success)
           }
-          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className="btn-primary px-8 py-4"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
@@ -327,7 +305,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
+          className="btn-outline px-8 py-4"
         >
           취소
         </button>

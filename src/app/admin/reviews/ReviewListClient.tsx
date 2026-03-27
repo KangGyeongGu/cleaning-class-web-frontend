@@ -128,25 +128,15 @@ export function ReviewListClient({
       )}
 
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          순서
-        </div>
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          이미지
-        </div>
-        <div className="col-span-3 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          제목
-        </div>
-        <div className="col-span-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          태그
-        </div>
-        <div className="col-span-1 text-center text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">순서</div>
+        <div className="text-label col-span-1 text-slate-500">이미지</div>
+        <div className="text-label col-span-3 text-slate-500">제목</div>
+        <div className="text-label col-span-2 text-slate-500">태그</div>
+        <div className="text-label col-span-1 text-center text-slate-500">
           게시
         </div>
-        <div className="col-span-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          등록일
-        </div>
-        <div className="col-span-2 text-right text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-2 text-slate-500">등록일</div>
+        <div className="text-label col-span-2 text-right text-slate-500">
           작업
         </div>
       </div>
