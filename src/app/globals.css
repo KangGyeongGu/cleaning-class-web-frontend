@@ -30,7 +30,9 @@
 }
 
 @theme inline {
-  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", sans-serif;
+  --font-sans:
+    "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont,
+    system-ui, "Segoe UI", sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -142,47 +144,89 @@
 
   /* Hero 장식 요소 float 애니메이션 (CSS-only, motion/react 대체) */
   @keyframes floatUp {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-30px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-30px);
+    }
   }
 
   @keyframes floatDown {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(40px); }
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(40px);
+    }
   }
 
   /* Hero CTA 버튼 페이드인 애니메이션 */
   @keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   /* Hero 전화번호 페이드인 애니메이션 */
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* Hero 배경이미지 등장 애니메이션 */
   @keyframes heroImageReveal {
-    from { opacity: 0; transform: scale(1.08); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+      opacity: 0;
+      transform: scale(1.08);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   @keyframes heroImageSlideLeft {
-    from { opacity: 0; transform: scale(1.05) translateX(-3%); }
-    to { opacity: 1; transform: scale(1) translateX(0); }
+    from {
+      opacity: 0;
+      transform: scale(1.05) translateX(-3%);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
   }
 
   @keyframes heroImageSlideRight {
-    from { opacity: 0; transform: scale(1.05) translateX(3%); }
-    to { opacity: 1; transform: scale(1) translateX(0); }
+    from {
+      opacity: 0;
+      transform: scale(1.05) translateX(3%);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+    }
   }
 
   /* Hero 오버레이 — 이미지가 먼저 드러난 뒤 서서히 어두워짐 */
   @keyframes heroOverlayFade {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /* react-slick 균등 높이 */
@@ -207,9 +251,16 @@
 
   /* 얇은 스크롤바 유틸리티 — ContactForm 드롭다운·textarea 등 반복 패턴 추출 */
   .scrollbar-thin {
-    &::-webkit-scrollbar { width: 0.375rem; }
-    &::-webkit-scrollbar-thumb { border-radius: 9999px; background-color: var(--color-slate-300, #cbd5e1); }
-    &::-webkit-scrollbar-track { background-color: transparent; }
+    &::-webkit-scrollbar {
+      width: 0.375rem;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 9999px;
+      background-color: var(--color-slate-300, #cbd5e1);
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   }
 
   /* 스크롤 진입 애니메이션 — IntersectionObserver에서 .is-visible 토글로 작동 */
@@ -218,7 +269,9 @@
   .scroll-reveal {
     opacity: 0;
     transform: translateY(2rem);
-    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    transition:
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
   }
 
   .scroll-reveal.is-visible {
@@ -239,17 +292,21 @@
   /* ── 타이포그래피 스케일 ── */
 
   .text-display {
-    @apply text-4xl font-black leading-tight tracking-tighter text-slate-900;
+    @apply text-4xl leading-tight font-black tracking-tighter text-slate-900;
   }
   @media (min-width: 768px) {
-    .text-display { @apply text-6xl; }
+    .text-display {
+      @apply text-6xl;
+    }
   }
 
   .text-heading-1 {
     @apply text-3xl font-black tracking-tight text-slate-900;
   }
   @media (min-width: 768px) {
-    .text-heading-1 { @apply text-4xl; }
+    .text-heading-1 {
+      @apply text-4xl;
+    }
   }
 
   .text-heading-2 {
@@ -268,7 +325,9 @@
     @apply text-xl font-light tracking-wide text-slate-600;
   }
   @media (min-width: 768px) {
-    .text-subtitle { @apply text-2xl; }
+    .text-subtitle {
+      @apply text-2xl;
+    }
   }
 
   .text-body {
@@ -316,7 +375,7 @@
   /* ── 폼 ── */
 
   .form-label {
-    @apply text-xs font-bold tracking-widest uppercase mb-3 block text-slate-900;
+    @apply mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase;
   }
 
   .form-label-sm {

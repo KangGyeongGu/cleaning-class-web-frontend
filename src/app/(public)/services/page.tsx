@@ -1,9 +1,3 @@
-/**
- * /services — 서비스 소개 전용 페이지
- * 청소·이사 서비스를 카테고리별로 DB 데이터 기반 소개
- * ISR 1시간 재검증, BreadcrumbList JSON-LD 포함
- */
-
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,8 +7,6 @@ import type { ServiceWithImageUrls } from "@/shared/lib/home";
 import { ServiceBeforeAfter } from "@/components/ServiceBeforeAfter.client";
 
 export const revalidate = 3600;
-
-// ─── 메타데이터 ────────────────────────────────────────────────────────────────
 
 const PAGE_DESCRIPTION =
   "청소클라쓰의 전문 청소·이사 서비스를 소개합니다. 거주청소, 정기청소, 특수청소, 원룸이사, 포장이사 등.";
@@ -41,14 +33,10 @@ export const metadata: Metadata = {
   },
 };
 
-// ─── BreadcrumbList JSON-LD ───────────────────────────────────────────────────
-
 const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
   { name: "홈", url: "https://www.cleaningclass.co.kr" },
   { name: "서비스 소개", url: "https://www.cleaningclass.co.kr/services" },
 ]);
-
-// ─── 서비스 카드 컴포넌트 ─────────────────────────────────────────────────────
 
 interface ServiceCardProps {
   service: ServiceWithImageUrls;
@@ -56,7 +44,10 @@ interface ServiceCardProps {
 
 function ServiceCard({ service }: ServiceCardProps) {
   return (
-    <article id={`service-${service.id}`} className="scroll-mt-24 border-t border-slate-100 pt-8">
+    <article
+      id={`service-${service.id}`}
+      className="scroll-mt-24 border-t border-slate-100 pt-8"
+    >
       <h3 className="mb-3 text-lg font-black tracking-tight text-slate-900">
         {service.title}
       </h3>
@@ -85,8 +76,6 @@ function ServiceCard({ service }: ServiceCardProps) {
   );
 }
 
-// ─── 카테고리별 서비스 섹션 ───────────────────────────────────────────────────
-
 interface ServiceCategorySectionProps {
   id: string;
   label: string;
@@ -109,7 +98,7 @@ function ServiceCategorySection({
       className="px-6 py-12 md:py-16"
     >
       <div className="mx-auto max-w-5xl">
-        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-slate-400">
+        <p className="mb-3 text-xs font-bold tracking-widest text-slate-400 uppercase">
           {label}
         </p>
         <h2
@@ -119,7 +108,6 @@ function ServiceCategorySection({
           {heading}
         </h2>
 
-        {/* 이미지 있는 서비스 — 교대 레이아웃 (상세 이미지 우선) */}
         {services.filter((s) => s.detailImageUrl).length > 0 && (
           <div>
             {services
@@ -186,7 +174,6 @@ function ServiceCategorySection({
           </div>
         )}
 
-        {/* 이미지 없는 서비스 — 2컬럼 그리드 */}
         {services.filter((s) => !s.detailImageUrl).length > 0 && (
           <div className="mt-12 grid grid-cols-1 gap-x-12 gap-y-0 md:grid-cols-2">
             {services
@@ -201,19 +188,14 @@ function ServiceCategorySection({
   );
 }
 
-// ─── 페이지 ──────────────────────────────────────────────────────────────────
-
 export default async function ServicesPage() {
   const allServices = await getPublishedServicesWithImageUrls();
 
-  const cleaningServices = allServices.filter(
-    (s) => s.category === "cleaning",
-  );
+  const cleaningServices = allServices.filter((s) => s.category === "cleaning");
   const movingServices = allServices.filter((s) => s.category === "moving");
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
-      {/* BreadcrumbList JSON-LD */}
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"
@@ -223,7 +205,6 @@ export default async function ServicesPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      {/* ── 페이지 헤더 ────────────────────────────────────────── */}
       <section className="pt-12 pb-10 md:pt-16 md:pb-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <nav aria-label="현재 위치" className="mb-8">
@@ -252,7 +233,6 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      {/* ── 청소 서비스 섹션 ────────────────────────────────────── */}
       <ServiceCategorySection
         id="cleaning-services"
         label="Cleaning"
@@ -260,14 +240,12 @@ export default async function ServicesPage() {
         services={cleaningServices}
       />
 
-      {/* ── 섹션 구분선 ─────────────────────────────────────────── */}
       {cleaningServices.length > 0 && movingServices.length > 0 && (
         <div className="mx-auto max-w-5xl px-6">
           <div className="border-t border-slate-200" />
         </div>
       )}
 
-      {/* ── 이사 서비스 섹션 ────────────────────────────────────── */}
       <ServiceCategorySection
         id="moving-services"
         label="Moving"
@@ -275,21 +253,20 @@ export default async function ServicesPage() {
         services={movingServices}
       />
 
-      {/* ── 하단 CTA 배너 ──────────────────────────────────────── */}
       <section
         aria-label="견적 문의 유도"
         className="border-t border-slate-100 bg-slate-50 px-6 py-12"
       >
         <div className="mx-auto max-w-5xl text-center">
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-400">
+          <p className="mb-2 text-xs font-bold tracking-widest text-slate-400 uppercase">
             Contact
           </p>
           <h2 className="mb-4 text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
             견적 문의
           </h2>
           <p className="mb-8 text-sm leading-relaxed text-slate-500">
-            원하시는 서비스가 있으신가요? 부담 없이 연락 주시면 빠르게
-            안내해 드립니다.
+            원하시는 서비스가 있으신가요? 부담 없이 연락 주시면 빠르게 안내해
+            드립니다.
           </p>
           <Link
             href="/contact"

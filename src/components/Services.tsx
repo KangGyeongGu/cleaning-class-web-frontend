@@ -50,11 +50,10 @@ export async function Services() {
           </p>
         </div>
 
-        {/* 청소 서비스 */}
         {cleaningServices.length > 0 && (
           <div className="mb-16 md:mb-24">
             <div className="mb-8">
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+              <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
                 Cleaning
               </p>
               <h3 className="text-lg font-black tracking-tight text-slate-900">
@@ -65,11 +64,10 @@ export async function Services() {
           </div>
         )}
 
-        {/* 이사 서비스 */}
         {movingServices.length > 0 && (
           <div>
             <div className="mb-8">
-              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-slate-400">
+              <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
                 Moving
               </p>
               <h3 className="text-lg font-black tracking-tight text-slate-900">

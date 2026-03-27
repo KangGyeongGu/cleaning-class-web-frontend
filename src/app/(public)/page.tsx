@@ -78,22 +78,18 @@ function CustomerReviewsSkeleton() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
-      {/* Hero — h1 + LCP 요소이므로 Suspense 없이 렌더링 (데이터 대기 후 HTML 전송, CLS 방지) */}
+      {/* Hero는 h1 + LCP 요소이므로 Suspense 없이 렌더링 */}
       <Hero />
 
-      {/* 서비스 소개 — h2 헤딩 포함 */}
       <Suspense fallback={<ServicesSkeleton />}>
         <Services />
       </Suspense>
 
-      {/* 작업 방식 4단계 — h2 헤딩 포함, 클라이언트 컴포넌트(IntersectionObserver) */}
       <WorkProcessSection />
 
-      {/* 작업 후기 미리보기 — h2 헤딩 포함, 하단 전체 보기 링크 제공 */}
       <Suspense fallback={<ReviewsSkeleton />}>
         <BlogReviewsSection />
       </Suspense>
-      {/* 전체 보기 링크 — 작업후기 섹션 바로 아래에 배치 */}
       <div className="bg-white pb-2 text-center">
         <Link
           href="/reviews"
@@ -103,7 +99,6 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* 고객 리뷰 (별점) — 리뷰 없을 시 null 반환으로 섹션 자동 숨김 */}
       <Suspense fallback={<CustomerReviewsSkeleton />}>
         <CustomerReviewsSection />
       </Suspense>

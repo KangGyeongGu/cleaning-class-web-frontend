@@ -51,10 +51,7 @@ export function getServiceImageUrl(
   return transform ? buildTransformUrl(rawUrl, transform) : rawUrl;
 }
 
-/**
- * 히어로 배경이미지 URL 반환 — hero-images 버킷 사용
- * imagePath가 없거나 비어있으면 빈 문자열 반환 (폴백은 호출부에서 처리)
- */
+/** 히어로 이미지 URL 반환 — imagePath 없으면 빈 문자열, 폴백은 호출부에서 처리 */
 export function getHeroImageUrl(
   imagePath: string,
   transform?: ImageTransformOptions,

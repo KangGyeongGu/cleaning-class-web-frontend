@@ -60,10 +60,8 @@ export default async function HelpPage() {
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
       <div className="min-h-screen bg-white">
-        {/* 페이지 헤더 */}
         <section className="pt-12 pb-10 md:pt-16 md:pb-12">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            {/* 브레드크럼 */}
             <nav aria-label="현재 위치" className="mb-8">
               <ol className="flex items-center gap-2 text-xs text-slate-400">
                 <li>
@@ -88,7 +86,6 @@ export default async function HelpPage() {
           </div>
         </section>
 
-        {/* FAQ 섹션 */}
         <section className="py-10 md:py-14">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <FaqSection />

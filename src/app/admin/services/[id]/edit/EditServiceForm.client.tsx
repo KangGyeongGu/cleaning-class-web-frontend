@@ -38,7 +38,6 @@ export function EditServiceForm({
   const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<
     string | null
   >(null);
-  // 기존 서비스의 tags 배열로 초기 상태 설정
   const [tags, setTags] = useState<string[]>(service.tags ?? []);
   const [tagInput, setTagInput] = useState("");
   const [focalX, setFocalX] = useState(service.image_focal_x);
@@ -46,7 +45,7 @@ export function EditServiceForm({
   const [afterFocalX, setAfterFocalX] = useState(service.image_after_focal_x);
   const [afterFocalY, setAfterFocalY] = useState(service.image_after_focal_y);
 
-  // blob URL 메모리 누수 방지: ref로 최신 URL 추적
+  // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
   const afterImagePreviewRef = useRef<string | null>(null);
 
@@ -91,14 +90,12 @@ export function EditServiceForm({
     }
   };
 
-  // 성공 시 리다이렉트
   useEffect(() => {
     if (state && "success" in state && state.success) {
       router.push("/admin/services");
     }
   }, [state, router]);
 
-  // 태그 추가: 중복 및 최대 30자 제한 적용
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
     if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
@@ -107,12 +104,10 @@ export function EditServiceForm({
     }
   };
 
-  // 태그 삭제: 인덱스 기준으로 제거
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
   const handleSubmit = async (formData: FormData) => {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
@@ -123,7 +118,6 @@ export function EditServiceForm({
 
   return (
     <form action={handleSubmit} className="space-y-8">
-      {/* 서비스명 */}
       <div>
         <label
           htmlFor="title"
@@ -146,7 +140,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 카테고리 */}
       <div>
         <label
           htmlFor="category"
@@ -170,7 +163,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 서비스 설명 */}
       <div>
         <label
           htmlFor="description"
@@ -194,7 +186,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 서비스 태그 */}
       <div>
         <label
           htmlFor="tagInput"
@@ -229,7 +220,6 @@ export function EditServiceForm({
             <Plus size={14} />
           </button>
         </div>
-        {/* 추가된 태그 목록 (pill 형태), 기존 데이터 포함 */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
@@ -252,7 +242,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <label
@@ -329,7 +318,6 @@ export function EditServiceForm({
         </div>
       </div>
 
-      {/* 상세페이지용 Before/After 이미지 업로드 */}
       <div>
         <p className="mb-4 text-xs font-bold tracking-widest text-slate-900 uppercase">
           서비스 소개 페이지용 이미지 (선택)
@@ -401,9 +389,7 @@ export function EditServiceForm({
             {(detailAfterImagePreview ?? detailAfterImageUrl) && (
               <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
                 <Image
-                  src={
-                    (detailAfterImagePreview ?? detailAfterImageUrl) as string
-                  }
+                  src={(detailAfterImagePreview ?? detailAfterImageUrl) as string}
                   alt="상세 After 미리보기"
                   fill
                   unoptimized={!!detailAfterImagePreview}
@@ -416,7 +402,6 @@ export function EditServiceForm({
         </div>
       </div>
 
-      {/* 정렬 순서 */}
       <div>
         <label
           htmlFor="sort_order"
@@ -439,7 +424,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 게시 여부 */}
       <div className="flex items-center gap-3">
         <input
           id="is_published"
@@ -457,12 +441,10 @@ export function EditServiceForm({
         </label>
       </div>
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

@@ -9,10 +9,7 @@ import {
   DaangnIcon,
 } from "@/components/icons/SocialIcons";
 
-// ISR: 1시간마다 재검증 — site_config 변경을 주기적으로 반영
 export const revalidate = 3600;
-
-// ── 메타데이터 ──────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: "견적문의",
@@ -39,13 +36,9 @@ export const metadata: Metadata = {
   },
 };
 
-// ── 페이지 ──────────────────────────────────────────────────────────────────
-
 export default async function ContactPage() {
-  // site_config에서 연락처 정보 조회 — ISR 캐시 적용
   const siteConfig = await getSiteConfig();
 
-  // BreadcrumbList JSON-LD: 홈 > 견적문의
   const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
     { name: "견적문의", url: "https://www.cleaningclass.co.kr/contact" },
@@ -59,7 +52,6 @@ export default async function ContactPage() {
 
   return (
     <>
-      {/* 구조화 데이터 — BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -71,10 +63,8 @@ export default async function ContactPage() {
         <section className="pt-12 pb-16 md:pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_2fr] lg:gap-20">
-              {/* 좌측: 제목 + 연락처 */}
               <aside>
                 <div className="lg:sticky lg:top-24">
-                  {/* 브레드크럼 */}
                   <nav aria-label="현재 위치" className="mb-8">
                     <ol className="flex items-center gap-2 text-xs text-slate-400">
                       <li>
@@ -99,7 +89,6 @@ export default async function ContactPage() {
                     급한 문의는 전화로 연락해 주세요.
                   </p>
 
-                  {/* 연락처 */}
                   {phone && (
                     <div className="mb-6">
                       <p className="mb-1 text-sm font-bold text-slate-900">
@@ -168,7 +157,6 @@ export default async function ContactPage() {
                 </div>
               </aside>
 
-              {/* 우측: 견적문의 폼 */}
               <div>
                 <ContactForm />
               </div>

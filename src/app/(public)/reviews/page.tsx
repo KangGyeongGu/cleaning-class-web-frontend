@@ -4,10 +4,7 @@ import { getPublishedReviews } from "@/shared/lib/home";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 import { ReviewsPageClient } from "@/app/(public)/reviews/ReviewsPageClient.client";
 
-// ISR: 1시간마다 재검증
 export const revalidate = 3600;
-
-// ── 메타데이터 ──────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: "작업후기",
@@ -34,13 +31,9 @@ export const metadata: Metadata = {
   },
 };
 
-// ── 페이지 ──────────────────────────────────────────────────────────────────
-
 export default async function ReviewsPage() {
-  // 서버에서 공개된 작업후기 전체 조회 — ISR 캐시 적용
   const reviews = await getPublishedReviews();
 
-  // BreadcrumbList JSON-LD: 홈 > 작업후기
   const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
     { name: "작업후기", url: "https://www.cleaningclass.co.kr/reviews" },
@@ -48,7 +41,6 @@ export default async function ReviewsPage() {
 
   return (
     <>
-      {/* 구조화 데이터 — BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -57,10 +49,8 @@ export default async function ReviewsPage() {
       />
 
       <main className="min-h-screen bg-white">
-        {/* 페이지 헤더 */}
         <section className="pt-12 pb-10 md:pt-16 md:pb-12">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            {/* 브레드크럼 */}
             <nav aria-label="현재 위치" className="mb-8">
               <ol className="flex items-center gap-2 text-xs text-slate-400">
                 <li>
@@ -87,7 +77,6 @@ export default async function ReviewsPage() {
           </div>
         </section>
 
-        {/* 카드 그리드 + 필터 탭 영역 */}
         <section className="py-10 md:py-14">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <ReviewsPageClient reviews={reviews} />

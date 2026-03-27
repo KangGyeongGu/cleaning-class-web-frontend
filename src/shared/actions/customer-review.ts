@@ -10,13 +10,9 @@ import type { ReviewTokenRow } from "@/shared/types/database";
 /** 통일 에러 메시지 — 토큰 관련 모든 실패에 동일 문구 노출 */
 const TOKEN_ERROR_MESSAGE = "유효하지 않거나 만료된 링크입니다";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 관리자 전용 액션
-// ─────────────────────────────────────────────────────────────────────────────
-
 /**
  * 고객 리뷰 토큰 생성 — 인증된 관리자만 호출 가능
- * crypto.randomUUID()로 고유 토큰 생성, 만료일은 현재로부터 30일
+ * 만료일은 현재로부터 30일
  */
 export async function generateReviewToken(): Promise<{
   success: boolean;
@@ -53,10 +49,7 @@ export async function generateReviewToken(): Promise<{
   }
 }
 
-/**
- * 토큰 목록 조회 — 인증된 관리자만 호출 가능
- * 생성일 내림차순 정렬
- */
+/** 토큰 목록 조회 — 인증된 관리자만 호출 가능, 생성일 내림차순 */
 export async function listReviewTokens(): Promise<{
   success: boolean;
   tokens?: ReviewTokenRow[];
@@ -120,10 +113,6 @@ export async function deleteReviewToken(tokenId: string): Promise<{
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 공개 액션
-// ─────────────────────────────────────────────────────────────────────────────
-
 /**
  * 고객 리뷰 제출 — 인증 불필요, 토큰 유효성은 RPC에서 원자적 검증
  * submit_customer_review RPC: SECURITY DEFINER, FOR UPDATE 락으로 중복 방지
@@ -144,7 +133,6 @@ export async function submitCustomerReview(
       comment: formData.get("comment"),
     };
 
-    // Zod 스키마로 입력값 검증
     const validationResult = customerReviewFormSchema.safeParse(rawData);
     if (!validationResult.success) {
       return {
@@ -155,7 +143,6 @@ export async function submitCustomerReview(
 
     const { token, rating, comment } = validationResult.data;
 
-    // SECURITY DEFINER RPC 호출 — anon 키로 실행 가능
     const supabase = createStaticClient();
     const { error } = await supabase.rpc("submit_customer_review", {
       p_token: token,
@@ -164,7 +151,7 @@ export async function submitCustomerReview(
     });
 
     if (error) {
-      // RPC 내부의 INVALID_TOKEN raise 또는 다른 DB 에러 모두 통일 메시지로 처리
+      // RPC 내부 INVALID_TOKEN raise 및 모든 DB 에러를 통일 메시지로 처리하여 토큰 존재 여부를 노출하지 않음
       console.error("[submitCustomerReview] RPC error:", error.message);
       return {
         success: false,

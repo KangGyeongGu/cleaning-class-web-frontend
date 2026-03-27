@@ -1,8 +1,5 @@
 "use client";
 
-// 고객 리뷰 등록 폼 — 토큰 기반 1회성 제출
-// useActionState로 서버 액션 상태 관리, StarRatingInput으로 별점 인터랙션 처리
-
 import { useActionState, useState } from "react";
 import { Loader2, Check } from "lucide-react";
 import { submitCustomerReview } from "@/shared/actions/customer-review";
@@ -12,7 +9,6 @@ interface ReviewSubmitFormProps {
   token: string;
 }
 
-// 별점 입력 — 1~5점 클릭 선택, 미선택 시 hover 프리뷰 표시
 function StarRatingInput({
   value,
   onChange,
@@ -80,12 +76,10 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
 
   return (
     <form action={formAction} className="space-y-6">
-      {/* 토큰 — 서버 액션에서 유효성 검증 */}
       <input type="hidden" name="token" value={token} />
-      {/* 별점 — hidden input으로 서버에 전달, StarRatingInput이 시각적 제어 */}
+      {/* rating 값은 StarRatingInput이 시각적으로 제어, hidden input으로 서버에 전달 */}
       <input type="hidden" name="rating" value={rating} />
 
-      {/* 별점 선택 영역 */}
       <div>
         <p
           id="rating-label"
@@ -99,7 +93,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
         <div aria-labelledby="rating-label">
           <StarRatingInput value={rating} onChange={setRating} />
         </div>
-        {/* 선택된 별점을 읽기 전용으로 보조 표시 */}
         {rating > 0 && (
           <p className="mt-2 text-xs text-slate-500">
             <StarRating
@@ -116,7 +109,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
         )}
       </div>
 
-      {/* 후기 내용 */}
       <div>
         <label
           htmlFor="comment"
@@ -145,7 +137,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
         )}
       </div>
 
-      {/* 제출 버튼 및 결과 메시지 */}
       <div className="pt-2">
         {isSuccess ? (
           <div className="flex flex-col items-center gap-3 py-4 text-center">
@@ -176,7 +167,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
           </button>
         )}
 
-        {/* 서버 측 에러 메시지 — 토큰 만료/사용됨/무효 포함 */}
         {state?.error && (
           <p className="form-error mt-4 text-center">{state.error}</p>
         )}

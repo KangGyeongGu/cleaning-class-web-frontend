@@ -96,7 +96,6 @@ export async function submitContactForm(
       }),
     );
 
-    // inquiryType 분기 — cleaning은 region, moving은 출발지/도착지 전달
     const data = validationResult.data;
 
     await sendContactEmail({

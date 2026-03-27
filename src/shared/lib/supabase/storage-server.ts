@@ -8,7 +8,14 @@ const ALLOWED_MIME_TYPES = [
   "image/avif",
 ] as const;
 
-const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif", "avif"] as const;
+const ALLOWED_EXTENSIONS = [
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "gif",
+  "avif",
+] as const;
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 

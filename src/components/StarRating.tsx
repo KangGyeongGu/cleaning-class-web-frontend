@@ -1,5 +1,4 @@
-// 별점 표시 컴포넌트 — 인라인 SVG 사용으로 아이콘 라이브러리 의존 없이 재사용 가능
-// 서버 컴포넌트로 동작하며 "use client" 불필요
+// 아이콘 라이브러리 미사용 — 서버 컴포넌트로 동작
 
 interface StarRatingProps {
   rating: number;
@@ -19,7 +18,6 @@ export function StarRating({
       role="img"
     >
       {Array.from({ length: 5 }, (_, i) => {
-        // 채워진 별: rating 이하, 빈 별: rating 초과
         const filled = i < Math.round(rating);
         return (
           <svg

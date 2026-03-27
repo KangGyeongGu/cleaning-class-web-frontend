@@ -16,10 +16,6 @@ interface SiteConfigFormProps {
   config: SiteConfig;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 히어로 이미지 업로드 폼 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
-
 /** 히어로 배너 표시 비율 — 50vh 배너에서의 대략적인 가로:세로 비 */
 const HERO_BANNER_RATIO = 2.5;
 
@@ -48,7 +44,7 @@ function HeroSlotForm({
   const currentImageUrl =
     imagePath && imagePath.trim() ? getHeroImageUrl(imagePath) : null;
 
-  // FocalPointPicker에 전달할 이미지 URL (미리보기 우선)
+  // 미리보기가 있으면 우선 표시, 없으면 저장된 이미지 URL 사용
   const displayImageUrl = previewUrl ?? currentImageUrl;
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,7 +58,6 @@ function HeroSlotForm({
     const url = URL.createObjectURL(file);
     prevBlobRef.current = url;
     setPreviewUrl(url);
-    // 새 이미지 선택 시 focal point 초기화
     setFocalX(50);
     setFocalY(50);
   }
@@ -71,7 +66,6 @@ function HeroSlotForm({
     <div className="space-y-4">
       <p className="text-sm font-bold text-slate-900">{label}</p>
 
-      {/* FocalPointPicker — 배너 비율로 표시 영역 설정 */}
       <FocalPointPicker
         key={displayImageUrl}
         imageUrl={displayImageUrl}
@@ -86,7 +80,6 @@ function HeroSlotForm({
       />
 
       <form action={formAction} className="space-y-4">
-        {/* 슬롯 번호 + focal point hidden 필드 */}
         <input type="hidden" name="slot" value={slot} />
         <input type="hidden" name="focal_x" value={focalX} />
         <input type="hidden" name="focal_y" value={focalY} />
@@ -108,7 +101,6 @@ function HeroSlotForm({
           />
         </div>
 
-        {/* 성공/오류 메시지 */}
         {state && "message" in state && state.message && (
           <p className="text-sm text-green-600">{state.message}</p>
         )}
@@ -183,10 +175,6 @@ function HeroImageForm({ config }: HeroImageFormProps) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 이사업체 정보 폼 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
-
 interface MovingConfigFormProps {
   config: SiteConfig;
 }
@@ -207,7 +195,6 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
       </div>
 
       <form action={movingFormAction} className="space-y-8">
-        {/* 이사업체 대표자명 */}
         <div>
           <label
             htmlFor="moving_representative"
@@ -232,7 +219,6 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
             )}
         </div>
 
-        {/* 이사업체 전화번호 */}
         <div>
           <label
             htmlFor="moving_phone"
@@ -261,7 +247,6 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
             )}
         </div>
 
-        {/* 이사업체 사업자등록번호 */}
         <div>
           <label
             htmlFor="moving_business_registration_number"
@@ -297,7 +282,6 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
             )}
         </div>
 
-        {/* 이사업체 주소 */}
         <div>
           <label
             htmlFor="moving_address"
@@ -322,17 +306,14 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
             )}
         </div>
 
-        {/* 성공 메시지 */}
         {movingState && "message" in movingState && movingState.message && (
           <p className="text-sm text-green-600">{movingState.message}</p>
         )}
 
-        {/* 에러 메시지 */}
         {movingState && "error" in movingState && movingState.error && (
           <p className="text-sm text-red-500">{movingState.error}</p>
         )}
 
-        {/* 저장 버튼 */}
         <div className="pt-4">
           <button
             type="submit"
@@ -353,21 +334,15 @@ function MovingConfigForm({ config }: MovingConfigFormProps) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 메인 SiteConfigForm 컴포넌트
-// ─────────────────────────────────────────────────────────────────────────────
-
 export function SiteConfigForm({ config }: SiteConfigFormProps) {
   const [state, formAction, isPending] = useActionState(updateSiteConfig, null);
 
   return (
     <div className="space-y-16">
-      {/* 히어로 이미지 섹션 */}
       <HeroImageForm config={config} />
 
       <hr className="border-slate-100" />
 
-      {/* 청소업체 기본 정보 섹션 */}
       <section>
         <div className="mb-6">
           <h2 className="text-lg font-bold text-slate-900">
@@ -378,7 +353,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           </p>
         </div>
         <form action={formAction} className="space-y-8">
-          {/* 업체명 */}
           <div>
             <label
               htmlFor="business_name"
@@ -402,7 +376,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 대표자명 */}
           <div>
             <label
               htmlFor="representative"
@@ -425,7 +398,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 사업자번호 */}
           <div>
             <label
               htmlFor="business_registration_number"
@@ -461,7 +433,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
               )}
           </div>
 
-          {/* 전화번호 */}
           <div>
             <label
               htmlFor="phone"
@@ -489,7 +460,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 이메일 */}
           <div>
             <label
               htmlFor="email"
@@ -513,7 +483,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 블로그 URL */}
           <div>
             <label
               htmlFor="blog_url"
@@ -536,7 +505,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 인스타그램 URL */}
           <div>
             <label
               htmlFor="instagram_url"
@@ -559,7 +527,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 당근마켓 URL */}
           <div>
             <label
               htmlFor="daangn_url"
@@ -582,7 +549,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 소개글 */}
           <div>
             <label
               htmlFor="description"
@@ -606,7 +572,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 주소 */}
           <div>
             <label
               htmlFor="address"
@@ -629,17 +594,14 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             )}
           </div>
 
-          {/* 성공 메시지 */}
           {state && "message" in state && state.message && (
             <p className="text-sm text-green-600">{state.message}</p>
           )}
 
-          {/* 에러 메시지 */}
           {state && "error" in state && state.error && (
             <p className="text-sm text-red-500">{state.error}</p>
           )}
 
-          {/* 저장 버튼 */}
           <div className="pt-4">
             <button
               type="submit"
@@ -660,7 +622,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
 
       <hr className="border-slate-100" />
 
-      {/* 이사업체 정보 섹션 */}
       <MovingConfigForm config={config} />
     </div>
   );

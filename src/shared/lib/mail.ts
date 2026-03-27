@@ -1,7 +1,6 @@
 import nodemailer from "nodemailer";
 import type Mail from "nodemailer/lib/mailer";
 
-// inquiryType에 따라 분기되는 이메일 데이터 구조
 interface ContactEmailData {
   inquiryType: "cleaning" | "moving";
   name: string;
@@ -31,10 +30,7 @@ function sanitizeFilename(name: string): string {
   return sanitized || "attachment";
 }
 
-/**
- * HTML 특수문자 이스케이프
- * XSS 방지를 위해 사용자 입력값을 HTML 엔티티로 변환
- */
+/** HTML 특수문자 이스케이프 — XSS 방지 */
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -75,9 +71,7 @@ function getTransporter(): Mail {
   return cachedTransporter;
 }
 
-/**
- * 청소의뢰 HTML 본문 생성 — 지역 필드 포함
- */
+/** 청소의뢰 이메일 HTML 본문 생성 — 지역 필드 포함 */
 function buildCleaningHtml(data: ContactEmailData): string {
   return `
     <!DOCTYPE html>
@@ -127,9 +121,7 @@ function buildCleaningHtml(data: ContactEmailData): string {
   `;
 }
 
-/**
- * 이사의뢰 HTML 본문 생성 — 출발지/도착지 필드 포함
- */
+/** 이사의뢰 이메일 HTML 본문 생성 — 출발지/도착지 필드 포함 */
 function buildMovingHtml(data: ContactEmailData): string {
   return `
     <!DOCTYPE html>
@@ -206,7 +198,6 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
     ? buildMovingHtml(data)
     : buildCleaningHtml(data);
 
-  // 이사의뢰 일반 텍스트 — 출발지/도착지 포함
   const movingPlainText = `
 [이사의뢰]
 이름: ${data.name}
@@ -219,7 +210,6 @@ export async function sendContactEmail(data: ContactEmailData): Promise<void> {
 ${data.message}
   `.trim();
 
-  // 청소의뢰 일반 텍스트 — 지역 포함
   const cleaningPlainText = `
 이름: ${data.name}
 연락처: ${data.phone}

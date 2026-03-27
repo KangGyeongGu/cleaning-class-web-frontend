@@ -1,6 +1,10 @@
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
-import type { CustomerReviewRow, Review, Service } from "@/shared/types/database";
+import type {
+  CustomerReviewRow,
+  Review,
+  Service,
+} from "@/shared/types/database";
 
 export type ServiceWithImageUrls = {
   id: string;
@@ -88,10 +92,7 @@ export async function getPublishedServicesWithImageUrls(): Promise<
   }
 }
 
-/**
- * 고객 리뷰 전체 조회 — ISR 호환 (createStaticClient 사용)
- * 최신순(created_at DESC) 정렬
- */
+/** 고객 리뷰 전체 조회 — ISR 호환, 최신순 정렬 */
 export async function getCustomerReviews(): Promise<CustomerReviewRow[]> {
   try {
     const supabase = createStaticClient();

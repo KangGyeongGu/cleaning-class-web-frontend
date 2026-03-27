@@ -172,7 +172,6 @@ export function FocalPointPicker({
     };
   }, [dragging, naturalSize, onChange, targetRatio]);
 
-  // 비율 레이블 생성 (예: "3:4", "2:1")
   const ratioLabel =
     targetRatio >= 1
       ? `${Math.round(targetRatio * 10) / 10}:1`
@@ -201,7 +200,7 @@ export function FocalPointPicker({
         </p>
       )}
 
-      {/* aspect-square로 CLS 방지: width/height prop이 h-auto에 의해 오버라이드되므로 컨테이너에서 공간 확보 */}
+      {/* aspect-square로 CLS 방지: next/image의 fill 모드에서 컨테이너가 공간을 확보해야 함 */}
       <div
         ref={containerRef}
         className="relative aspect-square max-w-xs overflow-hidden select-none"

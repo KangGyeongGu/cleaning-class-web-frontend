@@ -7,18 +7,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-// ── 페이지 ──────────────────────────────────────────────────────────────────
-
 interface ReviewPageProps {
   params: Promise<{ token: string }>;
 }
 
 export default async function ReviewPage({ params }: ReviewPageProps) {
-  // Next.js 15+ — params는 비동기적으로 접근해야 함
   const { token } = await params;
 
-  // 토큰 형식 사전 검사 — UUID 패턴에 맞지 않으면 즉시 에러 표시
-  // 실제 유효성(만료·사용 여부)은 서버 액션 submitCustomerReview에서 원자적으로 처리
+  // 형식 사전 검사만 수행 — 실제 유효성(만료·사용 여부)은 서버 액션에서 원자적으로 처리
   const UUID_PATTERN =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   const isValidFormat = UUID_PATTERN.test(token);
@@ -27,9 +23,8 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
     <main className="min-h-screen bg-white">
       <div className="flex min-h-screen items-center justify-center px-4 py-16">
         <div className="w-full max-w-lg">
-          {/* 회사 신뢰도 표시 헤더 */}
           <div className="mb-10 text-center">
-            <p className="text-xs font-medium uppercase tracking-widest text-slate-400">
+            <p className="text-xs font-medium tracking-widest text-slate-400 uppercase">
               청소클라쓰
             </p>
             <h1 className="text-heading-1 mt-2">고객 리뷰</h1>
@@ -38,22 +33,14 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
             </p>
           </div>
 
-          {/* 폼 카드 */}
           <div className="border border-slate-100 bg-white p-8">
             {isValidFormat ? (
-              /*
-               * 형식이 유효한 경우 폼 렌더링.
-               * 실제 토큰 만료·사용 여부는 submitCustomerReview가 처리하며,
-               * 제출 실패 시 "유효하지 않거나 만료된 링크입니다" 에러를 표시함.
-               */
               <ReviewSubmitForm token={token} />
             ) : (
-              /* UUID 형식이 아닌 경우 즉시 에러 표시 */
               <InvalidTokenMessage />
             )}
           </div>
 
-          {/* 하단 안내 */}
           <p className="mt-8 text-center text-xs text-slate-400">
             리뷰 링크는 1회만 사용할 수 있으며 30일 후 만료됩니다.
           </p>
@@ -63,7 +50,6 @@ export default async function ReviewPage({ params }: ReviewPageProps) {
   );
 }
 
-// 무효·만료·사용된 토큰에 대해 통일된 에러 메시지 컴포넌트
 function InvalidTokenMessage() {
   return (
     <div className="py-6 text-center">

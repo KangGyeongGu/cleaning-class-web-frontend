@@ -1,6 +1,6 @@
 "use client";
 
-// FAQ 아코디언 컴포넌트 — 접근성(aria-expanded/aria-controls) 준수, CSS 전환 애니메이션
+// FAQ 아코디언 — 접근성(aria-expanded/aria-controls) 준수, CSS 전환 애니메이션
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { FaqRow } from "@/shared/types/database";
@@ -10,7 +10,6 @@ interface FaqAccordionProps {
 }
 
 export function FaqAccordion({ faqs }: FaqAccordionProps) {
-  // 열린 FAQ id 집합 — 다중 선택 허용
   const [openIds, setOpenIds] = useState(() => new Set<string>());
 
   if (faqs.length === 0) {
@@ -42,7 +41,6 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
 
         return (
           <li key={faq.id}>
-            {/* h3 — 접근성 heading 계층: 페이지 h1 → 섹션 h2 → 항목 h3 */}
             <h3>
               <button
                 type="button"
@@ -63,7 +61,7 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
               </button>
             </h3>
 
-            {/* 답변 패널 — grid-rows 전환으로 부드러운 열기/닫기 */}
+            {/* grid-rows 전환으로 높이 애니메이션 없이 부드러운 열기/닫기 구현 */}
             <div
               id={answerId}
               role="region"

@@ -15,13 +15,16 @@ interface HeroCTAProps {
   variant?: HeroCTAVariant;
 }
 
-export function HeroCTA({ phone, movingPhone, variant = "light" }: HeroCTAProps): React.JSX.Element {
+export function HeroCTA({
+  phone,
+  movingPhone,
+  variant = "light",
+}: HeroCTAProps): React.JSX.Element {
   const isDark = variant === "dark";
   const hasAnyPhone = phone || movingPhone;
 
   return (
     <div className="animate-[fadeInScale_0.8s_0.6s_cubic-bezier(0.16,1,0.3,1)_both]">
-      {/* 버튼: /contact 페이지로 이동 (견적문의 독립 페이지 분리) */}
       <Link
         href="/contact"
         className={[
@@ -31,7 +34,6 @@ export function HeroCTA({ phone, movingPhone, variant = "light" }: HeroCTAProps)
             : "border-slate-900 text-slate-900 hover:text-white",
         ].join(" ")}
       >
-        {/* 슬라이드 채우기 오버레이 */}
         <span
           className={[
             "absolute inset-0 h-full w-full origin-left scale-x-0 transform transition-transform duration-300 ease-out group-hover:scale-x-100",

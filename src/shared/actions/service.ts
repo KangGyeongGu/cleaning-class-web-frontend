@@ -8,7 +8,7 @@ import { serviceFormSchema } from "@/shared/lib/schema";
 import type { ServiceInsert, ServiceUpdate } from "@/shared/types/database";
 
 const BUCKET = "service-images";
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export async function createService(prevState: unknown, formData: FormData) {
   try {
@@ -71,7 +71,6 @@ export async function createService(prevState: unknown, formData: FormData) {
       imageAfterPath = await uploadImage(BUCKET, imageAfterFile);
     }
 
-    // 상세페이지용 이미지
     const detailImageFile = formData.get("detail_image") as File | null;
     let detailImagePath = "";
     if (detailImageFile && detailImageFile.size > 0) {
@@ -246,7 +245,6 @@ export async function updateService(
       }
     }
 
-    // 상세페이지용 이미지
     const detailImageFile = formData.get("detail_image") as File | null;
     let newDetailImagePath = existing.detail_image_path;
     if (detailImageFile && detailImageFile.size > 0) {
@@ -313,7 +311,7 @@ export async function updateService(
     revalidatePath("/services");
     revalidatePath("/admin/services");
 
-    // DB 업데이트 성공 후 기존 이미지 정리 (실패해도 성공 응답 유지)
+    // DB 업데이트 성공 후 기존 이미지 정리 — 실패해도 사용자 응답에는 영향 없음
     const oldPaths: Array<{ oldPath: string; newPath: string }> = [
       { oldPath: existing.image_path, newPath: newImagePath },
       { oldPath: existing.image_after_path, newPath: newImageAfterPath },

@@ -4,19 +4,16 @@ import {
   MOVING_SERVICE_TYPES,
 } from "@/shared/lib/constants";
 
-// 청소의뢰 서비스 유형 enum — CLEANING_SERVICE_TYPES + "기타 문의"
 const cleaningServiceTypeEnum = z.enum([
   ...CLEANING_SERVICE_TYPES,
   "기타 문의",
 ] as [string, ...string[]]);
 
-// 이사의뢰 서비스 유형 enum — MOVING_SERVICE_TYPES + "기타 문의"
-const movingServiceTypeEnum = z.enum([
-  ...MOVING_SERVICE_TYPES,
-  "기타 문의",
-] as [string, ...string[]]);
+const movingServiceTypeEnum = z.enum([...MOVING_SERVICE_TYPES, "기타 문의"] as [
+  string,
+  ...string[],
+]);
 
-// 청소의뢰 분기 스키마 — 기존 지역 필드 유지
 const cleaningContactSchema = z.object({
   inquiryType: z.literal("cleaning"),
   name: z.string().min(1, "이름을 입력해주세요"),
@@ -32,7 +29,6 @@ const cleaningContactSchema = z.object({
     .max(1000, "문의 내용은 1000자 이하로 작성해주세요"),
 });
 
-// 이사의뢰 분기 스키마 — 출발지/도착지 필드 추가
 const movingContactSchema = z.object({
   inquiryType: z.literal("moving"),
   name: z.string().min(1, "이름을 입력해주세요"),
@@ -95,7 +91,6 @@ export const reviewFormSchema = z.object({
 
 export type ReviewFormData = z.infer<typeof reviewFormSchema>;
 
-// 한국 전화번호 형식 정규식
 // 허용 패턴: 02-XXXX-XXXX, 010-XXXX-XXXX, 031-XXX-XXXX, 0504-XXXX-XXXX 등
 const PHONE_REGEX =
   /^(02|01[016-9]|0[3-9]\d{1,2})-\d{3,4}-\d{4}$|^0[5-9]0[4-9]-\d{4}-\d{4}$/;
@@ -237,12 +232,7 @@ export const faqFormSchema = z.object({
 
 export type FaqFormData = z.infer<typeof faqFormSchema>;
 
-/**
- * 고객 리뷰 제출 폼 스키마 — 토큰 기반 단회성 리뷰 등록
- * token: UUID 형식의 검증 토큰
- * rating: 1~5점 정수 별점
- * comment: 1~500자 리뷰 내용
- */
+/** 고객 리뷰 제출 폼 스키마 — 토큰 기반 단회성 리뷰 등록 */
 export const customerReviewFormSchema = z.object({
   token: z.string().uuid("유효하지 않은 토큰 형식입니다"),
   rating: z

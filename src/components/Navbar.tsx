@@ -18,7 +18,6 @@ interface NavbarProps {
   daangnUrl?: string;
 }
 
-// 모든 메뉴가 전용 페이지로 전환되어 link 타입만 사용
 interface MenuItem {
   label: string;
   href: string;
@@ -215,7 +214,7 @@ export function Navbar({
         </div>
       </nav>
 
-      {/* 모바일 메뉴 오버레이 — nav 외부에 배치하여 backdrop-blur 스태킹 컨텍스트 회피 */}
+      {/* nav 외부에 배치하여 backdrop-blur 스태킹 컨텍스트 회피 */}
       <div
         ref={overlayRef}
         role="dialog"

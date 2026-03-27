@@ -10,7 +10,6 @@ import {
   MOVING_INQUIRY_OPTIONS,
 } from "@/shared/lib/constants";
 
-// 문의 유형 — 청소의뢰 또는 이사의뢰
 type InquiryType = "cleaning" | "moving";
 
 interface CustomDropdownProps {
@@ -106,7 +105,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     null,
   );
 
-  // 문의 유형 토글 상태 — 기본값은 청소의뢰
   const [inquiryType, setInquiryType] = useState<InquiryType>("cleaning");
 
   const [images, setImages] = useState<File[]>([]);
@@ -128,7 +126,7 @@ export function ContactForm({ phone }: ContactFormProps) {
   const isSuccess = state?.success === true;
   const showSuccess = isSuccess && !isReset;
 
-  // 언마운트 시점에 최신 URL 목록을 참조하기 위한 ref (클로저 stale 방지)
+  // 언마운트 시 최신 URL을 참조하기 위한 ref — 클로저 stale 방지
   const previewUrlsRef = useRef(previewUrls);
 
   useEffect(() => {
@@ -141,7 +139,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     };
   }, []);
 
-  // 섹션 노출 시 fadeIn 애니메이션 트리거
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -160,7 +157,7 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => observer.disconnect();
   }, []);
 
-  // 성공 후 3초 뒤 폼 초기화
+  // 전송 성공 후 3초 뒤 폼 초기화 및 isReset 플래그 설정
   useEffect(() => {
     if (!isSuccess || isReset) return;
 
@@ -190,34 +187,33 @@ export function ContactForm({ phone }: ContactFormProps) {
     const phoneValue = phoneRef.current?.value.trim() ?? "";
     const message = messageRef.current?.value.trim() ?? "";
 
-    // 리셋 완료 후 사용자가 다시 입력을 시작하면 isReset 해제 (다음 전송 사이클 허용)
+    // 재입력 시작 시 isReset 해제하여 다음 전송 사이클 허용
     if (isReset) setIsReset(false);
 
-    const baseValid = name !== "" && phoneValue !== "" && serviceType !== "" && message !== "";
+    const baseValid =
+      name !== "" && phoneValue !== "" && serviceType !== "" && message !== "";
 
     if (inquiryType === "cleaning") {
-      // 청소의뢰: 지역 필수
+      // 청소의뢰는 지역 필수
       setFormValid(baseValid && region !== "");
     } else {
-      // 이사의뢰: 출발지/도착지는 선택 사항이므로 기본 필드만 검사
+      // 이사의뢰는 출발지/도착지 선택 사항이므로 기본 필드만 검사
       setFormValid(baseValid);
     }
   };
 
-  // 문의 유형 전환 시 서비스 유형·지역·출발지·도착지 초기화
   const handleInquiryTypeChange = (type: InquiryType) => {
     setInquiryType(type);
     setServiceType("");
     setRegion("");
     if (departureRef.current) departureRef.current.value = "";
     if (destinationRef.current) destinationRef.current.value = "";
-    // 유형 변경 직후 유효성 재검사 (serviceType 초기화 반영)
+    // setState 비동기 반영 후 유효성 재검사 — serviceType 초기화로 항상 false
     setTimeout(() => {
       const name = nameRef.current?.value.trim() ?? "";
       const phoneValue = phoneRef.current?.value.trim() ?? "";
       const message = messageRef.current?.value.trim() ?? "";
       const baseValid = name !== "" && phoneValue !== "" && message !== "";
-      // 서비스 유형이 초기화되어 항상 false
       setFormValid(baseValid && false);
     }, 0);
   };
@@ -257,9 +253,10 @@ export function ContactForm({ phone }: ContactFormProps) {
     }
   };
 
-  // 현재 inquiryType에 맞는 서비스 옵션
   const serviceOptions =
-    inquiryType === "cleaning" ? CLEANING_INQUIRY_OPTIONS : MOVING_INQUIRY_OPTIONS;
+    inquiryType === "cleaning"
+      ? CLEANING_INQUIRY_OPTIONS
+      : MOVING_INQUIRY_OPTIONS;
 
   return (
     <section ref={sectionRef} id="contact" className="bg-white">
@@ -289,7 +286,6 @@ export function ContactForm({ phone }: ContactFormProps) {
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          {/* 문의 유형 토글 — 청소의뢰 / 이사의뢰 세그먼트 컨트롤 */}
           <div className="flex border-b border-slate-200">
             <button
               type="button"
@@ -315,7 +311,6 @@ export function ContactForm({ phone }: ContactFormProps) {
             </button>
           </div>
 
-          {/* 서버 액션에 inquiryType 전달 */}
           <input type="hidden" name="inquiryType" value={inquiryType} />
 
           <div className="space-y-5">
@@ -364,7 +359,6 @@ export function ContactForm({ phone }: ContactFormProps) {
               </div>
             </div>
 
-            {/* 서비스 종류 — inquiryType에 따라 옵션 동적 변경 */}
             <CustomDropdown
               label="서비스 종류"
               name="serviceType"
@@ -379,7 +373,6 @@ export function ContactForm({ phone }: ContactFormProps) {
               }}
             />
 
-            {/* 지역 — 청소의뢰 시에만 표시 */}
             {inquiryType === "cleaning" && (
               <CustomDropdown
                 label="지역"
@@ -412,7 +405,6 @@ export function ContactForm({ phone }: ContactFormProps) {
               />
             )}
 
-            {/* 출발지·도착지 — 이사의뢰 시에만 표시 */}
             {inquiryType === "moving" && (
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="group">

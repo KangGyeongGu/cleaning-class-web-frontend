@@ -1,9 +1,4 @@
-// 프로젝트 전역 상수 — 도메인 데이터 한 곳에서 관리
-
-/**
- * 청소 서비스 카테고리 목록 — 기존 서비스 유형
- * 어드민 폼, 리뷰 필터, 견적문의 청소의뢰 분기 등에서 사용
- */
+/** 청소 서비스 카테고리 목록 — 어드민 폼, 리뷰 필터, 견적문의 분기 등에서 사용 */
 export const CLEANING_SERVICE_TYPES = [
   "거주청소",
   "정기청소",
@@ -14,9 +9,7 @@ export const CLEANING_SERVICE_TYPES = [
 
 export type CleaningServiceType = (typeof CLEANING_SERVICE_TYPES)[number];
 
-/**
- * 이사 서비스 카테고리 목록 — 이사의뢰 견적문의에서 사용
- */
+/** 이사 서비스 카테고리 목록 — 이사의뢰 견적문의에서 사용 */
 export const MOVING_SERVICE_TYPES = [
   "원룸이사",
   "일반이사",
@@ -27,10 +20,7 @@ export const MOVING_SERVICE_TYPES = [
 
 export type MovingServiceType = (typeof MOVING_SERVICE_TYPES)[number];
 
-/**
- * 전체 서비스 유형 — 청소 + 이사의 합집합
- * 서비스 관리 폼 등 카테고리 전체를 다루는 곳에서 사용
- */
+/** 전체 서비스 유형 — 청소 + 이사 합집합, 서비스 관리 폼 등에서 사용 */
 export const SERVICE_TYPES = [
   ...CLEANING_SERVICE_TYPES,
   ...MOVING_SERVICE_TYPES,
@@ -38,17 +28,13 @@ export const SERVICE_TYPES = [
 
 export type ServiceType = (typeof SERVICE_TYPES)[number];
 
-/**
- * 청소의뢰 견적문의 서비스 선택지 — CLEANING_SERVICE_TYPES에 "기타 문의" 추가
- */
+/** 청소의뢰 견적문의 선택지 — CLEANING_SERVICE_TYPES + "기타 문의" */
 export const CLEANING_INQUIRY_OPTIONS: string[] = [
   ...CLEANING_SERVICE_TYPES,
   "기타 문의",
 ];
 
-/**
- * 이사의뢰 견적문의 서비스 선택지 — MOVING_SERVICE_TYPES에 "기타 문의" 추가
- */
+/** 이사의뢰 견적문의 선택지 — MOVING_SERVICE_TYPES + "기타 문의" */
 export const MOVING_INQUIRY_OPTIONS: string[] = [
   ...MOVING_SERVICE_TYPES,
   "기타 문의",

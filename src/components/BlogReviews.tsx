@@ -127,7 +127,7 @@ export function BlogReviews({
   const scrollRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<Slider>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  // null = '전체' 필터 (필터 미적용 상태)
+  // null = 전체 (필터 미적용)
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
 
   const handleScroll = useCallback(() => {
@@ -135,7 +135,7 @@ export function BlogReviews({
     if (!el) return;
     const scrollLeft = el.scrollLeft;
     const cardWidth = el.firstElementChild?.clientWidth ?? 1;
-    const gap = 16; // gap-4 = 16px
+    const gap = 16; // gap-4
     const index = Math.round(scrollLeft / (cardWidth + gap));
     setActiveIndex(index);
   }, []);
@@ -151,7 +151,7 @@ export function BlogReviews({
     return null;
   }
 
-  // 청소 카테고리 리뷰만 표시 — 태그에 CLEANING_SERVICE_TYPES 중 하나 이상 포함된 리뷰
+  // 청소 서비스 태그가 하나라도 있는 리뷰만 필터링
   const cleaningReviews = reviews.filter((r) =>
     r.tags.some((tag) =>
       (CLEANING_SERVICE_TYPES as readonly string[]).includes(tag),

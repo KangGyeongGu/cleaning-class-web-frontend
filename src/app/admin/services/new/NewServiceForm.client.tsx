@@ -24,7 +24,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<
     string | null
   >(null);
-  // 서비스 태그 목록 및 입력 상태 관리
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [focalX, setFocalX] = useState(50);
@@ -32,7 +31,7 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   const [afterFocalX, setAfterFocalX] = useState(50);
   const [afterFocalY, setAfterFocalY] = useState(50);
 
-  // blob URL 메모리 누수 방지: ref로 최신 URL 추적
+  // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
   const afterImagePreviewRef = useRef<string | null>(null);
 
@@ -83,7 +82,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
-  // 태그 추가: 중복 및 최대 30자 제한 적용
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
     if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
@@ -92,12 +90,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
-  // 태그 삭제: 인덱스 기준으로 제거
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
   const handleSubmit = async (formData: FormData) => {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
@@ -105,7 +101,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
 
   return (
     <form action={handleSubmit} className="space-y-8">
-      {/* 서비스명 */}
       <div>
         <label
           htmlFor="title"
@@ -127,7 +122,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 카테고리 */}
       <div>
         <label
           htmlFor="category"
@@ -151,7 +145,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 서비스 설명 */}
       <div>
         <label
           htmlFor="description"
@@ -174,7 +167,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 서비스 태그 */}
       <div>
         <label
           htmlFor="tagInput"
@@ -209,7 +201,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             <Plus size={14} />
           </button>
         </div>
-        {/* 추가된 태그 목록 (pill 형태) */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
@@ -232,7 +223,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <label
@@ -309,7 +299,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </div>
       </div>
 
-      {/* 상세페이지용 Before/After 이미지 업로드 */}
       <div>
         <p className="mb-4 text-xs font-bold tracking-widest text-slate-900 uppercase">
           서비스 소개 페이지용 이미지 (선택)
@@ -394,7 +383,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </div>
       </div>
 
-      {/* 정렬 순서 */}
       <div>
         <label
           htmlFor="sort_order"
@@ -417,7 +405,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 게시 여부 */}
       <div>
         <div className="flex items-center gap-3">
           <input
@@ -440,12 +427,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </p>
       </div>
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

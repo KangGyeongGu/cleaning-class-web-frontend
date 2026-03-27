@@ -11,10 +11,7 @@ import type {
   CustomerReviewRow,
 } from "@/shared/types/database";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 별점 표시 컴포넌트 (관리자 전용 소형 버전)
-// ─────────────────────────────────────────────────────────────────────────────
-
+/** 관리자 전용 소형 별점 표시 */
 function StarDisplay({ rating }: { rating: number }) {
   return (
     <span className="flex items-center gap-0.5" aria-label={`별점 ${rating}점`}>
@@ -32,10 +29,6 @@ function StarDisplay({ rating }: { rating: number }) {
     </span>
   );
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 클립보드 복사 버튼
-// ─────────────────────────────────────────────────────────────────────────────
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -71,10 +64,6 @@ function CopyButton({ text }: { text: string }) {
     </button>
   );
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 토큰 삭제 버튼
-// ─────────────────────────────────────────────────────────────────────────────
 
 function DeleteTokenButton({ tokenId }: { tokenId: string }) {
   const [isPending, startTransition] = useTransition();
@@ -118,10 +107,6 @@ function DeleteTokenButton({ tokenId }: { tokenId: string }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 토큰 생성 버튼
-// ─────────────────────────────────────────────────────────────────────────────
-
 function GenerateTokenButton() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -157,10 +142,6 @@ function GenerateTokenButton() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 날짜 포맷 헬퍼
-// ─────────────────────────────────────────────────────────────────────────────
-
 function formatDate(isoString: string): string {
   const date = new Date(isoString);
   return date.toLocaleDateString("ko-KR", {
@@ -169,10 +150,6 @@ function formatDate(isoString: string): string {
     day: "2-digit",
   });
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 토큰 목록 섹션
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface TokenListSectionProps {
   tokens: ReviewTokenRow[];
@@ -183,7 +160,6 @@ export function TokenListSection({ tokens }: TokenListSectionProps) {
 
   return (
     <section>
-      {/* 섹션 헤더 — 토큰 생성 버튼 포함 */}
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-slate-900">리뷰 링크 토큰</h2>
@@ -243,7 +219,6 @@ export function TokenListSection({ tokens }: TokenListSectionProps) {
                     key={token.id}
                     className="border-b border-slate-100 last:border-0"
                   >
-                    {/* 토큰 URL — 잘라서 표시 후 복사 버튼 */}
                     <td className="py-3 pr-4 font-light text-slate-600">
                       <div className="flex items-center gap-2">
                         <span className="max-w-xs truncate font-mono text-xs text-slate-500">
@@ -276,10 +251,6 @@ export function TokenListSection({ tokens }: TokenListSectionProps) {
     </section>
   );
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 고객 리뷰 목록 섹션
-// ─────────────────────────────────────────────────────────────────────────────
 
 interface CustomerReviewsListProps {
   reviews: CustomerReviewRow[];

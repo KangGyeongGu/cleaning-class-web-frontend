@@ -10,7 +10,7 @@ import {
 import type { SiteConfigUpdate } from "@/shared/types/database";
 import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const FIELD_REVALIDATE_MAP: Record<string, string> = {
   faq_description: "/admin/faq",
@@ -166,11 +166,8 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
 }
 
 /**
- * 히어로 이미지 업로드/교체/삭제 액션 (좌/우 2장 + focal point 지원)
- * - slot: "1" (좌) 또는 "2" (우) — 어떤 슬롯을 업데이트할지 결정
- * - 새 파일이 있으면: 업로드 → DB 업데이트 → 기존 이미지 삭제 (upload-first 패턴)
- * - delete_hero_image=true이면: DB 초기화 → 기존 이미지 삭제
- * - focal point 값이 있으면 함께 저장
+ * 히어로 이미지 업로드/교체/삭제 — slot "1"(좌) 또는 "2"(우) 기반으로 분기
+ * 새 파일: upload-first 패턴(업로드 → DB → 기존 삭제), delete_hero_image=true이면 초기화
  */
 export async function updateHeroImage(
   prevState: unknown,
@@ -182,7 +179,6 @@ export async function updateHeroImage(
     const supabase = await createClient();
     const slot = formData.get("slot") === "2" ? "2" : "1";
 
-    // 슬롯별 DB 컬럼명 매핑
     const pathCol = slot === "1" ? "hero_image_path" : "hero_image_path_2";
     const focalXCol =
       slot === "1" ? "hero_image_focal_x" : "hero_image_focal_x_2";
@@ -210,11 +206,9 @@ export async function updateHeroImage(
     const deleteFlag = formData.get("delete_hero_image");
     const heroImageFile = formData.get("hero_image");
 
-    // focal point 파싱
     const focalX = Number(formData.get("focal_x")) || 50;
     const focalY = Number(formData.get("focal_y")) || 50;
 
-    // 삭제 요청 처리
     if (deleteFlag === "true") {
       const { error: updateError } = await supabase
         .from("site_config")
@@ -243,9 +237,8 @@ export async function updateHeroImage(
       };
     }
 
-    // focal point만 업데이트 (파일 없이 저장)
+    // 파일 없이 focal point만 저장하는 경우
     if (!(heroImageFile instanceof File) || heroImageFile.size === 0) {
-      // 기존 이미지가 있으면 focal point만 업데이트
       if (currentPath) {
         const { error: updateError } = await supabase
           .from("site_config")
@@ -271,7 +264,6 @@ export async function updateHeroImage(
       return { success: false, error: "업로드할 이미지를 선택해주세요." };
     }
 
-    // 파일 크기 사전 검증
     if (heroImageFile instanceof File && heroImageFile.size > MAX_FILE_SIZE) {
       return {
         success: false,
@@ -279,7 +271,6 @@ export async function updateHeroImage(
       };
     }
 
-    // 새 파일 업로드 (upload-first 패턴)
     const newImagePath = await uploadImage("hero-images", heroImageFile);
 
     const { error: updateError } = await supabase
@@ -314,10 +305,7 @@ export async function updateHeroImage(
   }
 }
 
-/**
- * 이사업체 정보 업데이트 액션
- * moving_representative, moving_phone, moving_business_registration_number, moving_address 컬럼 업데이트
- */
+/** 이사업체 정보(moving_* 컬럼) 업데이트 액션 */
 export async function updateMovingSiteConfig(
   prevState: unknown,
   formData: FormData,

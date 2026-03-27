@@ -106,23 +106,19 @@ export default async function RootLayout({
         <link rel="stylesheet" href="/fonts/pretendard/pretendard.css" />
       </head>
       <body className="font-sans antialiased">
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
+        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- JSON-LD 구조화 데이터, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- WebSite JSON-LD, 서버 생성 데이터로 XSS 위험 없음 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

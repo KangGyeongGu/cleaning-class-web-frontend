@@ -1,6 +1,3 @@
-// 고객 리뷰 목록 스크롤 진입 애니메이션 래퍼 — 클라이언트 컴포넌트 최소 범위 적용
-// IntersectionObserver로 뷰포트 진입 감지 후 CSS transition으로 페이드인
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +12,7 @@ export function CustomerReviewsReveal({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
-  // 뷰포트 진입 시 한 번만 트리거하여 성능 최적화
+  // 한 번 진입하면 disconnect — 반복 트리거 방지
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
