@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { updateService } from "@/shared/actions/service";
 import { Loader2, Plus, X } from "lucide-react";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
@@ -31,8 +32,12 @@ export function EditServiceForm({
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
-  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(null);
-  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<string | null>(null);
+  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(
+    null,
+  );
+  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<
+    string | null
+  >(null);
   // 기존 서비스의 tags 배열로 초기 상태 설정
   const [tags, setTags] = useState<string[]>(service.tags ?? []);
   const [tagInput, setTagInput] = useState("");
@@ -159,7 +164,9 @@ export function EditServiceForm({
           <option value="moving">이사 서비스</option>
         </select>
         {state && "errors" in state && state.errors?.category && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.category[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.category[0]}
+          </p>
         )}
       </div>
 
@@ -177,11 +184,13 @@ export function EditServiceForm({
           maxLength={500}
           rows={3}
           defaultValue={service.description}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base font-light leading-relaxed transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base leading-relaxed font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="서비스 소개 페이지에 표시될 설명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.description && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.description[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.description[0]}
+          </p>
         )}
       </div>
 
@@ -224,7 +233,7 @@ export function EditServiceForm({
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
-              key={index}
+              key={`${tag}-${index}`}
               className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm"
             >
               {tag}
@@ -353,8 +362,14 @@ export function EditServiceForm({
             </label>
             {(detailImagePreview ?? detailImageUrl) && (
               <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 또는 외부 URL 미리보기 전용 */}
-                <img src={detailImagePreview ?? detailImageUrl} alt="상세 Before 미리보기" className="h-full w-full object-cover" />
+                <Image
+                  src={(detailImagePreview ?? detailImageUrl) as string}
+                  alt="상세 Before 미리보기"
+                  fill
+                  unoptimized={!!detailImagePreview}
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             )}
           </div>
@@ -385,8 +400,16 @@ export function EditServiceForm({
             </label>
             {(detailAfterImagePreview ?? detailAfterImageUrl) && (
               <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 또는 외부 URL 미리보기 전용 */}
-                <img src={detailAfterImagePreview ?? detailAfterImageUrl} alt="상세 After 미리보기" className="h-full w-full object-cover" />
+                <Image
+                  src={
+                    (detailAfterImagePreview ?? detailAfterImageUrl) as string
+                  }
+                  alt="상세 After 미리보기"
+                  fill
+                  unoptimized={!!detailAfterImagePreview}
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             )}
           </div>

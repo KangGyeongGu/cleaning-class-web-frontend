@@ -170,12 +170,13 @@ export function FocalPointPicker({
       document.removeEventListener("touchmove", handleMove);
       document.removeEventListener("touchend", handleUp);
     };
-  }, [dragging, naturalSize, onChange]);
+  }, [dragging, naturalSize, onChange, targetRatio]);
 
   // 비율 레이블 생성 (예: "3:4", "2:1")
-  const ratioLabel = targetRatio >= 1
-    ? `${Math.round(targetRatio * 10) / 10}:1`
-    : `1:${Math.round((1 / targetRatio) * 10) / 10}`;
+  const ratioLabel =
+    targetRatio >= 1
+      ? `${Math.round(targetRatio * 10) / 10}:1`
+      : `1:${Math.round((1 / targetRatio) * 10) / 10}`;
 
   if (!imageUrl) {
     return (
@@ -286,7 +287,9 @@ export function FocalPointPicker({
       )}
 
       <div>
-        <p className="mb-2 text-xs text-slate-500">실제 표시 미리보기 ({ratioLabel})</p>
+        <p className="mb-2 text-xs text-slate-500">
+          실제 표시 미리보기 ({ratioLabel})
+        </p>
         <div
           className="relative w-32 overflow-hidden border border-slate-200 bg-slate-100"
           style={{ aspectRatio: targetRatio }}

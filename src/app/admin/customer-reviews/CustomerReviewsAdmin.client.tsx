@@ -6,7 +6,10 @@ import {
   generateReviewToken,
   deleteReviewToken,
 } from "@/shared/actions/customer-review";
-import type { ReviewTokenRow, CustomerReviewRow } from "@/shared/types/database";
+import type {
+  ReviewTokenRow,
+  CustomerReviewRow,
+} from "@/shared/types/database";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 별점 표시 컴포넌트 (관리자 전용 소형 버전)
@@ -17,7 +20,7 @@ function StarDisplay({ rating }: { rating: number }) {
     <span className="flex items-center gap-0.5" aria-label={`별점 ${rating}점`}>
       {Array.from({ length: 5 }).map((_, i) => (
         <svg
-          key={i}
+          key={`star-${i}`}
           className={`h-3.5 w-3.5 ${i < rating ? "text-slate-900" : "text-slate-200"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
@@ -49,6 +52,7 @@ function CopyButton({ text }: { text: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       className="inline-flex items-center gap-1 text-xs text-slate-500 transition-colors hover:text-slate-900"
       title="링크 복사"
@@ -77,7 +81,12 @@ function DeleteTokenButton({ tokenId }: { tokenId: string }) {
   const [error, setError] = useState<string | null>(null);
 
   function handleDelete() {
-    if (!confirm("이 토큰을 삭제하시겠습니까? 연결된 리뷰가 없는 경우에만 삭제됩니다.")) return;
+    if (
+      !confirm(
+        "이 토큰을 삭제하시겠습니까? 연결된 리뷰가 없는 경우에만 삭제됩니다.",
+      )
+    )
+      return;
 
     startTransition(async () => {
       const result = await deleteReviewToken(tokenId);
@@ -92,6 +101,7 @@ function DeleteTokenButton({ tokenId }: { tokenId: string }) {
   return (
     <div>
       <button
+        type="button"
         onClick={handleDelete}
         disabled={isPending}
         className="inline-flex items-center text-slate-400 transition-colors hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
@@ -130,6 +140,7 @@ function GenerateTokenButton() {
   return (
     <div>
       <button
+        type="button"
         onClick={handleGenerate}
         disabled={isPending}
         className="inline-flex items-center gap-2 bg-slate-900 px-5 py-2.5 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
@@ -177,7 +188,8 @@ export function TokenListSection({ tokens }: TokenListSectionProps) {
         <div>
           <h2 className="text-lg font-bold text-slate-900">리뷰 링크 토큰</h2>
           <p className="mt-0.5 text-xs font-light text-slate-500">
-            생성된 링크를 고객에게 전달하면 별점 리뷰를 등록할 수 있습니다. 유효기간 30일.
+            생성된 링크를 고객에게 전달하면 별점 리뷰를 등록할 수 있습니다.
+            유효기간 30일.
           </p>
         </div>
         <GenerateTokenButton />

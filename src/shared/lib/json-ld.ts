@@ -262,3 +262,8 @@ export function generateBreadcrumbListJsonLd(
     })),
   };
 }
+
+/** JSON-LD 직렬화 시 `</script>` 시퀀스를 이스케이프하여 XSS 방지 */
+export function safeJsonLdString(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

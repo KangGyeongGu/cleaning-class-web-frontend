@@ -3,12 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
 import { getUser } from "@/shared/lib/supabase/auth";
-import { siteConfigFormSchema, movingSiteConfigSchema } from "@/shared/lib/schema";
-import type { SiteConfigUpdate } from "@/shared/types/database";
 import {
-  uploadImage,
-  deleteImage,
-} from "@/shared/lib/supabase/storage-server";
+  siteConfigFormSchema,
+  movingSiteConfigSchema,
+} from "@/shared/lib/schema";
+import type { SiteConfigUpdate } from "@/shared/types/database";
+import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const FIELD_REVALIDATE_MAP: Record<string, string> = {
   faq_description: "/admin/faq",
@@ -182,22 +184,29 @@ export async function updateHeroImage(
 
     // 슬롯별 DB 컬럼명 매핑
     const pathCol = slot === "1" ? "hero_image_path" : "hero_image_path_2";
-    const focalXCol = slot === "1" ? "hero_image_focal_x" : "hero_image_focal_x_2";
-    const focalYCol = slot === "1" ? "hero_image_focal_y" : "hero_image_focal_y_2";
+    const focalXCol =
+      slot === "1" ? "hero_image_focal_x" : "hero_image_focal_x_2";
+    const focalYCol =
+      slot === "1" ? "hero_image_focal_y" : "hero_image_focal_y_2";
     const slotLabel = slot === "1" ? "좌측" : "우측";
 
     const { data: current, error: fetchError } = await supabase
       .from("site_config")
       .select("id, hero_image_path, hero_image_path_2")
       .limit(1)
-      .single<{ id: string; hero_image_path: string | null; hero_image_path_2: string | null }>();
+      .single<{
+        id: string;
+        hero_image_path: string | null;
+        hero_image_path_2: string | null;
+      }>();
 
     if (fetchError || !current) {
       console.error("updateHeroImage fetch error:", fetchError);
       return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
-    const currentPath = slot === "1" ? current.hero_image_path : current.hero_image_path_2;
+    const currentPath =
+      slot === "1" ? current.hero_image_path : current.hero_image_path_2;
     const deleteFlag = formData.get("delete_hero_image");
     const heroImageFile = formData.get("hero_image");
 
@@ -228,7 +237,10 @@ export async function updateHeroImage(
 
       revalidatePath("/");
       revalidatePath("/admin/config");
-      return { success: true, message: `${slotLabel} 히어로 이미지가 삭제되었습니다.` };
+      return {
+        success: true,
+        message: `${slotLabel} 히어로 이미지가 삭제되었습니다.`,
+      };
     }
 
     // focal point만 업데이트 (파일 없이 저장)
@@ -251,9 +263,20 @@ export async function updateHeroImage(
 
         revalidatePath("/");
         revalidatePath("/admin/config");
-        return { success: true, message: `${slotLabel} 표시 영역이 업데이트되었습니다.` };
+        return {
+          success: true,
+          message: `${slotLabel} 표시 영역이 업데이트되었습니다.`,
+        };
       }
       return { success: false, error: "업로드할 이미지를 선택해주세요." };
+    }
+
+    // 파일 크기 사전 검증
+    if (heroImageFile instanceof File && heroImageFile.size > MAX_FILE_SIZE) {
+      return {
+        success: false,
+        error: "이미지 파일 크기는 10MB 이하여야 합니다.",
+      };
     }
 
     // 새 파일 업로드 (upload-first 패턴)
@@ -281,7 +304,10 @@ export async function updateHeroImage(
 
     revalidatePath("/");
     revalidatePath("/admin/config");
-    return { success: true, message: `${slotLabel} 히어로 이미지가 업데이트되었습니다.` };
+    return {
+      success: true,
+      message: `${slotLabel} 히어로 이미지가 업데이트되었습니다.`,
+    };
   } catch (error) {
     console.error("updateHeroImage error:", error);
     return { success: false, error: "설정 처리 중 오류가 발생했습니다." };

@@ -49,7 +49,10 @@ export async function Hero(): Promise<React.JSX.Element> {
                 className="absolute top-0 bottom-0 left-0 overflow-hidden"
                 style={{
                   ...(hasImage2
-                    ? { width: "60%", clipPath: "polygon(0 0, 91.67% 0, 75% 100%, 0 100%)" }
+                    ? {
+                        width: "60%",
+                        clipPath: "polygon(0 0, 91.67% 0, 75% 100%, 0 100%)",
+                      }
                     : { width: "100%" }),
                   animation: hasImage2
                     ? "heroImageSlideLeft 1.4s cubic-bezier(0.16,1,0.3,1) both"
@@ -72,7 +75,11 @@ export async function Hero(): Promise<React.JSX.Element> {
                 className="absolute top-0 right-0 bottom-0 overflow-hidden"
                 style={{
                   ...(hasImage1
-                    ? { width: "60%", clipPath: "polygon(25% 0, 100% 0, 100% 100%, 8.33% 100%)" }
+                    ? {
+                        width: "60%",
+                        clipPath:
+                          "polygon(25% 0, 100% 0, 100% 100%, 8.33% 100%)",
+                      }
                     : { width: "100%" }),
                   animation: hasImage1
                     ? "heroImageSlideRight 1.4s 0.15s cubic-bezier(0.16,1,0.3,1) both"
@@ -82,7 +89,6 @@ export async function Hero(): Promise<React.JSX.Element> {
                 <Image
                   src={heroImage2}
                   fill
-                  priority
                   alt=""
                   className="object-cover"
                   style={{ objectPosition: `${focal2.x}% ${focal2.y}%` }}
@@ -120,14 +126,25 @@ export async function Hero(): Promise<React.JSX.Element> {
       {/* 텍스트 콘텐츠 — 이미지 있을 때는 오버레이 완료 후 한번에 등장 */}
       <div
         className="relative z-10 mx-auto max-w-5xl px-4 text-center md:px-8 lg:px-12"
-        style={hasAnyImage ? { animation: "fadeInScale 0.8s 2s cubic-bezier(0.16,1,0.3,1) both" } : undefined}
+        style={
+          hasAnyImage
+            ? {
+                animation:
+                  "fadeInScale 0.8s 2s cubic-bezier(0.16,1,0.3,1) both",
+              }
+            : undefined
+        }
       >
         <p
           className={[
             "text-label mb-6 tracking-widest",
             hasAnyImage ? "text-white/70" : "text-slate-400",
           ].join(" ")}
-          style={!hasAnyImage ? { animation: "fadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both" } : undefined}
+          style={
+            !hasAnyImage
+              ? { animation: "fadeIn 0.6s cubic-bezier(0.16,1,0.3,1) both" }
+              : undefined
+          }
         >
           전문 청소 서비스
         </p>
@@ -137,7 +154,11 @@ export async function Hero(): Promise<React.JSX.Element> {
             "text-display mb-6",
             hasAnyImage ? "text-white" : "",
           ].join(" ")}
-          style={!hasAnyImage ? { animation: "slideUp 1s cubic-bezier(0.16,1,0.3,1) both" } : undefined}
+          style={
+            !hasAnyImage
+              ? { animation: "slideUp 1s cubic-bezier(0.16,1,0.3,1) both" }
+              : undefined
+          }
         >
           {displayName}.
         </h1>
@@ -147,7 +168,11 @@ export async function Hero(): Promise<React.JSX.Element> {
             "text-subtitle mb-12",
             hasAnyImage ? "font-light text-white/85" : "",
           ].join(" ")}
-          style={!hasAnyImage ? { animation: "slideUp 1s 0.3s cubic-bezier(0.16,1,0.3,1) both" } : undefined}
+          style={
+            !hasAnyImage
+              ? { animation: "slideUp 1s 0.3s cubic-bezier(0.16,1,0.3,1) both" }
+              : undefined
+          }
         >
           {description ?? "완벽함을 넘어선 쾌적함을 선사합니다."}
         </p>

@@ -102,7 +102,11 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
         {/* 선택된 별점을 읽기 전용으로 보조 표시 */}
         {rating > 0 && (
           <p className="mt-2 text-xs text-slate-500">
-            <StarRating rating={rating} size={12} className="mr-1 inline-flex" />
+            <StarRating
+              rating={rating}
+              size={12}
+              className="mr-1 inline-flex"
+            />
             <span className="sr-only">선택된 별점:</span>
             {rating}점
           </p>
@@ -114,8 +118,10 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
 
       {/* 후기 내용 */}
       <div>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control -- htmlFor로 연결되어 있으나 eslint가 textarea 내부 wrapping을 인식 못함 */}
-        <label htmlFor="comment" className="mb-2 block text-sm font-medium text-slate-900">
+        <label
+          htmlFor="comment"
+          className="mb-2 block text-sm font-medium text-slate-900"
+        >
           후기 내용
           <span className="ml-1 text-red-500" aria-hidden="true">
             *

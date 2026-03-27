@@ -8,6 +8,7 @@ import { serviceFormSchema } from "@/shared/lib/schema";
 import type { ServiceInsert, ServiceUpdate } from "@/shared/types/database";
 
 const BUCKET = "service-images";
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function createService(prevState: unknown, formData: FormData) {
   try {
@@ -48,6 +49,12 @@ export async function createService(prevState: unknown, formData: FormData) {
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "Before 이미지를 선택해주세요." };
     }
+    if (imageFile.size > MAX_FILE_SIZE) {
+      return {
+        success: false,
+        error: "이미지 파일 크기는 10MB 이하여야 합니다.",
+      };
+    }
 
     const imagePath = await uploadImage(BUCKET, imageFile);
 
@@ -55,6 +62,12 @@ export async function createService(prevState: unknown, formData: FormData) {
     let imageAfterPath = "";
 
     if (imageAfterFile && imageAfterFile.size > 0) {
+      if (imageAfterFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "After 이미지 파일 크기는 10MB 이하여야 합니다.",
+        };
+      }
       imageAfterPath = await uploadImage(BUCKET, imageAfterFile);
     }
 
@@ -62,12 +75,26 @@ export async function createService(prevState: unknown, formData: FormData) {
     const detailImageFile = formData.get("detail_image") as File | null;
     let detailImagePath = "";
     if (detailImageFile && detailImageFile.size > 0) {
+      if (detailImageFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "상세 Before 이미지 크기는 10MB 이하여야 합니다.",
+        };
+      }
       detailImagePath = await uploadImage(BUCKET, detailImageFile);
     }
 
-    const detailAfterImageFile = formData.get("detail_image_after") as File | null;
+    const detailAfterImageFile = formData.get(
+      "detail_image_after",
+    ) as File | null;
     let detailAfterImagePath = "";
     if (detailAfterImageFile && detailAfterImageFile.size > 0) {
+      if (detailAfterImageFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "상세 After 이미지 크기는 10MB 이하여야 합니다.",
+        };
+      }
       detailAfterImagePath = await uploadImage(BUCKET, detailAfterImageFile);
     }
 
@@ -84,7 +111,12 @@ export async function createService(prevState: unknown, formData: FormData) {
 
     if (error) {
       console.error("createService DB error:", error);
-      const rollbackPaths = [imagePath, imageAfterPath, detailImagePath, detailAfterImagePath].filter(Boolean);
+      const rollbackPaths = [
+        imagePath,
+        imageAfterPath,
+        detailImagePath,
+        detailAfterImagePath,
+      ].filter(Boolean);
       for (const path of rollbackPaths) {
         try {
           await deleteImage(BUCKET, path);
@@ -155,7 +187,9 @@ export async function updateService(
 
     const { data: existingService, error: fetchError } = await supabase
       .from("services")
-      .select("image_path, image_after_path, detail_image_path, detail_image_after_path")
+      .select(
+        "image_path, image_after_path, detail_image_path, detail_image_after_path",
+      )
       .eq("id", serviceId)
       .single();
 
@@ -175,6 +209,12 @@ export async function updateService(
     let newImagePath = existing.image_path;
 
     if (imageFile && imageFile.size > 0) {
+      if (imageFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "이미지 파일 크기는 10MB 이하여야 합니다.",
+        };
+      }
       newImagePath = await uploadImage(BUCKET, imageFile);
     }
 
@@ -182,12 +222,25 @@ export async function updateService(
     let newImageAfterPath = existing.image_after_path;
 
     if (imageAfterFile && imageAfterFile.size > 0) {
+      if (imageAfterFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "After 이미지 파일 크기는 10MB 이하여야 합니다.",
+        };
+      }
       try {
         newImageAfterPath = await uploadImage(BUCKET, imageAfterFile);
       } catch (afterUploadErr) {
-        console.error("updateService: after-image upload failed:", afterUploadErr);
+        console.error(
+          "updateService: after-image upload failed:",
+          afterUploadErr,
+        );
         if (newImagePath !== existing.image_path) {
-          try { await deleteImage(BUCKET, newImagePath); } catch { /* noop */ }
+          try {
+            await deleteImage(BUCKET, newImagePath);
+          } catch {
+            /* noop */
+          }
         }
         return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
       }
@@ -197,12 +250,26 @@ export async function updateService(
     const detailImageFile = formData.get("detail_image") as File | null;
     let newDetailImagePath = existing.detail_image_path;
     if (detailImageFile && detailImageFile.size > 0) {
+      if (detailImageFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "상세 Before 이미지 크기는 10MB 이하여야 합니다.",
+        };
+      }
       newDetailImagePath = await uploadImage(BUCKET, detailImageFile);
     }
 
-    const detailAfterImageFile = formData.get("detail_image_after") as File | null;
+    const detailAfterImageFile = formData.get(
+      "detail_image_after",
+    ) as File | null;
     let newDetailAfterImagePath = existing.detail_image_after_path;
     if (detailAfterImageFile && detailAfterImageFile.size > 0) {
+      if (detailAfterImageFile.size > MAX_FILE_SIZE) {
+        return {
+          success: false,
+          error: "상세 After 이미지 크기는 10MB 이하여야 합니다.",
+        };
+      }
       newDetailAfterImagePath = await uploadImage(BUCKET, detailAfterImageFile);
     }
 
@@ -251,7 +318,10 @@ export async function updateService(
       { oldPath: existing.image_path, newPath: newImagePath },
       { oldPath: existing.image_after_path, newPath: newImageAfterPath },
       { oldPath: existing.detail_image_path, newPath: newDetailImagePath },
-      { oldPath: existing.detail_image_after_path, newPath: newDetailAfterImagePath },
+      {
+        oldPath: existing.detail_image_after_path,
+        newPath: newDetailAfterImagePath,
+      },
     ];
     for (const { oldPath, newPath } of oldPaths) {
       if (oldPath && newPath !== oldPath) {
@@ -284,7 +354,9 @@ export async function deleteService(serviceId: string) {
 
     const { data: existingService, error: fetchError } = await supabase
       .from("services")
-      .select("image_path, image_after_path, detail_image_path, detail_image_after_path")
+      .select(
+        "image_path, image_after_path, detail_image_path, detail_image_after_path",
+      )
       .eq("id", serviceId)
       .single();
 

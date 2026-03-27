@@ -5,10 +5,7 @@ import { createClient } from "@/shared/lib/supabase/server";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getUser } from "@/shared/lib/supabase/auth";
 import { customerReviewFormSchema } from "@/shared/lib/schema";
-import type {
-  ReviewTokenRow,
-  CustomerReviewRow,
-} from "@/shared/types/database";
+import type { ReviewTokenRow } from "@/shared/types/database";
 
 /** 통일 에러 메시지 — 토큰 관련 모든 실패에 동일 문구 노출 */
 const TOKEN_ERROR_MESSAGE = "유효하지 않거나 만료된 링크입니다";
@@ -135,7 +132,11 @@ export async function deleteReviewToken(tokenId: string): Promise<{
 export async function submitCustomerReview(
   prevState: unknown,
   formData: FormData,
-): Promise<{ success: boolean; error?: string; errors?: Record<string, string[]> }> {
+): Promise<{
+  success: boolean;
+  error?: string;
+  errors?: Record<string, string[]>;
+}> {
   try {
     const rawData = {
       token: formData.get("token"),

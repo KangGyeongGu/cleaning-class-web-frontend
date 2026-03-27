@@ -60,7 +60,6 @@ export default async function ContactPage() {
   return (
     <>
       {/* 구조화 데이터 — BreadcrumbList */}
-      {/* eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버 생성 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -166,7 +165,6 @@ export default async function ContactPage() {
                       )}
                     </div>
                   </div>
-
                 </div>
               </aside>
 

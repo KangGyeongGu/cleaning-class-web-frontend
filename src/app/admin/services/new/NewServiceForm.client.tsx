@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createService } from "@/shared/actions/service";
 import { Loader2, Plus, X } from "lucide-react";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
@@ -17,8 +18,12 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
-  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(null);
-  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<string | null>(null);
+  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(
+    null,
+  );
+  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<
+    string | null
+  >(null);
   // 서비스 태그 목록 및 입력 상태 관리
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -140,7 +145,9 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
           <option value="moving">이사 서비스</option>
         </select>
         {state && "errors" in state && state.errors?.category && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.category[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.category[0]}
+          </p>
         )}
       </div>
 
@@ -157,11 +164,13 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
           name="description"
           maxLength={500}
           rows={3}
-          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base font-light leading-relaxed transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base leading-relaxed font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="서비스 소개 페이지에 표시될 설명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.description && (
-          <p className="mt-1 text-xs text-red-500">{state.errors.description[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.description[0]}
+          </p>
         )}
       </div>
 
@@ -204,7 +213,7 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
-              key={index}
+              key={`${tag}-${index}`}
               className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm"
             >
               {tag}
@@ -333,8 +342,14 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             </label>
             {detailImagePreview && (
               <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 미리보기 전용 */}
-                <img src={detailImagePreview} alt="상세 Before 미리보기" className="h-full w-full object-cover" />
+                <Image
+                  src={detailImagePreview}
+                  alt="상세 Before 미리보기"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             )}
           </div>
@@ -365,8 +380,14 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             </label>
             {detailAfterImagePreview && (
               <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
-                {/* eslint-disable-next-line @next/next/no-img-element -- 로컬 blob 미리보기 전용 */}
-                <img src={detailAfterImagePreview} alt="상세 After 미리보기" className="h-full w-full object-cover" />
+                <Image
+                  src={detailAfterImagePreview}
+                  alt="상세 After 미리보기"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
               </div>
             )}
           </div>
