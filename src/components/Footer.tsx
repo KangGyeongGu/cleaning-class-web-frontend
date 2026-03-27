@@ -23,7 +23,6 @@ export function Footer({ siteConfig }: FooterProps) {
   const representative = siteConfig?.representative ?? "";
   const address = siteConfig?.address ?? "";
 
-  // moving_representative 존재 여부로 이사 섹션 표시 결정
   const movingRepresentative = siteConfig?.moving_representative ?? "";
   const movingPhone = siteConfig?.moving_phone ?? "";
   const movingBusinessRegistrationNumber =
@@ -38,17 +37,15 @@ export function Footer({ siteConfig }: FooterProps) {
   return (
     <footer className="bg-white py-20 text-slate-900">
       <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12">
-        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-[2fr_3fr_2fr]">
-          <div>
-            <p className="text-heading-1 tracking-tighter">{businessName}</p>
-          </div>
+        <p className="text-heading-1 mb-12 tracking-tighter">{businessName}</p>
 
+        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-[auto_auto]">
           <div className="grid grid-cols-[auto_1fr] gap-x-8">
             <p className="text-label text-slate-900">Contact</p>
-            <div>
-              <div className="mb-5">
+            <div className={hasMovingInfo ? "grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-0" : ""}>
+              <div>
                 <p className="mb-1.5 text-sm font-bold text-slate-900">청소</p>
-                <ul className="space-y-0.5 text-sm font-light text-slate-600">
+                <ul className="space-y-0.5 text-sm font-light whitespace-nowrap text-slate-600">
                   {representative && <li>대표 {representative}</li>}
                   {businessRegistrationNumber && (
                     <li>사업자등록번호 {businessRegistrationNumber}</li>
@@ -73,7 +70,7 @@ export function Footer({ siteConfig }: FooterProps) {
                       </a>
                     </li>
                   )}
-                  {address && <li>{address}</li>}
+                  {address && <li className="whitespace-normal">{address}</li>}
                 </ul>
               </div>
 
@@ -82,10 +79,12 @@ export function Footer({ siteConfig }: FooterProps) {
                   <p className="mb-1.5 text-sm font-bold text-slate-900">
                     이사
                   </p>
-                  <ul className="space-y-0.5 text-sm font-light text-slate-600">
+                  <ul className="space-y-0.5 text-sm font-light whitespace-nowrap text-slate-600">
                     <li>대표 {movingRepresentative}</li>
                     {movingBusinessRegistrationNumber && (
-                      <li>사업자등록번호 {movingBusinessRegistrationNumber}</li>
+                      <li>
+                        사업자등록번호 {movingBusinessRegistrationNumber}
+                      </li>
                     )}
                     {movingPhone && (
                       <li>
@@ -97,7 +96,7 @@ export function Footer({ siteConfig }: FooterProps) {
                         </a>
                       </li>
                     )}
-                    {movingAddress && <li>{movingAddress}</li>}
+                    {movingAddress && <li className="whitespace-normal">{movingAddress}</li>}
                   </ul>
                 </div>
               )}

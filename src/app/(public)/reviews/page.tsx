@@ -49,7 +49,7 @@ export default async function ReviewsPage() {
       />
 
       <main className="min-h-screen bg-white">
-        <section className="pt-12 pb-10 md:pt-16 md:pb-12">
+        <section className="pt-12 md:pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <nav aria-label="현재 위치" className="mb-8">
               <ol className="flex items-center gap-2 text-xs text-slate-400">

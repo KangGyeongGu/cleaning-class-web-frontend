@@ -79,6 +79,14 @@ export async function Services() {
               </div>
             </div>
             <ServiceGrid services={cleaningServices} />
+            <div className="mt-6 text-center">
+              <Link
+                href="/services#cleaning-services"
+                className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"
+              >
+                상세 보기 →
+              </Link>
+            </div>
           </div>
         )}
 
@@ -109,6 +117,14 @@ export async function Services() {
               </div>
             </div>
             <ServiceGrid services={movingServices} />
+            <div className="mt-6 text-center">
+              <Link
+                href="/services#moving-services"
+                className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"
+              >
+                상세 보기 →
+              </Link>
+            </div>
           </div>
         )}
       </div>

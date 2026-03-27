@@ -5,6 +5,7 @@ import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
 import { ServiceBeforeAfter } from "@/components/ServiceBeforeAfter.client";
+import { HashHighlight } from "@/app/(public)/services/HashHighlight.client";
 
 export const revalidate = 3600;
 
@@ -196,6 +197,7 @@ export default async function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
+      <HashHighlight />
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 정적 데이터로 XSS 위험 없음 */}
       <script
         type="application/ld+json"
@@ -205,7 +207,7 @@ export default async function ServicesPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      <section className="pt-12 pb-10 md:pt-16 md:pb-12">
+      <section className="pt-12 md:pt-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <nav aria-label="현재 위치" className="mb-8">
             <ol className="flex items-center gap-2 text-xs text-slate-400">
