@@ -13,6 +13,7 @@ import {
   LogOut,
   ExternalLink,
   HelpCircle,
+  Star,
 } from "lucide-react";
 import { logout } from "@/shared/actions/auth";
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/admin", label: "대시보드", icon: LayoutDashboard },
   { href: "/admin/services", label: "서비스 관리", icon: Layers },
   { href: "/admin/reviews", label: "리뷰 관리", icon: Image },
+  { href: "/admin/customer-reviews", label: "고객리뷰 관리", icon: Star },
   { href: "/admin/faq", label: "FAQ 관리", icon: HelpCircle },
   { href: "/admin/config", label: "업체 정보", icon: Settings },
 ];

@@ -7,7 +7,6 @@ import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(login, null);
-  // 비밀번호 표시/숨기기 상태
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
@@ -45,7 +44,6 @@ export function LoginForm() {
             >
               Password
             </label>
-            {/* 비밀번호 입력 필드 + 표시/숨기기 토글 버튼 래퍼 */}
             <div className="relative">
               <input
                 id="password"
@@ -56,7 +54,6 @@ export function LoginForm() {
                 className="w-full border-b border-slate-200 bg-transparent pr-10 pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
                 placeholder="비밀번호를 입력하세요"
               />
-              {/* 비밀번호 표시/숨기기 토글 버튼 */}
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}

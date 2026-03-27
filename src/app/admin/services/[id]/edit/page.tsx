@@ -23,6 +23,8 @@ export default async function EditServicePage({
         service={service}
         imageUrl={service.imageUrl}
         afterImageUrl={service.afterImageUrl}
+        detailImageUrl={service.detailImageUrl}
+        detailAfterImageUrl={service.detailAfterImageUrl}
       />
     </div>
   );

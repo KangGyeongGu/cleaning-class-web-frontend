@@ -3,6 +3,8 @@ import { Navbar } from "@/components/Navbar";
 import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
+export const revalidate = 3600;
+
 interface PublicLayoutProps {
   children: React.ReactNode;
 }
@@ -20,7 +22,12 @@ export default async function PublicLayout({ children }: PublicLayoutProps) {
       />
       <main>{children}</main>
       <Footer siteConfig={siteConfig} />
-      {siteConfig?.phone && <MobilePhoneButton phone={siteConfig.phone} />}
+      {siteConfig?.phone && (
+        <MobilePhoneButton
+          phone={siteConfig.phone}
+          movingPhone={siteConfig.moving_phone ?? undefined}
+        />
+      )}
     </>
   );
 }

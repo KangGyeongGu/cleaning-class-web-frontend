@@ -10,6 +10,14 @@ import type { ReviewInsert, ReviewUpdate } from "@/shared/types/database";
 const BUCKET = "review-images";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const REVALIDATE_PATHS = ["/", "/reviews", "/admin/reviews"] as const;
+
+function revalidateReviewPaths(): void {
+  for (const path of REVALIDATE_PATHS) {
+    revalidatePath(path);
+  }
+}
+
 export async function createReview(prevState: unknown, formData: FormData) {
   try {
     await getUser();
@@ -68,11 +76,10 @@ export async function createReview(prevState: unknown, formData: FormData) {
         await deleteImage(BUCKET, imagePath);
       }
       console.error("createReview DB error:", error);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/reviews");
+    revalidateReviewPaths();
 
     return {
       success: true,
@@ -134,7 +141,7 @@ export async function updateReview(
 
     if (fetchError || !existingReview) {
       console.error("updateReview fetch error:", fetchError);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
     const existingImagePath = (existingReview as { image_path: string })
@@ -168,7 +175,7 @@ export async function updateReview(
         await deleteImage(BUCKET, newImagePath);
       }
       console.error("updateReview DB error:", updateError);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
     if (
@@ -180,8 +187,7 @@ export async function updateReview(
       await deleteImage(BUCKET, existingImagePath);
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/reviews");
+    revalidateReviewPaths();
 
     return {
       success: true,
@@ -210,7 +216,7 @@ export async function deleteReview(reviewId: string) {
 
     if (fetchError || !existingReview) {
       console.error("deleteReview fetch error:", fetchError);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
     const existingImagePath = (existingReview as { image_path: string })
@@ -223,15 +229,14 @@ export async function deleteReview(reviewId: string) {
 
     if (deleteError) {
       console.error("deleteReview DB error:", deleteError);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
     if (existingImagePath) {
       await deleteImage(BUCKET, existingImagePath);
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/reviews");
+    revalidateReviewPaths();
 
     return {
       success: true,
@@ -264,11 +269,10 @@ export async function toggleReviewPublish(
 
     if (error) {
       console.error("toggleReviewPublish DB error:", error);
-      throw new Error("리뷰 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/reviews");
+    revalidateReviewPaths();
 
     return {
       success: true,
@@ -287,10 +291,7 @@ export async function reorderReviews(
   orderedIds: string[],
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const user = await getUser();
-    if (!user) {
-      return { success: false, error: "인증이 필요합니다." };
-    }
+    await getUser();
 
     const supabase = await createClient();
 
@@ -306,8 +307,7 @@ export async function reorderReviews(
       }
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/reviews");
+    revalidateReviewPaths();
 
     return { success: true };
   } catch (error) {

@@ -109,6 +109,43 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // 컴포넌트에서 서버 Supabase 클라이언트 직접 임포트 금지
+  {
+    files: ["src/components/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [{
+          name: "@/shared/lib/supabase/server",
+          message: "컴포넌트에서 서버 Supabase 클라이언트 직접 임포트 금지 — queries/ 또는 home.ts 경유",
+        }],
+      }],
+    },
+  },
+  // 클라이언트 컴포넌트에서 서버 전용 모듈 임포트 금지
+  {
+    files: ["**/*.client.tsx"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [{
+          name: "@/shared/lib/supabase/server",
+          message: "클라이언트 컴포넌트에서 서버 전용 모듈 임포트 금지",
+        }],
+      }],
+    },
+  },
+  // 공개 페이지에서 Supabase 직접 호출 금지 (admin 제외)
+  {
+    files: ["src/app/**/page.tsx"],
+    ignores: ["src/app/admin/**"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [{
+          name: "@/shared/lib/supabase/server",
+          message: "공개 페이지에서 Supabase 직접 호출 금지 — queries/ 또는 home.ts 경유",
+        }],
+      }],
+    },
+  },
 ]);
 
 export default eslintConfig;

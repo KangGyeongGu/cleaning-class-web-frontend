@@ -5,7 +5,12 @@ import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
 import { formatPhoneNumber } from "@/shared/lib/format";
-import { INQUIRY_SERVICE_OPTIONS } from "@/shared/lib/constants";
+import {
+  CLEANING_INQUIRY_OPTIONS,
+  MOVING_INQUIRY_OPTIONS,
+} from "@/shared/lib/constants";
+
+type InquiryType = "cleaning" | "moving";
 
 interface CustomDropdownProps {
   label: string;
@@ -99,6 +104,9 @@ export function ContactForm({ phone }: ContactFormProps) {
     submitContactForm,
     null,
   );
+
+  const [inquiryType, setInquiryType] = useState<InquiryType>("cleaning");
+
   const [images, setImages] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [messageLength, setMessageLength] = useState<number>(0);
@@ -107,6 +115,8 @@ export function ContactForm({ phone }: ContactFormProps) {
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const departureRef = useRef<HTMLInputElement>(null);
+  const destinationRef = useRef<HTMLInputElement>(null);
   const [serviceType, setServiceType] = useState("");
   const [region, setRegion] = useState("");
   const [isReset, setIsReset] = useState(false);
@@ -116,7 +126,7 @@ export function ContactForm({ phone }: ContactFormProps) {
   const isSuccess = state?.success === true;
   const showSuccess = isSuccess && !isReset;
 
-  // 언마운트 시점에 최신 URL 목록을 참조하기 위한 ref (클로저 stale 방지)
+  // 언마운트 시 최신 URL을 참조하기 위한 ref — 클로저 stale 방지
   const previewUrlsRef = useRef(previewUrls);
 
   useEffect(() => {
@@ -147,6 +157,7 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => observer.disconnect();
   }, []);
 
+  // 전송 성공 후 3초 뒤 폼 초기화 및 isReset 플래그 설정
   useEffect(() => {
     if (!isSuccess || isReset) return;
 
@@ -163,6 +174,8 @@ export function ContactForm({ phone }: ContactFormProps) {
       if (nameRef.current) nameRef.current.value = "";
       if (phoneRef.current) phoneRef.current.value = "";
       if (messageRef.current) messageRef.current.value = "";
+      if (departureRef.current) departureRef.current.value = "";
+      if (destinationRef.current) destinationRef.current.value = "";
       if (fileInputRef.current) fileInputRef.current.value = "";
     }, 3000);
 
@@ -170,24 +183,43 @@ export function ContactForm({ phone }: ContactFormProps) {
   }, [isSuccess, isReset]);
 
   const checkFormValidity = () => {
-    const name = nameRef.current?.value.trim() || "";
-    const phoneValue = phoneRef.current?.value.trim() || "";
-    const message = messageRef.current?.value.trim() || "";
+    const name = nameRef.current?.value.trim() ?? "";
+    const phoneValue = phoneRef.current?.value.trim() ?? "";
+    const message = messageRef.current?.value.trim() ?? "";
 
-    /* 리셋 완료 후 사용자가 다시 입력을 시작하면 isReset 해제 (다음 전송 사이클 허용) */
+    // 재입력 시작 시 isReset 해제하여 다음 전송 사이클 허용
     if (isReset) setIsReset(false);
 
-    const isValid =
-      name !== "" &&
-      phoneValue !== "" &&
-      region !== "" &&
-      serviceType !== "" &&
-      message !== "";
-    setFormValid(isValid);
+    const baseValid =
+      name !== "" && phoneValue !== "" && serviceType !== "" && message !== "";
+
+    if (inquiryType === "cleaning") {
+      // 청소의뢰는 지역 필수
+      setFormValid(baseValid && region !== "");
+    } else {
+      // 이사의뢰는 출발지/도착지 선택 사항이므로 기본 필드만 검사
+      setFormValid(baseValid);
+    }
+  };
+
+  const handleInquiryTypeChange = (type: InquiryType) => {
+    setInquiryType(type);
+    setServiceType("");
+    setRegion("");
+    if (departureRef.current) departureRef.current.value = "";
+    if (destinationRef.current) destinationRef.current.value = "";
+    // setState 비동기 반영 후 유효성 재검사 — serviceType 초기화로 항상 false
+    setTimeout(() => {
+      const name = nameRef.current?.value.trim() ?? "";
+      const phoneValue = phoneRef.current?.value.trim() ?? "";
+      const message = messageRef.current?.value.trim() ?? "";
+      const baseValid = name !== "" && phoneValue !== "" && message !== "";
+      setFormValid(baseValid && false);
+    }, 0);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files ?? []);
     const newImages = [...images, ...files];
 
     if (newImages.length > 15) {
@@ -221,9 +253,14 @@ export function ContactForm({ phone }: ContactFormProps) {
     }
   };
 
+  const serviceOptions =
+    inquiryType === "cleaning"
+      ? CLEANING_INQUIRY_OPTIONS
+      : MOVING_INQUIRY_OPTIONS;
+
   return (
-    <section ref={sectionRef} id="contact" className="bg-white py-10 md:py-16">
-      <div className="container mx-auto max-w-lg px-4">
+    <section ref={sectionRef} id="contact" className="bg-white">
+      <div className="container mx-auto max-w-lg px-4 md:px-8 lg:px-12">
         <div
           className={`mb-8 text-center transition-all duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
@@ -249,6 +286,33 @@ export function ContactForm({ phone }: ContactFormProps) {
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
+          <div className="flex border-b border-slate-200">
+            <button
+              type="button"
+              onClick={() => handleInquiryTypeChange("cleaning")}
+              className={`flex-1 pb-3 text-sm font-medium transition-colors ${
+                inquiryType === "cleaning"
+                  ? "border-b-2 border-slate-900 text-slate-900"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              청소의뢰
+            </button>
+            <button
+              type="button"
+              onClick={() => handleInquiryTypeChange("moving")}
+              className={`flex-1 pb-3 text-sm font-medium transition-colors ${
+                inquiryType === "moving"
+                  ? "border-b-2 border-slate-900 text-slate-900"
+                  : "text-slate-400 hover:text-slate-600"
+              }`}
+            >
+              이사의뢰
+            </button>
+          </div>
+
+          <input type="hidden" name="inquiryType" value={inquiryType} />
+
           <div className="space-y-5">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="group">
@@ -298,7 +362,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             <CustomDropdown
               label="서비스 종류"
               name="serviceType"
-              options={INQUIRY_SERVICE_OPTIONS}
+              options={serviceOptions}
               placeholder="서비스를 선택해주세요"
               required
               error={state?.errors?.serviceType?.[0]}
@@ -309,35 +373,76 @@ export function ContactForm({ phone }: ContactFormProps) {
               }}
             />
 
-            <CustomDropdown
-              label="지역"
-              name="region"
-              options={[
-                "전주시 완산구",
-                "전주시 덕진구",
-                "군산시",
-                "익산시",
-                "정읍시",
-                "남원시",
-                "김제시",
-                "완주군",
-                "진안군",
-                "무주군",
-                "장수군",
-                "임실군",
-                "순창군",
-                "고창군",
-                "부안군",
-              ]}
-              placeholder="지역을 선택해주세요"
-              required
-              error={state?.errors?.region?.[0]}
-              value={region}
-              onChange={(value) => {
-                setRegion(value);
-                setTimeout(checkFormValidity, 0);
-              }}
-            />
+            {inquiryType === "cleaning" && (
+              <CustomDropdown
+                label="지역"
+                name="region"
+                options={[
+                  "전주시 완산구",
+                  "전주시 덕진구",
+                  "군산시",
+                  "익산시",
+                  "정읍시",
+                  "남원시",
+                  "김제시",
+                  "완주군",
+                  "진안군",
+                  "무주군",
+                  "장수군",
+                  "임실군",
+                  "순창군",
+                  "고창군",
+                  "부안군",
+                ]}
+                placeholder="지역을 선택해주세요"
+                required
+                error={state?.errors?.region?.[0]}
+                value={region}
+                onChange={(value) => {
+                  setRegion(value);
+                  setTimeout(checkFormValidity, 0);
+                }}
+              />
+            )}
+
+            {inquiryType === "moving" && (
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <div className="group">
+                  <label htmlFor="departure" className="form-label-sm">
+                    출발지
+                  </label>
+                  <input
+                    ref={departureRef}
+                    id="departure"
+                    name="departure"
+                    type="text"
+                    className="form-input"
+                    placeholder="출발지"
+                    onInput={checkFormValidity}
+                  />
+                  {state?.errors?.departure && (
+                    <p className="form-error">{state.errors.departure[0]}</p>
+                  )}
+                </div>
+                <div className="group">
+                  <label htmlFor="destination" className="form-label-sm">
+                    도착지
+                  </label>
+                  <input
+                    ref={destinationRef}
+                    id="destination"
+                    name="destination"
+                    type="text"
+                    className="form-input"
+                    placeholder="도착지"
+                    onInput={checkFormValidity}
+                  />
+                  {state?.errors?.destination && (
+                    <p className="form-error">{state.errors.destination[0]}</p>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="group">
               <label htmlFor="message" className="form-label-sm">
@@ -455,8 +560,8 @@ function ArrowDown({ size, className }: { size?: number; className?: string }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={size || 24}
-      height={size || 24}
+      width={size ?? 24}
+      height={size ?? 24}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

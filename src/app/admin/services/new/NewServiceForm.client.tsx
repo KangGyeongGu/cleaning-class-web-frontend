@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createService } from "@/shared/actions/service";
 import { Loader2, Plus, X } from "lucide-react";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
@@ -17,7 +18,12 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
-  // 서비스 태그 목록 및 입력 상태 관리
+  const [detailImagePreview, setDetailImagePreview] = useState<string | null>(
+    null,
+  );
+  const [detailAfterImagePreview, setDetailAfterImagePreview] = useState<
+    string | null
+  >(null);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [focalX, setFocalX] = useState(50);
@@ -25,7 +31,7 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   const [afterFocalX, setAfterFocalX] = useState(50);
   const [afterFocalY, setAfterFocalY] = useState(50);
 
-  // blob URL 메모리 누수 방지: ref로 최신 URL 추적
+  // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
   const afterImagePreviewRef = useRef<string | null>(null);
 
@@ -76,7 +82,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
-  // 태그 추가: 중복 및 최대 30자 제한 적용
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
     if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
@@ -85,12 +90,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
-  // 태그 삭제: 인덱스 기준으로 제거
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
   const handleSubmit = async (formData: FormData) => {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
@@ -98,7 +101,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
 
   return (
     <form action={handleSubmit} className="space-y-8">
-      {/* 서비스명 */}
       <div>
         <label
           htmlFor="title"
@@ -120,7 +122,51 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 서비스 태그 */}
+      <div>
+        <label
+          htmlFor="category"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          카테고리
+        </label>
+        <select
+          id="category"
+          name="category"
+          defaultValue="cleaning"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
+        >
+          <option value="cleaning">청소 서비스</option>
+          <option value="moving">이사 서비스</option>
+        </select>
+        {state && "errors" in state && state.errors?.category && (
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.category[0]}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="description"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
+          서비스 설명 (최대 500자, 선택)
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          maxLength={500}
+          rows={3}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-base leading-relaxed font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
+          placeholder="서비스 소개 페이지에 표시될 설명을 입력하세요"
+        />
+        {state && "errors" in state && state.errors?.description && (
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.description[0]}
+          </p>
+        )}
+      </div>
+
       <div>
         <label
           htmlFor="tagInput"
@@ -155,11 +201,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             <Plus size={14} />
           </button>
         </div>
-        {/* 추가된 태그 목록 (pill 형태) */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
-              key={index}
+              key={`${tag}-${index}`}
               className="inline-flex items-center gap-2 bg-slate-100 px-3 py-1 text-sm"
             >
               {tag}
@@ -178,7 +223,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <label
@@ -255,7 +299,90 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </div>
       </div>
 
-      {/* 정렬 순서 */}
+      <div>
+        <p className="mb-4 text-xs font-bold tracking-widest text-slate-900 uppercase">
+          서비스 소개 페이지용 이미지 (선택)
+        </p>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div>
+            <label
+              htmlFor="detail_image"
+              className="mb-3 block text-xs font-bold text-slate-500"
+            >
+              Before 이미지
+            </label>
+            <input
+              id="detail_image"
+              name="detail_image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setDetailImagePreview(URL.createObjectURL(file));
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="detail_image"
+              className="inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
+            >
+              <Plus size={16} />
+              이미지 선택
+            </label>
+            {detailImagePreview && (
+              <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
+                <Image
+                  src={detailImagePreview}
+                  alt="상세 Before 미리보기"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="detail_image_after"
+              className="mb-3 block text-xs font-bold text-slate-500"
+            >
+              After 이미지
+            </label>
+            <input
+              id="detail_image_after"
+              name="detail_image_after"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setDetailAfterImagePreview(URL.createObjectURL(file));
+              }}
+              className="hidden"
+            />
+            <label
+              htmlFor="detail_image_after"
+              className="inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
+            >
+              <Plus size={16} />
+              이미지 선택
+            </label>
+            {detailAfterImagePreview && (
+              <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden border border-slate-200">
+                <Image
+                  src={detailAfterImagePreview}
+                  alt="상세 After 미리보기"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div>
         <label
           htmlFor="sort_order"
@@ -278,7 +405,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         )}
       </div>
 
-      {/* 게시 여부 */}
       <div>
         <div className="flex items-center gap-3">
           <input
@@ -301,12 +427,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </p>
       </div>
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

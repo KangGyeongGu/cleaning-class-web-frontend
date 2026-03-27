@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
+import { WorkProcessSection } from "@/components/WorkProcessSection";
 import { BlogReviewsSection } from "@/components/BlogReviewsSection";
-import { ContactSection } from "@/components/ContactSection";
+import { CustomerReviewsSection } from "@/components/CustomerReviewsSection";
 import { buildDescription } from "@/shared/lib/format";
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const title = "전주 청소업체 청소클라쓰 | 전북 전주 전문 청소 서비스";
+  const title = "전주 청소·이사업체 청소클라쓰 | 전북 전주 전문 청소·이사 서비스";
   const description = buildDescription();
 
   return {
@@ -25,9 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
           url: "/opengraph-image",
           width: 1200,
           height: 630,
-          alt: "청소클라쓰",
+          alt: "청소클라쓰 — 전북 전주 전문 청소·이사 서비스",
         },
       ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
@@ -58,15 +64,16 @@ function ReviewsSkeleton() {
   );
 }
 
-function ContactSkeleton() {
+function CustomerReviewsSkeleton() {
   return (
     <div className="py-16 md:py-32">
-      <div className="mx-auto max-w-7xl animate-pulse px-6">
-        <div className="mx-auto mb-8 h-8 w-48 rounded bg-slate-200" />
-        <div className="mb-4 h-12 rounded bg-slate-200" />
-        <div className="mb-4 h-12 rounded bg-slate-200" />
-        <div className="mb-4 h-32 rounded bg-slate-200" />
-        <div className="h-12 w-32 rounded bg-slate-200" />
+      <div className="mx-auto max-w-2xl animate-pulse px-6">
+        <div className="mb-8 h-8 w-32 rounded bg-slate-200" />
+        <div className="space-y-4">
+          <div className="h-24 rounded bg-slate-200" />
+          <div className="h-24 rounded bg-slate-200" />
+          <div className="h-24 rounded bg-slate-200" />
+        </div>
       </div>
     </div>
   );
@@ -75,17 +82,21 @@ function ContactSkeleton() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
-      <Suspense>
-        <Hero />
-      </Suspense>
+      {/* Hero는 h1 + LCP 요소이므로 Suspense 없이 렌더링 */}
+      <Hero />
+
       <Suspense fallback={<ServicesSkeleton />}>
         <Services />
       </Suspense>
+
+      <WorkProcessSection />
+
       <Suspense fallback={<ReviewsSkeleton />}>
         <BlogReviewsSection />
       </Suspense>
-      <Suspense fallback={<ContactSkeleton />}>
-        <ContactSection />
+
+      <Suspense fallback={<CustomerReviewsSkeleton />}>
+        <CustomerReviewsSection />
       </Suspense>
     </div>
   );

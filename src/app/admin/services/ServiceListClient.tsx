@@ -130,8 +130,9 @@ export function ServiceListClient({
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
         <div className="text-label col-span-1 text-slate-500">순서</div>
         <div className="text-label col-span-1 text-slate-500">이미지</div>
-        <div className="text-label col-span-3 text-slate-500">서비스명</div>
-        <div className="text-label col-span-3 text-slate-500">설명</div>
+        <div className="text-label col-span-2 text-slate-500">서비스명</div>
+        <div className="text-label col-span-1 text-slate-500">카테고리</div>
+        <div className="text-label col-span-3 text-slate-500">태그</div>
         <div className="text-label col-span-1 text-center text-slate-500">
           게시
         </div>
@@ -168,21 +169,33 @@ export function ServiceListClient({
             </div>
 
             <div className="col-span-1">
-              <div className="relative aspect-square h-16 w-16 border border-slate-200">
-                <Image
-                  src={service.imageUrl}
-                  alt={service.title}
-                  fill
-                  className="object-cover"
-                  sizes="64px"
-                />
+              <div className="relative aspect-square h-16 w-16 border border-slate-200 bg-slate-100">
+                {service.imageUrl ? (
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                    sizes="64px"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-xs text-slate-400">
+                    없음
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="col-span-3">
+            <div className="col-span-2">
               <p className="text-sm font-bold text-slate-900">
                 {service.title}
               </p>
+            </div>
+
+            <div className="col-span-1">
+              <span className="text-xs text-slate-500">
+                {service.category === "moving" ? "이사" : "청소"}
+              </span>
             </div>
 
             <div className="col-span-3">

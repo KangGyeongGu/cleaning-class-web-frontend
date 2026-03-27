@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
-const BLUR_PLACEHOLDER =
-  "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 
 export interface ServiceCardProps {
   service: {
+    id: string;
     title: string;
     /** 서비스 특징 태그 목록 (description 대체) */
     tags: string[];
@@ -54,71 +55,71 @@ export function ServiceCard({
   return (
     <div
       ref={cardRef}
-      className={`group cursor-default pb-4 transition-all duration-600 ease-out md:pb-0 ${
+      className={`group pb-4 transition-all duration-600 ease-out md:pb-0 ${
         isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
     >
-      <div className="relative mb-3 aspect-square overflow-hidden bg-slate-200 transition-all duration-500 ease-out group-hover:-translate-y-3 group-hover:shadow-2xl md:mb-5 md:aspect-3/4">
-        {service.afterImageUrl ? (
-          <>
-            <Image
-              src={service.imageUrl}
-              alt={`${service.title} Before`}
-              fill
-              sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
-              priority={priority}
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              className={`object-cover transition-opacity duration-700 ease-in-out group-hover:opacity-0 ${
-                showAfter ? "opacity-0" : ""
-              }`}
-              style={{
-                objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
-              }}
-            />
-            <Image
-              src={service.afterImageUrl}
-              alt={`${service.title} After`}
-              fill
-              sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
-              placeholder="blur"
-              blurDataURL={BLUR_PLACEHOLDER}
-              className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100 ${
-                showAfter ? "opacity-100!" : ""
-              }`}
-              style={{
-                objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
-              }}
-            />
-          </>
-        ) : (
-          <Image
-            src={service.imageUrl}
-            alt={service.title}
-            fill
-            sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
-            priority={priority}
-            placeholder="blur"
-            blurDataURL={BLUR_PLACEHOLDER}
-            className="object-cover grayscale filter transition-transform duration-700 ease-in-out group-hover:scale-110 group-hover:grayscale-0"
-            style={{
-              objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
-            }}
-          />
-        )}
-        <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
-      </div>
-      <div className="px-1 text-center">
-        <h3 className="text-heading-4 mb-2 origin-center transition-all duration-300 group-hover:scale-110 group-hover:text-black">
+      {service.imageUrl && (
+        <Link href={`/services#service-${service.id}`} className="block">
+          <div className="relative mb-3 aspect-square overflow-hidden bg-slate-200 transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl md:mb-5 md:aspect-3/4">
+            {service.afterImageUrl ? (
+              <>
+                <Image
+                  src={service.imageUrl}
+                  alt={`${service.title} Before`}
+                  fill
+                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                  priority={priority}
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
+                  className={`object-cover transition-opacity duration-700 ease-in-out group-hover:opacity-0 ${
+                    showAfter ? "opacity-0" : ""
+                  }`}
+                  style={{
+                    objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+                  }}
+                />
+                <Image
+                  src={service.afterImageUrl}
+                  alt={`${service.title} After`}
+                  fill
+                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                  placeholder="blur"
+                  blurDataURL={BLUR_PLACEHOLDER}
+                  className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100 ${
+                    showAfter ? "opacity-100!" : ""
+                  }`}
+                  style={{
+                    objectPosition: `${service.afterFocalX ?? 50}% ${service.afterFocalY ?? 50}%`,
+                  }}
+                />
+              </>
+            ) : (
+              <Image
+                src={service.imageUrl}
+                alt={service.title}
+                fill
+                sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                priority={priority}
+                placeholder="blur"
+                blurDataURL={BLUR_PLACEHOLDER}
+                className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                style={{
+                  objectPosition: `${service.focalX ?? 50}% ${service.focalY ?? 50}%`,
+                }}
+              />
+            )}
+            <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/5" />
+          </div>
+        </Link>
+      )}
+      <div className="px-1 transition-transform duration-500 ease-out group-hover:-translate-y-2">
+        <h3 className="text-heading-4 mb-2 transition-colors duration-300 group-hover:text-black">
           {service.title}
         </h3>
-        <div className="flex flex-wrap justify-center gap-2">
-          {service.tags.map((tag) => (
-            <span key={tag} className="tag-pill">
-              {tag}
-            </span>
-          ))}
-        </div>
+        <p className="text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-600">
+          {service.tags.join(" · ")}
+        </p>
       </div>
     </div>
   );

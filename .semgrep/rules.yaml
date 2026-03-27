@@ -1,0 +1,95 @@
+rules:
+  # ─── server action에서 throw 금지 ──────────────────────────────────
+  # server action은 에러를 throw 대신 { success: false, error: ... } 형태로 반환해야 한다.
+  # throw는 Next.js 서버 경계에서 예측하기 어려운 동작을 유발할 수 있다.
+  - id: server-action-no-throw
+    message: >
+      server action에서 throw 대신 return { success: false, error: ... } 패턴을 사용하세요.
+      throw는 Next.js 서버 경계에서 예측하기 어려운 동작을 유발합니다.
+    severity: WARNING
+    languages: [typescript]
+    pattern: throw new Error("...");
+    paths:
+      include:
+        - "**/src/shared/actions/"
+
+  # ─── 컴포넌트에서 Supabase 직접 쿼리 금지 ──────────────────────────
+  # 컴포넌트 레이어는 shared/lib/ 쿼리 함수를 통해 데이터를 조회해야 한다.
+  # 컴포넌트에서 직접 supabase.from() 호출 시 관심사 분리 원칙 위반이다.
+  - id: no-inline-supabase-query-in-components
+    message: >
+      컴포넌트에서 Supabase 직접 쿼리 금지 —
+      shared/lib/queries/ 또는 shared/lib/home.ts의 쿼리 함수를 사용하세요.
+    severity: ERROR
+    languages: [typescript]
+    pattern: $SUPABASE.from("...")
+    paths:
+      include:
+        - "**/src/components/"
+
+  # ─── 공개 페이지에서 Supabase 직접 쿼리 금지 ────────────────────────
+  # page.tsx는 라우팅·조합 전용이며 DB 쿼리를 직접 실행해서는 안 된다.
+  # shared/lib/ 헬퍼 함수를 경유하여 관심사를 분리한다.
+  - id: no-supabase-from-in-public-pages
+    message: >
+      공개 페이지에서 Supabase 직접 쿼리 금지 — queries/ 또는 home.ts 경유하세요.
+      page.tsx는 라우팅과 페이지 조합만 담당해야 합니다.
+    severity: ERROR
+    languages: [typescript]
+    pattern: $SUPABASE.from("...")
+    paths:
+      include:
+        - "**/src/app/(public)/"
+
+  # ─── use client 파일에서 서버 전용 Supabase 모듈 임포트 금지 ─────────
+  # 서버 전용 Supabase 클라이언트를 클라이언트 번들에 포함하면
+  # 서비스 롤 키가 노출되거나 런타임 오류가 발생할 수 있다.
+  - id: use-client-no-server-import
+    message: >
+      "use client" 파일에서 서버 전용 Supabase 모듈 임포트 금지.
+      클라이언트 컴포넌트는 @/shared/lib/supabase/browser를 사용하세요.
+    severity: ERROR
+    languages: [typescript]
+    patterns:
+      - pattern: import { ... } from "@/shared/lib/supabase/server"
+      - pattern-inside: |
+          "use client";
+          ...
+
+  # ─── DB 타입 인라인 재정의 금지 ─────────────────────────────────────
+  # 데이터베이스 타입을 컴포넌트나 페이지에 직접 재정의하면
+  # 스키마 변경 시 여러 곳을 수동으로 수정해야 하는 유지보수 부채가 생긴다.
+  # @/shared/types/database에서 타입을 임포트하여 단일 진실 원천을 유지한다.
+  # 참고: semgrep TypeScript 파서는 interface 선언 내 ... ellipsis를 지원하지 않아
+  # metavariable-regex 방식으로 interface 이름을 필터링한다.
+  - id: no-inline-db-type-redefinition
+    message: >
+      DB 타입을 인라인으로 재정의하지 마세요 — @/shared/types/database에서 임포트하세요.
+      타입 중복 정의는 스키마 변경 시 동기화 실패의 원인이 됩니다.
+    severity: WARNING
+    languages: [typescript]
+    patterns:
+      - pattern: |
+          interface $TYPE extends $BASE {}
+      - metavariable-regex:
+          metavariable: $TYPE
+          regex: >-
+            ^(CustomerReviewRow|ReviewTokenRow|ServiceInsert|ServiceUpdate|ReviewInsert|ReviewUpdate|FaqInsert|FaqUpdate|SiteConfigUpdate)$
+    paths:
+      include:
+        - "**/src/components/"
+        - "**/src/app/"
+
+  # ─── any 타입 단언 금지 ──────────────────────────────────────────────
+  # any 타입 단언은 TypeScript strict 모드의 보호를 무력화한다.
+  # unknown + 타입 가드 패턴으로 대체하여 런타임 안전성을 확보한다.
+  - id: no-any-type-assertion
+    message: >
+      any 타입 단언 금지 — unknown + 타입 가드를 사용하세요.
+      as any는 TypeScript의 타입 보호를 우회하여 런타임 오류를 숨깁니다.
+    severity: ERROR
+    languages: [typescript]
+    pattern: $X as any
+    paths:
+      include:
+        - "**/src/"

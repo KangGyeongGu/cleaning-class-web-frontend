@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createStaticClient();
 
-  // 서비스, 리뷰, 사이트 설정 중 가장 최근 업데이트 시점을 조회
   const [
     { data: serviceData, error: serviceError },
     { data: reviewData, error: reviewError },
@@ -63,7 +64,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 1.0,
     },
-    // 정책 페이지: 변경 빈도가 낮으므로 yearly, 낮은 우선순위 적용
+    {
+      url: "https://www.cleaningclass.co.kr/services",
+      lastModified: serviceData?.updated_at
+        ? new Date(serviceData.updated_at as string)
+        : lastModified,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: "https://www.cleaningclass.co.kr/reviews",
+      lastModified: reviewData?.updated_at
+        ? new Date(reviewData.updated_at as string)
+        : lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: "https://www.cleaningclass.co.kr/contact",
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
     {
       url: "https://www.cleaningclass.co.kr/policy/privacy",
       lastModified: new Date("2026-03-23T00:00:00.000Z"),

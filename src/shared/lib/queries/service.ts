@@ -5,6 +5,8 @@ import type { Service } from "@/shared/types/database";
 export interface ServiceWithImageUrl extends Service {
   imageUrl: string;
   afterImageUrl?: string;
+  detailImageUrl?: string;
+  detailAfterImageUrl?: string;
 }
 
 export async function getServices(): Promise<ServiceWithImageUrl[]> {
@@ -24,6 +26,12 @@ export async function getServices(): Promise<ServiceWithImageUrl[]> {
     imageUrl: getServiceImageUrl(service.image_path),
     afterImageUrl: service.image_after_path
       ? getServiceImageUrl(service.image_after_path)
+      : undefined,
+    detailImageUrl: service.detail_image_path
+      ? getServiceImageUrl(service.detail_image_path)
+      : undefined,
+    detailAfterImageUrl: service.detail_image_after_path
+      ? getServiceImageUrl(service.detail_image_after_path)
       : undefined,
   }));
 }
@@ -51,6 +59,12 @@ export async function getServiceById(
     imageUrl: getServiceImageUrl(service.image_path),
     afterImageUrl: service.image_after_path
       ? getServiceImageUrl(service.image_after_path)
+      : undefined,
+    detailImageUrl: service.detail_image_path
+      ? getServiceImageUrl(service.detail_image_path)
+      : undefined,
+    detailAfterImageUrl: service.detail_image_after_path
+      ? getServiceImageUrl(service.detail_image_after_path)
       : undefined,
   };
 }
