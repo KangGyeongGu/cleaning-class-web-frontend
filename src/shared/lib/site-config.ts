@@ -1,10 +1,10 @@
 import { cache } from "react";
-import { createClient } from "@/shared/lib/supabase/server";
+import { createStaticClient } from "@/shared/lib/supabase/static";
 import type { SiteConfig } from "@/shared/types/database";
 
 export const getSiteConfig = cache(async (): Promise<SiteConfig | null> => {
   try {
-    const supabase = await createClient();
+    const supabase = createStaticClient();
     const { data, error } = await supabase
       .from("site_config")
       .select("*")
