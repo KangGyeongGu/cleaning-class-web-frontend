@@ -4,8 +4,8 @@ import { contactFormSchema } from "@/shared/lib/schema";
 import { sendContactEmail } from "@/shared/lib/mail";
 
 const MAX_IMAGE_COUNT = 15;
-const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
-const MAX_TOTAL_SIZE = 50 * 1024 * 1024; // 50MB
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
@@ -37,7 +37,6 @@ export async function submitContactForm(
     };
   }
 
-  // 다중 이미지 첨부 처리 (병렬 버퍼 변환)
   const imageFiles = formData.getAll("images") as File[];
   const filteredImageFiles = imageFiles.filter((file) => file && file.size > 0);
 
@@ -94,7 +93,6 @@ export async function submitContactForm(
       }),
     );
 
-    // 이메일 전송
     await sendContactEmail({
       name: validationResult.data.name,
       phone: validationResult.data.phone,

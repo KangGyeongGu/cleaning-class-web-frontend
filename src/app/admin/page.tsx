@@ -1,33 +1,19 @@
 import Link from "next/link";
-import { getAdminDashboardData } from "@/shared/lib/queries/admin";
-import { ImageIcon, Layers, Settings } from "lucide-react";
+import { HelpCircle, ImageIcon, Layers, Settings } from "lucide-react";
+import { getUser } from "@/shared/lib/supabase/auth";
+import { DashboardStats } from "@/app/admin/components/DashboardStats";
 
-export default async function AdminDashboardPage() {
-  const { serviceCount, reviewCount } = await getAdminDashboardData();
+export default async function AdminDashboardPage(): Promise<React.ReactElement> {
+  await getUser();
 
   return (
     <div className="mx-auto max-w-6xl p-8">
-      <h1 className="mb-8 text-3xl font-black text-slate-900">대시보드</h1>
+      <h1 className="text-heading-1 mb-8">대시보드</h1>
 
-      {/* 통계 카드 */}
-      <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div className="border border-slate-200 p-6">
-          <p className="mb-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-            전체 서비스 수
-          </p>
-          <p className="text-4xl font-black text-slate-900">{serviceCount}</p>
-        </div>
-        <div className="border border-slate-200 p-6">
-          <p className="mb-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-            전체 리뷰 수
-          </p>
-          <p className="text-4xl font-black text-slate-900">{reviewCount}</p>
-        </div>
-      </div>
+      <DashboardStats />
 
-      {/* 바로가기 링크 */}
       <div className="space-y-4">
-        <h2 className="mb-4 text-xl font-black text-slate-900">관리 메뉴</h2>
+        <h2 className="text-heading-2 mb-4">관리 메뉴</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <Link
             href="/admin/services"
@@ -38,7 +24,7 @@ export default async function AdminDashboardPage() {
                 size={20}
                 className="text-slate-500 transition-colors group-hover:text-slate-900"
               />
-              <h3 className="text-lg font-bold text-slate-900">서비스 관리</h3>
+              <h3 className="text-heading-3">서비스 관리</h3>
             </div>
             <p className="text-sm font-light text-slate-500">
               서비스를 등록, 수정, 삭제할 수 있습니다.
@@ -54,10 +40,26 @@ export default async function AdminDashboardPage() {
                 size={20}
                 className="text-slate-500 transition-colors group-hover:text-slate-900"
               />
-              <h3 className="text-lg font-bold text-slate-900">리뷰 관리</h3>
+              <h3 className="text-heading-3">리뷰 관리</h3>
             </div>
             <p className="text-sm font-light text-slate-500">
               리뷰를 등록, 수정, 삭제할 수 있습니다.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/faq"
+            className="group border border-slate-200 p-6 transition-colors hover:border-slate-900"
+          >
+            <div className="mb-2 flex items-center gap-3">
+              <HelpCircle
+                size={20}
+                className="text-slate-500 transition-colors group-hover:text-slate-900"
+              />
+              <h3 className="text-heading-3">FAQ 관리</h3>
+            </div>
+            <p className="text-sm font-light text-slate-500">
+              자주 묻는 질문을 등록, 수정, 삭제할 수 있습니다.
             </p>
           </Link>
 
@@ -70,7 +72,7 @@ export default async function AdminDashboardPage() {
                 size={20}
                 className="text-slate-500 transition-colors group-hover:text-slate-900"
               />
-              <h3 className="text-lg font-bold text-slate-900">업체 정보</h3>
+              <h3 className="text-heading-3">업체 정보</h3>
             </div>
             <p className="text-sm font-light text-slate-500">
               업체명, 연락처, 소셜미디어 등을 설정할 수 있습니다.

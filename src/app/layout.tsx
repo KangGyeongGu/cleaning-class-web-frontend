@@ -3,7 +3,6 @@ import Script from "next/script";
 import "@/app/globals.css";
 import {
   generateBreadcrumbListJsonLd,
-  generateFaqPageJsonLd,
   generateLocalBusinessJsonLd,
   generateWebSiteJsonLd,
 } from "@/shared/lib/json-ld";
@@ -46,13 +45,14 @@ async function getPretendardCss(): Promise<string> {
       /url\(\.\.\/\.\.\/\.\.\/packages\/pretendard\/dist\/web\/variable\//g,
       `url(${cdnBase}`,
     );
+    // </style> 및 <!-- 시퀀스 이스케이프: CDN 응답이 style 태그 탈출이나 HTML 주석 주입을 시도하는 경우 방어
+    css = css.replace(/<\/style/gi, "<\\/style").replace(/<!--/g, "<\\!--");
     return css;
   } catch {
     return "";
   }
 }
 
-// ISR: layout 수준에서도 1시간마다 재검증
 export const revalidate = 3600;
 
 export const viewport: Viewport = {
@@ -105,17 +105,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "청소클라쓰",
-    description: "공간의 본질을 되찾는 시간. 전북 지역 전문 청소 서비스",
-    images: [
-      {
-        url: "/opengraph-image",
-        alt: "청소클라쓰 — 전북 전주 전문 청소 서비스",
-      },
-    ],
-  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -140,7 +129,6 @@ export default async function RootLayout({
   ]);
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
   const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
-  const faqPageJsonLd = generateFaqPageJsonLd();
   const breadcrumbListJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
   ]);
@@ -148,19 +136,12 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Pretendard: CDN CSS를 인라인화 (font-display:swap 유지) */}
         {pretendardCss && (
           // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 인라인. XSS 위험 없음 (고정 URL, Content-Type 검증 완료)
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
         )}
       </head>
       <body className="font-sans antialiased">
-        {/*
-          JSON-LD 구조화 데이터 삽입.
-          dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
-          @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
-          jsonLd 객체는 서버에서 생성되며 사용자 입력을 포함하지 않으므로 XSS 위험 없음.
-        */}
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"
@@ -177,14 +158,6 @@ export default async function RootLayout({
           }}
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
-        {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- FAQPage JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(faqPageJsonLd).replace(/</g, "\\u003c"),
-          }}
-        />
-        {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}
         <script
           type="application/ld+json"
@@ -197,7 +170,6 @@ export default async function RootLayout({
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
         {children}
-        {/* GA_ID가 설정된 경우에만 Google Analytics 스크립트 삽입 */}
         {GA_ID && (
           <>
             <Script
@@ -214,7 +186,6 @@ export default async function RootLayout({
             </Script>
           </>
         )}
-        {/* CLARITY_ID가 설정된 경우에만 Microsoft Clarity 스크립트 삽입 */}
         {CLARITY_ID && (
           <Script id="ms-clarity" strategy="afterInteractive">
             {`

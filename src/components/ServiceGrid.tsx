@@ -26,7 +26,6 @@ export function ServiceGrid({ services }: { services: ServiceItem[] }) {
 
   const hasAfterImages = services.some((s) => s.afterImageUrl);
 
-  // 터치 디바이스 감지 + 동기화 인터벌
   useEffect(() => {
     if (!hasAfterImages) return;
 

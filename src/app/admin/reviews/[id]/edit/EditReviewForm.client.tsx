@@ -6,14 +6,7 @@ import { updateReview } from "@/shared/actions/review";
 import { Loader2, X, Plus } from "lucide-react";
 import Image from "next/image";
 import type { Review } from "@/shared/types/database";
-
-const SERVICE_TYPES = [
-  "거주청소",
-  "정기청소",
-  "특수청소",
-  "쓰레기집청소",
-  "상가청소",
-];
+import { SERVICE_TYPES } from "@/shared/lib/constants";
 
 interface EditReviewFormProps {
   review: Review;
@@ -30,7 +23,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
   const [tags, setTags] = useState<string[]>(review.tags ?? []);
   const [tagInput, setTagInput] = useState("");
   const existingService = (review.tags ?? []).find((t) =>
-    SERVICE_TYPES.includes(t),
+    (SERVICE_TYPES as readonly string[]).includes(t),
   );
   const [selectedService, setSelectedService] = useState<string>(
     existingService || "",
@@ -175,7 +168,7 @@ export function EditReviewForm({ review, imageUrl }: EditReviewFormProps) {
               key={type}
               type="button"
               onClick={() => {
-                const filtered = tags.filter((t) => !SERVICE_TYPES.includes(t));
+                const filtered = tags.filter((t) => !(SERVICE_TYPES as readonly string[]).includes(t));
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}

@@ -5,8 +5,8 @@ import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
 import { formatPhoneNumber } from "@/shared/lib/format";
+import { INQUIRY_SERVICE_OPTIONS } from "@/shared/lib/constants";
 
-// 커스텀 드롭다운 컴포넌트
 interface CustomDropdownProps {
   label: string;
   name: string;
@@ -31,7 +31,6 @@ function CustomDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     function handleClickOutside(event: PointerEvent) {
       if (
@@ -55,7 +54,7 @@ function CustomDropdown({
 
   return (
     <div className="group" ref={dropdownRef}>
-      <label className="mb-3 block text-xs font-bold tracking-wider text-slate-900">
+      <label className="form-label-sm">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
       </label>
@@ -63,7 +62,7 @@ function CustomDropdown({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex min-h-12 w-full items-center justify-between border-b border-slate-200 bg-transparent py-3 text-left text-lg font-light transition-colors outline-none focus:border-slate-900"
+          className="flex min-h-9 w-full items-center justify-between border-b border-slate-200 bg-transparent py-2 text-left text-sm font-light transition-colors outline-none focus:border-slate-900"
         >
           <span className={value ? "text-slate-900" : "text-slate-400"}>
             {value || placeholder || "선택해주세요"}
@@ -71,13 +70,13 @@ function CustomDropdown({
           <ArrowDown size={16} className="text-slate-400" />
         </button>
         {isOpen && (
-          <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 [&::-webkit-scrollbar-track]:bg-transparent">
+          <div className="scrollbar-thin absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg">
             {options.map((option) => (
               <button
                 key={option}
                 type="button"
                 onClick={() => handleSelect(option)}
-                className="w-full px-4 py-3 text-left text-lg font-light transition-colors hover:bg-slate-50"
+                className="w-full px-3 py-2 text-left text-sm font-light transition-colors hover:bg-slate-50"
               >
                 {option}
               </button>
@@ -86,7 +85,7 @@ function CustomDropdown({
         )}
         <input type="hidden" name={name} value={value} />
       </div>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   );
 }
@@ -117,7 +116,7 @@ export function ContactForm({ phone }: ContactFormProps) {
   const isSuccess = state?.success === true;
   const showSuccess = isSuccess && !isReset;
 
-  // 언마운트 시 최신 previewUrls를 해제하기 위한 ref
+  // 언마운트 시점에 최신 URL 목록을 참조하기 위한 ref (클로저 stale 방지)
   const previewUrlsRef = useRef(previewUrls);
 
   useEffect(() => {
@@ -130,7 +129,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     };
   }, []);
 
-  // IntersectionObserver로 섹션 진입 애니메이션
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -149,15 +147,11 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => observer.disconnect();
   }, []);
 
-  // 전송 성공 시 3초간 메시지 표시 후 폼 리셋
   useEffect(() => {
     if (!isSuccess || isReset) return;
 
     const timer = setTimeout(() => {
-      // blob URL 해제
       previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
-
-      // React 상태 초기화
       setImages([]);
       setPreviewUrls([]);
       setMessageLength(0);
@@ -166,7 +160,6 @@ export function ContactForm({ phone }: ContactFormProps) {
       setRegion("");
       setIsReset(true);
 
-      // DOM 입력 필드 초기화
       if (nameRef.current) nameRef.current.value = "";
       if (phoneRef.current) phoneRef.current.value = "";
       if (messageRef.current) messageRef.current.value = "";
@@ -202,12 +195,10 @@ export function ContactForm({ phone }: ContactFormProps) {
       return;
     }
 
-    // 새 파일들의 blob URL 생성
     const newUrls = files.map((file) => URL.createObjectURL(file));
     setImages(newImages);
     setPreviewUrls((prev) => [...prev, ...newUrls]);
 
-    // DataTransfer API를 사용하여 input.files 갱신
     if (fileInputRef.current) {
       const dataTransfer = new DataTransfer();
       newImages.forEach((file) => dataTransfer.items.add(file));
@@ -216,7 +207,6 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   const handleImageRemove = (index: number) => {
-    // 제거될 이미지의 blob URL 해제
     URL.revokeObjectURL(previewUrls[index]);
 
     const newImages = images.filter((_, i) => i !== index);
@@ -224,7 +214,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     setImages(newImages);
     setPreviewUrls(newUrls);
 
-    // DataTransfer API를 사용하여 input.files 갱신
     if (fileInputRef.current) {
       const dataTransfer = new DataTransfer();
       newImages.forEach((file) => dataTransfer.items.add(file));
@@ -233,22 +222,20 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   return (
-    <section ref={sectionRef} id="contact" className="bg-white py-16 md:py-32">
-      <div className="container mx-auto max-w-2xl px-4">
+    <section ref={sectionRef} id="contact" className="bg-white py-10 md:py-16">
+      <div className="container mx-auto max-w-lg px-4">
         <div
-          className={`mb-16 text-center transition-all duration-700 ${
+          className={`mb-8 text-center transition-all duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
-            CONTACT
-          </h2>
+          <h2 className="text-heading-1 mb-3">CONTACT</h2>
           {phone && (
             <p className="mt-3 text-sm text-slate-600">
               유선상담{" "}
               <a
                 href={`tel:${phone}`}
-                className="inline-flex min-h-12 items-center px-1 font-bold text-slate-900 hover:underline"
+                className="inline-flex items-center px-1 font-bold text-slate-900 hover:underline"
               >
                 {phone}
               </a>
@@ -258,17 +245,14 @@ export function ContactForm({ phone }: ContactFormProps) {
 
         <form
           action={formAction}
-          className={`space-y-12 transition-all delay-200 duration-700 ${
+          className={`space-y-6 transition-all delay-200 duration-700 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
           }`}
         >
-          <div className="space-y-8">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <div className="group">
-                <label
-                  htmlFor="name"
-                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
-                >
+                <label htmlFor="name" className="form-label-sm">
                   성함
                   <span className="ml-1 text-red-500">*</span>
                 </label>
@@ -278,21 +262,16 @@ export function ContactForm({ phone }: ContactFormProps) {
                   name="name"
                   type="text"
                   required
-                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="form-input"
                   placeholder="이름을 입력하세요"
                   onInput={checkFormValidity}
                 />
                 {state?.errors?.name && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {state.errors.name[0]}
-                  </p>
+                  <p className="form-error">{state.errors.name[0]}</p>
                 )}
               </div>
               <div className="group">
-                <label
-                  htmlFor="phone"
-                  className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
-                >
+                <label htmlFor="phone" className="form-label-sm">
                   연락처
                   <span className="ml-1 text-red-500">*</span>
                 </label>
@@ -307,13 +286,11 @@ export function ContactForm({ phone }: ContactFormProps) {
                     input.value = formatPhoneNumber(input.value);
                     checkFormValidity();
                   }}
-                  className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900"
+                  className="form-input"
                   placeholder="010-0000-0000"
                 />
                 {state?.errors?.phone && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {state.errors.phone[0]}
-                  </p>
+                  <p className="form-error">{state.errors.phone[0]}</p>
                 )}
               </div>
             </div>
@@ -321,14 +298,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             <CustomDropdown
               label="서비스 종류"
               name="serviceType"
-              options={[
-                "거주청소",
-                "정기청소",
-                "특수청소",
-                "쓰레기집청소",
-                "상가청소",
-                "기타 문의",
-              ]}
+              options={INQUIRY_SERVICE_OPTIONS}
               placeholder="서비스를 선택해주세요"
               required
               error={state?.errors?.serviceType?.[0]}
@@ -370,10 +340,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             />
 
             <div className="group">
-              <label
-                htmlFor="message"
-                className="mb-3 block text-xs font-bold tracking-wider text-slate-900"
-              >
+              <label htmlFor="message" className="form-label-sm">
                 문의사항
                 <span className="ml-1 text-red-500">*</span>
               </label>
@@ -381,10 +348,10 @@ export function ContactForm({ phone }: ContactFormProps) {
                 ref={messageRef}
                 id="message"
                 name="message"
-                rows={6}
+                rows={3}
                 maxLength={1000}
                 required
-                className="w-full resize-none overflow-y-auto border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-400 focus:border-slate-900 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
+                className="scrollbar-thin form-input resize-none overflow-y-auto"
                 placeholder="문의 내용을 자유롭게 작성해주세요"
                 onInput={(e) => {
                   setMessageLength(e.currentTarget.value.length);
@@ -394,9 +361,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               <div className="mt-1 flex justify-between">
                 <div>
                   {state?.errors?.message && (
-                    <p className="text-xs text-red-500">
-                      {state.errors.message[0]}
-                    </p>
+                    <p className="form-error">{state.errors.message[0]}</p>
                   )}
                 </div>
                 <span className="text-xs text-slate-400">
@@ -404,10 +369,8 @@ export function ContactForm({ phone }: ContactFormProps) {
                 </span>
               </div>
 
-              {/* 이미지 첨부 */}
-              <div className="mt-8">
+              <div className="mt-4">
                 <div className="flex items-center gap-4">
-                  {/* 이미지 미리보기 그리드 */}
                   {images.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {images.map((file, index) => (
@@ -437,7 +400,6 @@ export function ContactForm({ phone }: ContactFormProps) {
                     </div>
                   )}
 
-                  {/* 파일 추가 버튼 */}
                   <label className="group/add flex shrink-0 cursor-pointer items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center border border-slate-200 text-slate-400 transition-colors group-hover/add:border-slate-900 group-hover/add:text-slate-900">
                       <Plus size={20} />
@@ -460,15 +422,11 @@ export function ContactForm({ phone }: ContactFormProps) {
             </div>
           </div>
 
-          <div className="pt-8 text-center">
+          <div className="pt-4 text-center">
             <button
               type="submit"
               disabled={isPending || !formValid}
-              className={`px-12 py-4 text-sm font-bold tracking-widest transition-all disabled:cursor-not-allowed ${
-                formValid && !isPending
-                  ? "bg-slate-900 text-white hover:bg-slate-800"
-                  : "border border-slate-200 bg-slate-200 text-slate-400"
-              }`}
+              className="btn-primary px-10 py-3"
             >
               {isPending ? (
                 <span className="flex items-center justify-center gap-2">
@@ -483,11 +441,9 @@ export function ContactForm({ phone }: ContactFormProps) {
               )}
             </button>
             {showSuccess && state?.message && (
-              <p className="mt-4 text-sm text-green-600">{state.message}</p>
+              <p className="form-success mt-4">{state.message}</p>
             )}
-            {state?.error && (
-              <p className="mt-4 text-sm text-red-600">{state.error}</p>
-            )}
+            {state?.error && <p className="form-error mt-4">{state.error}</p>}
           </div>
         </form>
       </div>

@@ -23,14 +23,20 @@ export function InlineDescriptionEditor({
 
   const handleSave = async () => {
     setIsSaving(true);
-    const result = await onSave(draft);
-    setIsSaving(false);
-
-    if (result.success) {
-      setValue(draft);
-      setIsEditing(false);
-    } else {
-      alert(result.error || "저장 중 오류가 발생했습니다.");
+    try {
+      const result = await onSave(draft);
+      if (result.success) {
+        setValue(draft);
+        setIsEditing(false);
+      } else {
+        alert(result.error || "저장 중 오류가 발생했습니다.");
+      }
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "저장 중 오류가 발생했습니다.";
+      alert(message);
+    } finally {
+      setIsSaving(false);
     }
   };
 

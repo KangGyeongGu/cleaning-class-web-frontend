@@ -1,0 +1,15 @@
+import { getUser } from "@/shared/lib/supabase/auth";
+import { getNextFaqDisplayOrder } from "@/shared/lib/queries/faq";
+import { NewFaqForm } from "@/app/admin/faq/new/NewFaqForm.client";
+
+export default async function NewFaqPage() {
+  await getUser();
+  const nextDisplayOrder = await getNextFaqDisplayOrder();
+
+  return (
+    <div className="mx-auto max-w-4xl p-8">
+      <h1 className="mb-8 text-3xl font-black text-slate-900">FAQ 신규 등록</h1>
+      <NewFaqForm defaultDisplayOrder={nextDisplayOrder} />
+    </div>
+  );
+}

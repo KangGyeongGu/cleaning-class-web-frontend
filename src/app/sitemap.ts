@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { data: serviceData, error: serviceError },
     { data: reviewData, error: reviewError },
     { data: configData, error: configError },
+    { data: faqData, error: faqError },
   ] = await Promise.all([
     supabase
       .from("services")
@@ -23,6 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .limit(1)
       .single(),
     supabase.from("site_config").select("updated_at").limit(1).single(),
+    supabase
+      .from("faqs")
+      .select("updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single(),
   ]);
 
   // PGRST116은 빈 테이블에서 .single() 호출 시 발생 — 정상 케이스이므로 무시
@@ -32,14 +39,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[sitemap] reviews 조회 실패:", reviewError);
   if (configError && configError.code !== "PGRST116")
     console.error("[sitemap] site_config 조회 실패:", configError);
+  if (faqError && faqError.code !== "PGRST116")
+    console.error("[sitemap] faqs 조회 실패:", faqError);
 
   const dates = [
     serviceData?.updated_at,
     reviewData?.updated_at,
     configData?.updated_at,
+    faqData?.updated_at,
   ]
-    .filter(Boolean)
-    .map((d) => new Date(d as string));
+    .filter((d): d is string => typeof d === "string")
+    .map((d) => new Date(d));
 
   const lastModified =
     dates.length > 0
@@ -52,6 +62,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified,
       changeFrequency: "weekly",
       priority: 1.0,
+    },
+    // 정책 페이지: 변경 빈도가 낮으므로 yearly, 낮은 우선순위 적용
+    {
+      url: "https://www.cleaningclass.co.kr/policy/privacy",
+      lastModified: new Date("2026-03-23T00:00:00.000Z"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: "https://www.cleaningclass.co.kr/policy/terms",
+      lastModified: new Date("2026-03-23T00:00:00.000Z"),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: "https://www.cleaningclass.co.kr/help",
+      lastModified: faqData?.updated_at
+        ? new Date(faqData.updated_at as string)
+        : new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
   ];
 }

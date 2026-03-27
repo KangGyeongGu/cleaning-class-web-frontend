@@ -12,7 +12,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     <div className="min-h-screen bg-white">
       <AdminSidebar />
 
-      {/* Main Content */}
       <main className="pt-16 md:ml-64 md:pt-0">{children}</main>
     </div>
   );

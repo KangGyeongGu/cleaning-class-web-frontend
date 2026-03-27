@@ -10,15 +10,10 @@ import type { ReviewInsert, ReviewUpdate } from "@/shared/types/database";
 const BUCKET = "review-images";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-/**
- * 리뷰 생성 Server Action
- */
 export async function createReview(prevState: unknown, formData: FormData) {
   try {
-    // 1. 인증 확인
     await getUser();
 
-    // 2. FormData 파싱
     let parsedTags: unknown;
     try {
       parsedTags = formData.get("tags")
@@ -40,7 +35,6 @@ export async function createReview(prevState: unknown, formData: FormData) {
       is_published: formData.get("is_published") === "true",
     };
 
-    // 3. Zod 검증
     const validationResult = reviewFormSchema.safeParse(rawData);
     if (!validationResult.success) {
       return {
@@ -49,7 +43,6 @@ export async function createReview(prevState: unknown, formData: FormData) {
       };
     }
 
-    // 4. 이미지 업로드 (필수)
     const imageFile = formData.get("image") as File | null;
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "이미지를 선택해주세요." };
@@ -61,7 +54,6 @@ export async function createReview(prevState: unknown, formData: FormData) {
 
     imagePath = await uploadImage(BUCKET, imageFile);
 
-    // 5. DB INSERT
     const supabase = await createClient();
     const reviewData: ReviewInsert = {
       ...validationResult.data,
@@ -71,7 +63,7 @@ export async function createReview(prevState: unknown, formData: FormData) {
     const { error } = await supabase.from("reviews").insert(reviewData);
 
     if (error) {
-      // 실패 시 업로드된 이미지 삭제
+      // DB 실패 시 이미 업로드된 이미지 롤백
       if (imagePath) {
         await deleteImage(BUCKET, imagePath);
       }
@@ -79,7 +71,6 @@ export async function createReview(prevState: unknown, formData: FormData) {
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // 6. 캐시 무효화
     revalidatePath("/");
     revalidatePath("/admin/reviews");
 
@@ -96,19 +87,14 @@ export async function createReview(prevState: unknown, formData: FormData) {
   }
 }
 
-/**
- * 리뷰 수정 Server Action
- */
 export async function updateReview(
   reviewId: string,
   prevState: unknown,
   formData: FormData,
 ) {
   try {
-    // 1. 인증 확인
     await getUser();
 
-    // 2. FormData 파싱
     let parsedTagsUpdate: unknown;
     try {
       parsedTagsUpdate = formData.get("tags")
@@ -130,7 +116,6 @@ export async function updateReview(
       is_published: formData.get("is_published") === "true",
     };
 
-    // 3. Zod 검증
     const validationResult = reviewFormSchema.safeParse(rawData);
     if (!validationResult.success) {
       return {
@@ -141,7 +126,6 @@ export async function updateReview(
 
     const supabase = await createClient();
 
-    // 4. 기존 리뷰 조회
     const { data: existingReview, error: fetchError } = await supabase
       .from("reviews")
       .select("image_path")
@@ -156,7 +140,6 @@ export async function updateReview(
     const existingImagePath = (existingReview as { image_path: string })
       .image_path;
 
-    // 5. 이미지 교체 처리
     const imageFile = formData.get("image") as File | null;
     let newImagePath = existingImagePath;
 
@@ -164,11 +147,10 @@ export async function updateReview(
       if (imageFile.size > MAX_FILE_SIZE) {
         return { success: false, error: "파일 크기는 10MB 이하여야 합니다" };
       }
-      // 새 이미지 업로드 먼저 (기존 이미지는 DB UPDATE 성공 후 삭제)
+      // 새 이미지 업로드 먼저, 기존 이미지는 DB UPDATE 성공 후 삭제
       newImagePath = await uploadImage(BUCKET, imageFile);
     }
 
-    // 6. DB UPDATE
     const reviewData: ReviewUpdate = {
       ...validationResult.data,
       image_path: newImagePath,
@@ -181,7 +163,7 @@ export async function updateReview(
       .eq("id", reviewId);
 
     if (updateError) {
-      // 실패 시 새로 업로드된 이미지만 삭제 (기존 이미지는 건드리지 않음)
+      // DB 실패 시 새로 업로드된 이미지만 롤백 (기존 이미지는 건드리지 않음)
       if (newImagePath !== existingImagePath) {
         await deleteImage(BUCKET, newImagePath);
       }
@@ -189,7 +171,6 @@ export async function updateReview(
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // DB UPDATE 성공 시 기존 이미지 삭제
     if (
       imageFile &&
       imageFile.size > 0 &&
@@ -199,7 +180,6 @@ export async function updateReview(
       await deleteImage(BUCKET, existingImagePath);
     }
 
-    // 7. 캐시 무효화
     revalidatePath("/");
     revalidatePath("/admin/reviews");
 
@@ -216,17 +196,12 @@ export async function updateReview(
   }
 }
 
-/**
- * 리뷰 삭제 Server Action
- */
 export async function deleteReview(reviewId: string) {
   try {
-    // 1. 인증 확인
     await getUser();
 
     const supabase = await createClient();
 
-    // 2. 기존 리뷰 조회 (이미지 경로 확인)
     const { data: existingReview, error: fetchError } = await supabase
       .from("reviews")
       .select("image_path")
@@ -241,7 +216,6 @@ export async function deleteReview(reviewId: string) {
     const existingImagePath = (existingReview as { image_path: string })
       .image_path;
 
-    // 3. DB DELETE
     const { error: deleteError } = await supabase
       .from("reviews")
       .delete()
@@ -252,12 +226,10 @@ export async function deleteReview(reviewId: string) {
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // 4. Storage 이미지 삭제
     if (existingImagePath) {
       await deleteImage(BUCKET, existingImagePath);
     }
 
-    // 5. 캐시 무효화
     revalidatePath("/");
     revalidatePath("/admin/reviews");
 
@@ -274,18 +246,13 @@ export async function deleteReview(reviewId: string) {
   }
 }
 
-/**
- * 리뷰 게시 상태 토글 Server Action
- */
 export async function toggleReviewPublish(
   reviewId: string,
   isPublished: boolean,
 ) {
   try {
-    // 1. 인증 확인
     await getUser();
 
-    // 2. DB UPDATE
     const supabase = await createClient();
     const { error } = await supabase
       .from("reviews")
@@ -300,7 +267,6 @@ export async function toggleReviewPublish(
       throw new Error("리뷰 처리 중 오류가 발생했습니다.");
     }
 
-    // 3. 캐시 무효화
     revalidatePath("/");
     revalidatePath("/admin/reviews");
 
@@ -317,9 +283,6 @@ export async function toggleReviewPublish(
   }
 }
 
-/**
- * 리뷰 순서 일괄 변경 Server Action
- */
 export async function reorderReviews(
   orderedIds: string[],
 ): Promise<{ success: boolean; error?: string }> {
@@ -331,17 +294,16 @@ export async function reorderReviews(
 
     const supabase = await createClient();
 
-    const results = await Promise.all(
-      orderedIds.map((id, i) =>
-        supabase.from("reviews").update({ sort_order: i }).eq("id", id),
-      ),
-    );
-    const failed = results.find((r) => r.error);
-    const error = failed?.error;
-
-    if (error) {
-      console.error("reorderReviews DB error:", error);
-      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+    // 첫 실패 시 즉시 반환하여 불일치 범위 최소화 (순차 실행)
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("reviews")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+      if (error) {
+        console.error("reorderReviews DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
     }
 
     revalidatePath("/");

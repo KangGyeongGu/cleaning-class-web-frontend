@@ -57,9 +57,11 @@ next-env.d.ts
 .vscode/
 
 # deprecated design docs (root level only)
-/AGENTS.md
 /CLAUDE.md
 /agent-orchestration-system.md
-agents-system.md
+agent-system.md
 research.md
 legacy
+policy.md
+seo-maximize.md
+seo-research.md

@@ -1,4 +1,4 @@
-// Supabase Database 타입 정의 (supabase gen types 기반)
+// supabase gen types 기반 자동 생성 — 수동 편집 금지
 
 export type Json =
   | string
@@ -56,7 +56,6 @@ export interface Database {
       services: {
         Row: {
           created_at: string;
-          // description: TASK-STR-003 전환 전까지 하위 호환 유지 (DB 컬럼이 남아있을 수 있음)
           description?: string;
           id: string;
           image_after_focal_x: number;
@@ -105,6 +104,36 @@ export interface Database {
         };
         Relationships: [];
       };
+      faqs: {
+        Row: {
+          answer: string;
+          created_at: string;
+          display_order: number;
+          id: string;
+          is_active: boolean;
+          question: string;
+          updated_at: string;
+        };
+        Insert: {
+          answer: string;
+          created_at?: string;
+          display_order?: number;
+          id?: string;
+          is_active?: boolean;
+          question: string;
+          updated_at?: string;
+        };
+        Update: {
+          answer?: string;
+          created_at?: string;
+          display_order?: number;
+          id?: string;
+          is_active?: boolean;
+          question?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       site_config: {
         Row: {
           address: string;
@@ -113,12 +142,14 @@ export interface Database {
           blog_url: string;
           business_name: string;
           business_registration_number: string | null;
+          daangn_url: string;
           description: string;
           email: string;
           id: string;
           instagram_url: string;
           phone: string;
           representative: string;
+          faq_description: string | null;
           review_description: string | null;
           service_description: string | null;
           site_url: string;
@@ -131,12 +162,14 @@ export interface Database {
           blog_url?: string;
           business_name?: string;
           business_registration_number?: string | null;
+          daangn_url?: string;
           description?: string;
           email?: string;
           id?: string;
           instagram_url?: string;
           phone?: string;
           representative?: string;
+          faq_description?: string | null;
           review_description?: string | null;
           service_description?: string | null;
           site_url?: string;
@@ -149,12 +182,14 @@ export interface Database {
           blog_url?: string;
           business_name?: string;
           business_registration_number?: string | null;
+          daangn_url?: string;
           description?: string;
           email?: string;
           id?: string;
           instagram_url?: string;
           phone?: string;
           representative?: string;
+          faq_description?: string | null;
           review_description?: string | null;
           service_description?: string | null;
           site_url?: string;
@@ -178,7 +213,6 @@ export interface Database {
   };
 }
 
-// 편의 타입 별칭
 export type SiteConfigRow = Database["public"]["Tables"]["site_config"]["Row"];
 export type SiteConfigInsert =
   Database["public"]["Tables"]["site_config"]["Insert"];
@@ -196,3 +230,7 @@ export type ServiceUpdate = Database["public"]["Tables"]["services"]["Update"];
 export type SiteConfig = SiteConfigRow;
 export type Review = ReviewRow;
 export type Service = ServiceRow;
+
+export type FaqRow = Database["public"]["Tables"]["faqs"]["Row"];
+export type FaqInsert = Database["public"]["Tables"]["faqs"]["Insert"];
+export type FaqUpdate = Database["public"]["Tables"]["faqs"]["Update"];

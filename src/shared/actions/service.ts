@@ -9,9 +9,6 @@ import type { ServiceInsert, ServiceUpdate } from "@/shared/types/database";
 
 const BUCKET = "service-images";
 
-/**
- * 서비스 생성 Server Action
- */
 export async function createService(prevState: unknown, formData: FormData) {
   try {
     await getUser();
@@ -39,11 +36,8 @@ export async function createService(prevState: unknown, formData: FormData) {
     if (!imageFile || imageFile.size === 0) {
       return { success: false, error: "Before 이미지를 선택해주세요." };
     }
-    let imagePath = "";
 
-    if (imageFile && imageFile.size > 0) {
-      imagePath = await uploadImage(BUCKET, imageFile);
-    }
+    const imagePath = await uploadImage(BUCKET, imageFile);
 
     const imageAfterFile = formData.get("image_after") as File | null;
     let imageAfterPath = "";
@@ -102,9 +96,6 @@ export async function createService(prevState: unknown, formData: FormData) {
   }
 }
 
-/**
- * 서비스 수정 Server Action
- */
 export async function updateService(
   serviceId: string,
   prevState: unknown,
@@ -164,7 +155,7 @@ export async function updateService(
       try {
         newImageAfterPath = await uploadImage(BUCKET, imageAfterFile);
       } catch (afterUploadErr) {
-        // after-image 업로드 실패 시, 이미 업로드된 before-image를 롤백
+        // after-image 업로드 실패 시 이미 업로드된 before-image 롤백
         console.error(
           "updateService: after-image upload failed:",
           afterUploadErr,
@@ -220,7 +211,7 @@ export async function updateService(
     revalidatePath("/");
     revalidatePath("/admin/services");
 
-    // DB 업데이트 성공 후 기존 이미지 삭제 (실패해도 성공 응답 유지)
+    // DB 업데이트 성공 후 기존 이미지 정리 (실패해도 성공 응답 유지)
     if (
       imageFile &&
       imageFile.size > 0 &&
@@ -259,9 +250,6 @@ export async function updateService(
   }
 }
 
-/**
- * 서비스 삭제 Server Action
- */
 export async function deleteService(serviceId: string) {
   try {
     await getUser();
@@ -325,9 +313,6 @@ export async function deleteService(serviceId: string) {
   }
 }
 
-/**
- * 서비스 게시 상태 토글 Server Action
- */
 export async function toggleServicePublish(
   serviceId: string,
   isPublished: boolean,
@@ -368,9 +353,6 @@ export async function toggleServicePublish(
   }
 }
 
-/**
- * 서비스 순서 일괄 변경 Server Action
- */
 export async function reorderServices(
   orderedIds: string[],
 ): Promise<{ success: boolean; error?: string }> {
@@ -382,15 +364,16 @@ export async function reorderServices(
 
     const supabase = await createClient();
 
-    const results = await Promise.all(
-      orderedIds.map((id, i) =>
-        supabase.from("services").update({ sort_order: i }).eq("id", id),
-      ),
-    );
-    const failed = results.find((r) => r.error);
-    if (failed?.error) {
-      console.error("reorderServices DB error:", failed.error);
-      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+    // 첫 실패 시 즉시 반환하여 불일치 범위 최소화 (순차 실행)
+    for (let i = 0; i < orderedIds.length; i++) {
+      const { error } = await supabase
+        .from("services")
+        .update({ sort_order: i })
+        .eq("id", orderedIds[i]);
+      if (error) {
+        console.error("reorderServices DB error:", error);
+        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
+      }
     }
 
     revalidatePath("/");

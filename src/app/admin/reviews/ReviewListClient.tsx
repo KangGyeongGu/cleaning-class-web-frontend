@@ -127,32 +127,20 @@ export function ReviewListClient({
         </div>
       )}
 
-      {/* Table Header */}
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          순서
-        </div>
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          이미지
-        </div>
-        <div className="col-span-3 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          제목
-        </div>
-        <div className="col-span-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          태그
-        </div>
-        <div className="col-span-1 text-center text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">순서</div>
+        <div className="text-label col-span-1 text-slate-500">이미지</div>
+        <div className="text-label col-span-3 text-slate-500">제목</div>
+        <div className="text-label col-span-2 text-slate-500">태그</div>
+        <div className="text-label col-span-1 text-center text-slate-500">
           게시
         </div>
-        <div className="col-span-2 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          등록일
-        </div>
-        <div className="col-span-2 text-right text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-2 text-slate-500">등록일</div>
+        <div className="text-label col-span-2 text-right text-slate-500">
           작업
         </div>
       </div>
 
-      {/* Table Body */}
       <div className="divide-y divide-slate-200">
         {reviews.map((review, index) => (
           <div
@@ -171,7 +159,6 @@ export function ReviewListClient({
                   : ""
             }`}
           >
-            {/* 드래그 핸들 */}
             <div className="col-span-1 flex items-center gap-2">
               <GripVertical
                 size={16}
@@ -180,9 +167,8 @@ export function ReviewListClient({
               <span className="text-xs text-slate-400">{index}</span>
             </div>
 
-            {/* 이미지 */}
             <div className="col-span-1">
-              <div className="relative h-16 w-16 border border-slate-200">
+              <div className="relative aspect-square h-16 w-16 border border-slate-200">
                 <Image
                   src={review.imageUrl}
                   alt={review.title}
@@ -193,7 +179,6 @@ export function ReviewListClient({
               </div>
             </div>
 
-            {/* 제목 */}
             <div className="col-span-3">
               <p className="line-clamp-2 text-sm font-bold text-slate-900">
                 {review.title}
@@ -203,7 +188,6 @@ export function ReviewListClient({
               </p>
             </div>
 
-            {/* 태그 */}
             <div className="col-span-2">
               <div className="flex flex-wrap gap-1">
                 {review.tags.map((tag) => (
@@ -217,7 +201,6 @@ export function ReviewListClient({
               </div>
             </div>
 
-            {/* 게시 상태 */}
             <div className="col-span-1 text-center">
               <button
                 type="button"
@@ -238,14 +221,12 @@ export function ReviewListClient({
               </button>
             </div>
 
-            {/* 등록일 */}
             <div className="col-span-2">
               <span className="text-xs text-slate-500">
                 {new Date(review.created_at).toLocaleDateString("ko-KR")}
               </span>
             </div>
 
-            {/* 작업 버튼 */}
             <div className="col-span-2 flex justify-end gap-2">
               <Link
                 href={`/admin/reviews/${review.id}/edit`}

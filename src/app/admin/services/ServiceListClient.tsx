@@ -127,32 +127,20 @@ export function ServiceListClient({
         </div>
       )}
 
-      {/* Table Header */}
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          순서
-        </div>
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          이미지
-        </div>
-        <div className="col-span-3 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          서비스명
-        </div>
-        <div className="col-span-3 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          설명
-        </div>
-        <div className="col-span-1 text-center text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">순서</div>
+        <div className="text-label col-span-1 text-slate-500">이미지</div>
+        <div className="text-label col-span-3 text-slate-500">서비스명</div>
+        <div className="text-label col-span-3 text-slate-500">설명</div>
+        <div className="text-label col-span-1 text-center text-slate-500">
           게시
         </div>
-        <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
-          등록일
-        </div>
-        <div className="col-span-2 text-right text-xs font-bold tracking-widest text-slate-500 uppercase">
+        <div className="text-label col-span-1 text-slate-500">등록일</div>
+        <div className="text-label col-span-2 text-right text-slate-500">
           작업
         </div>
       </div>
 
-      {/* Table Body */}
       <div className="divide-y divide-slate-200">
         {services.map((service, index) => (
           <div
@@ -171,7 +159,6 @@ export function ServiceListClient({
                   : ""
             }`}
           >
-            {/* 드래그 핸들 */}
             <div className="col-span-1 flex items-center gap-2">
               <GripVertical
                 size={16}
@@ -180,9 +167,8 @@ export function ServiceListClient({
               <span className="text-xs text-slate-400">{index}</span>
             </div>
 
-            {/* 이미지 */}
             <div className="col-span-1">
-              <div className="relative h-16 w-16 border border-slate-200">
+              <div className="relative aspect-square h-16 w-16 border border-slate-200">
                 <Image
                   src={service.imageUrl}
                   alt={service.title}
@@ -193,14 +179,12 @@ export function ServiceListClient({
               </div>
             </div>
 
-            {/* 서비스명 */}
             <div className="col-span-3">
               <p className="text-sm font-bold text-slate-900">
                 {service.title}
               </p>
             </div>
 
-            {/* 태그 */}
             <div className="col-span-3">
               <div className="flex flex-wrap gap-1">
                 {(service.tags ?? []).map((tag) => (
@@ -214,7 +198,6 @@ export function ServiceListClient({
               </div>
             </div>
 
-            {/* 게시 상태 */}
             <div className="col-span-1 text-center">
               <button
                 type="button"
@@ -235,14 +218,12 @@ export function ServiceListClient({
               </button>
             </div>
 
-            {/* 등록일 */}
             <div className="col-span-1">
               <span className="text-xs text-slate-500">
                 {new Date(service.created_at).toLocaleDateString("ko-KR")}
               </span>
             </div>
 
-            {/* 작업 버튼 */}
             <div className="col-span-2 flex justify-end gap-2">
               <Link
                 href={`/admin/services/${service.id}/edit`}

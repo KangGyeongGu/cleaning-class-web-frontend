@@ -2,10 +2,6 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "@/shared/types/database";
 
-/**
- * Server Component/Server Action용 Supabase 클라이언트 생성
- * Next.js 16의 async cookies() API 사용
- */
 export async function createClient() {
   const cookieStore = await cookies();
 

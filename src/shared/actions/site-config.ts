@@ -6,14 +6,14 @@ import { getUser } from "@/shared/lib/supabase/auth";
 import { siteConfigFormSchema } from "@/shared/lib/schema";
 import type { SiteConfigUpdate } from "@/shared/types/database";
 
-/** site_config의 단일 필드를 수정하는 공통 내부 함수 */
 const FIELD_REVALIDATE_MAP: Record<string, string> = {
+  faq_description: "/admin/faq",
   review_description: "/admin/reviews",
   service_description: "/admin/services",
 };
 
 async function updateSiteConfigField(
-  field: "review_description" | "service_description",
+  field: "faq_description" | "review_description" | "service_description",
   value: string,
 ) {
   try {
@@ -61,29 +61,23 @@ async function updateSiteConfigField(
   }
 }
 
-/**
- * 리뷰 안내 문구 수정 Server Action
- */
+export async function updateFaqDescription(description: string) {
+  return updateSiteConfigField("faq_description", description);
+}
+
 export async function updateReviewDescription(description: string) {
   return updateSiteConfigField("review_description", description);
 }
 
-/**
- * 서비스 안내 문구 수정 Server Action
- */
 export async function updateServiceDescription(description: string) {
   return updateSiteConfigField("service_description", description);
 }
 
-/**
- * 업체 정보(site_config) 수정 Server Action
- */
 export async function updateSiteConfig(prevState: unknown, formData: FormData) {
   try {
-    // 1. 인증 확인
     await getUser();
 
-    // 2. DB에서 현재 행 조회 (클라이언트 변조 불가 필드를 서버에서 직접 읽기)
+    // site_url, address_region, address_locality는 클라이언트 변조 방지를 위해 DB에서 직접 읽음
     const supabase = await createClient();
     const { data: current, error: fetchConfigError } = await supabase
       .from("site_config")
@@ -104,7 +98,6 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
 
-    // 3. FormData 파싱 (site_url, address_region, address_locality는 DB 값 사용)
     const rawData = {
       business_name: formData.get("business_name"),
       representative: formData.get("representative") || "",
@@ -114,6 +107,7 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       email: formData.get("email"),
       blog_url: formData.get("blog_url") || "",
       instagram_url: formData.get("instagram_url") || "",
+      daangn_url: formData.get("daangn_url") || "",
       site_url: current.site_url,
       description: formData.get("description") || "",
       address_region: current.address_region,
@@ -121,7 +115,6 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       address: formData.get("address") || "",
     };
 
-    // 4. Zod 검증
     const validationResult = siteConfigFormSchema.safeParse(rawData);
     if (!validationResult.success) {
       return {
@@ -130,11 +123,11 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       };
     }
 
-    // 5. DB UPDATE
     const configData: SiteConfigUpdate = {
       ...validationResult.data,
       blog_url: validationResult.data.blog_url || "",
       instagram_url: validationResult.data.instagram_url || "",
+      daangn_url: validationResult.data.daangn_url || "",
       description: validationResult.data.description || "",
       address: validationResult.data.address || "",
       updated_at: new Date().toISOString(),
@@ -150,7 +143,6 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
       throw new Error("설정 처리 중 오류가 발생했습니다.");
     }
 
-    // 6. 캐시 무효화 (공개 페이지 즉시 반영)
     revalidatePath("/");
     revalidatePath("/admin/config");
 

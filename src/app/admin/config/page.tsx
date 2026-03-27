@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteConfig } from "@/shared/lib/site-config";
-import { SiteConfigForm } from "@/app/admin/config/SiteConfigForm";
+import { SiteConfigForm } from "@/app/admin/config/SiteConfigForm.client";
 
 export const metadata: Metadata = {
   title: "업체 정보",
