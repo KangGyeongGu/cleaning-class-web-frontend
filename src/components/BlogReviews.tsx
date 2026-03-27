@@ -11,8 +11,7 @@ import type { Review } from "@/shared/types/database";
 import { NaverBlogIcon } from "@/components/icons/SocialIcons";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
-const BLUR_PLACEHOLDER =
-  "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 
 export interface ReviewWithUrl extends Review {
   imageUrl: string;
@@ -61,7 +60,7 @@ function ReviewCard({ review }: { review: ReviewWithUrl }) {
           src={review.imageUrl}
           alt={review.title}
           fill
-          sizes="(max-width: 768px) 75vw, (max-width: 1280px) 33vw, 25vw"
+          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 33vw, 25vw"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"

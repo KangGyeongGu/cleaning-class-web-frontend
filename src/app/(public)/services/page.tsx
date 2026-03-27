@@ -6,6 +6,7 @@ import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
 import { ServiceBeforeAfter } from "@/components/ServiceBeforeAfter.client";
 import { HashHighlight } from "@/app/(public)/services/HashHighlight.client";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 
 export const revalidate = 3600;
 
@@ -137,7 +138,10 @@ function ServiceCategorySection({
                             src={service.detailImageUrl!}
                             alt={service.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, 320px"
+                            priority={index === 0}
+                            sizes="(max-width: 768px) calc(100vw - 48px), 320px"
+                            placeholder="blur"
+                            blurDataURL={BLUR_PLACEHOLDER}
                             className="object-cover"
                           />
                         </div>

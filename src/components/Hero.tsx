@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { getHeroImageUrl } from "@/shared/lib/supabase/storage";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 import { HeroCTA } from "@/components/HeroCTA";
 
 export async function Hero(): Promise<React.JSX.Element> {
@@ -36,7 +37,7 @@ export async function Hero(): Promise<React.JSX.Element> {
     <section
       className={[
         "relative flex w-full flex-col items-center justify-center overflow-hidden",
-        "h-[50vh] py-12 md:h-auto md:min-h-[50vh] md:py-20",
+        "h-[50svh] py-12 md:h-auto md:min-h-[50svh] md:py-20",
         hasAnyImage ? "bg-slate-900 text-white" : "bg-white text-slate-900",
       ].join(" ")}
     >
@@ -47,9 +48,7 @@ export async function Hero(): Promise<React.JSX.Element> {
               <div
                 className="absolute top-0 bottom-0 left-0 overflow-hidden"
                 style={{
-                  ...(hasBothImages
-                    ? { width: "100%" }
-                    : { width: "100%" }),
+                  width: "100%",
                   animation: hasBothImages
                     ? "heroImageSlideLeft 1.4s cubic-bezier(0.16,1,0.3,1) both"
                     : "heroImageReveal 1.6s cubic-bezier(0.16,1,0.3,1) both",
@@ -67,6 +66,8 @@ export async function Hero(): Promise<React.JSX.Element> {
                     src={heroImage1}
                     fill
                     priority
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
                     alt={`${displayName} 청소 서비스`}
                     className="object-cover"
                     style={{ objectPosition: `${focal1.x}% ${focal1.y}%` }}
@@ -79,9 +80,7 @@ export async function Hero(): Promise<React.JSX.Element> {
               <div
                 className="absolute top-0 right-0 bottom-0 overflow-hidden"
                 style={{
-                  ...(hasImage1
-                    ? { width: "100%" }
-                    : { width: "100%" }),
+                  width: "100%",
                   animation: hasImage1
                     ? "heroImageSlideRight 1.4s 0.15s cubic-bezier(0.16,1,0.3,1) both"
                     : "heroImageReveal 1.6s cubic-bezier(0.16,1,0.3,1) both",
@@ -97,7 +96,9 @@ export async function Hero(): Promise<React.JSX.Element> {
                   <Image
                     src={heroImage2}
                     fill
-                    priority={!hasImage1}
+                    priority
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
                     alt={`${displayName} 청소 서비스 현장`}
                     className="object-cover"
                     style={{ objectPosition: `${focal2.x}% ${focal2.y}%` }}
@@ -122,11 +123,11 @@ export async function Hero(): Promise<React.JSX.Element> {
             aria-hidden="true"
           />
           <div
-            className="absolute top-1/4 right-1/4 hidden h-64 w-64 animate-[floatUp_6s_ease-in-out_infinite] rounded-full bg-gradient-to-b from-slate-50 to-white opacity-60 md:block md:blur-2xl"
+            className="absolute top-1/4 right-1/4 hidden h-64 w-64 rounded-full bg-gradient-to-b from-slate-50 to-white opacity-60 md:block md:blur-2xl"
             aria-hidden="true"
           />
           <div
-            className="absolute bottom-1/3 left-1/4 hidden h-48 w-48 animate-[floatDown_7s_1s_ease-in-out_infinite] rounded-full bg-gradient-to-t from-slate-50 to-white opacity-60 md:block md:blur-2xl"
+            className="absolute bottom-1/3 left-1/4 hidden h-48 w-48 rounded-full bg-gradient-to-t from-slate-50 to-white opacity-60 md:block md:blur-2xl"
             aria-hidden="true"
           />
         </>
@@ -138,7 +139,7 @@ export async function Hero(): Promise<React.JSX.Element> {
           hasAnyImage
             ? {
                 animation:
-                  "fadeInScale 0.8s 2s cubic-bezier(0.16,1,0.3,1) both",
+                  "fadeInScale 0.8s 1s cubic-bezier(0.16,1,0.3,1) both",
               }
             : undefined
         }

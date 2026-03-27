@@ -8,19 +8,18 @@ function buildTransformUrl(
   baseUrl: string,
   options: ImageTransformOptions,
 ): string {
-  const renderUrl = baseUrl.replace(
+  const url = new URL(baseUrl);
+  url.pathname = url.pathname.replace(
     "/storage/v1/object/public/",
     "/storage/v1/render/image/public/",
   );
 
-  const params = new URLSearchParams();
-  if (options.width !== undefined) params.set("width", String(options.width));
+  if (options.width !== undefined) url.searchParams.set("width", String(options.width));
   if (options.quality !== undefined)
-    params.set("quality", String(options.quality));
-  if (options.format !== undefined) params.set("format", options.format);
+    url.searchParams.set("quality", String(options.quality));
+  if (options.format !== undefined) url.searchParams.set("format", options.format);
 
-  const query = params.toString();
-  return query ? `${renderUrl}?${query}` : renderUrl;
+  return url.toString();
 }
 
 export function getReviewImageUrl(

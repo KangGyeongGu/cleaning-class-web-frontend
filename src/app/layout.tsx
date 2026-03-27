@@ -19,8 +19,6 @@ const CLARITY_ID = ANALYTICS_ID_PATTERN.test(
   ? (process.env.NEXT_PUBLIC_CLARITY_ID ?? "")
   : "";
 
-export const revalidate = 3600;
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,

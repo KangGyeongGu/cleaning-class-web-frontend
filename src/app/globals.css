@@ -142,27 +142,6 @@
     }
   }
 
-  /* Hero 장식 요소 float 애니메이션 (CSS-only, motion/react 대체) */
-  @keyframes floatUp {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-30px);
-    }
-  }
-
-  @keyframes floatDown {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(40px);
-    }
-  }
-
   /* Hero CTA 버튼 페이드인 애니메이션 */
   @keyframes fadeInScale {
     from {
@@ -284,6 +263,15 @@
       opacity: 1;
       transform: none;
       transition: none;
+    }
+
+    /* Hero 인라인 애니메이션 및 전역 transition 억제 */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
   }
 }

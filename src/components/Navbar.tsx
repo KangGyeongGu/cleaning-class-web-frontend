@@ -35,8 +35,8 @@ function LogoIcon(): React.JSX.Element {
     <Image
       src="/images/logo-small.png"
       alt=""
-      width={36}
-      height={36}
+      width={28}
+      height={28}
       aria-hidden={true}
       className="h-7 w-7 rounded-sm md:h-9 md:w-9"
     />

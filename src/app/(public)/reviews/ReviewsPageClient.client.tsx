@@ -7,9 +7,7 @@ import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
-// 블러 플레이스홀더 — 이미지 로딩 전 자리를 채워 CLS 방지
-const BLUR_PLACEHOLDER =
-  "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 
 interface ReviewsPageClientProps {
   reviews: Review[];

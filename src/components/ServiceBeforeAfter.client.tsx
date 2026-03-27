@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 
 interface ServiceBeforeAfterProps {
   beforeSrc: string;
@@ -44,17 +45,21 @@ export function ServiceBeforeAfter({
         src={beforeSrc}
         alt={`${alt} — 작업 전`}
         fill
-        sizes="(max-width: 768px) 100vw, 320px"
+        sizes="(max-width: 768px) calc(100vw - 48px), 320px"
+        placeholder="blur"
+        blurDataURL={BLUR_PLACEHOLDER}
         className="object-cover"
       />
 
       {/* After 이미지 — 스크롤에 따라 우측→좌측으로 드러남 */}
-      <motion.div className="absolute inset-0" style={{ clipPath }}>
+      <motion.div className="absolute inset-0" style={{ clipPath, willChange: "clip-path" }}>
         <Image
           src={afterSrc}
           alt={`${alt} — 작업 후`}
           fill
-          sizes="(max-width: 768px) 100vw, 320px"
+          sizes="(max-width: 768px) calc(100vw - 48px), 320px"
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover"
         />
       </motion.div>

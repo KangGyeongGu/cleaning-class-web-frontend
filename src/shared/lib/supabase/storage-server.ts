@@ -19,6 +19,30 @@ const ALLOWED_EXTENSIONS = [
 
 const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
+/** 이미지 파일 매직 바이트 패턴 — MIME/확장자와 별개로 실제 파일 내용 검증 */
+const IMAGE_MAGIC_BYTES: Array<{ signature: number[]; offset: number }> = [
+  { signature: [0xff, 0xd8, 0xff], offset: 0 }, // JPEG
+  { signature: [0x89, 0x50, 0x4e, 0x47], offset: 0 }, // PNG
+  { signature: [0x52, 0x49, 0x46, 0x46], offset: 0 }, // WebP (RIFF header)
+  { signature: [0x47, 0x49, 0x46, 0x38], offset: 0 }, // GIF
+  { signature: [0x00, 0x00, 0x00], offset: 1 }, // AVIF (ftyp box, offset 4 'ftypavif' — 간이 검사)
+];
+
+function isValidImageMagicBytes(header: Uint8Array): boolean {
+  // AVIF: bytes 4-7 = 'ftyp'
+  if (
+    header.length >= 12 &&
+    header[4] === 0x66 && header[5] === 0x74 &&
+    header[6] === 0x79 && header[7] === 0x70
+  ) {
+    return true;
+  }
+
+  return IMAGE_MAGIC_BYTES.some(({ signature, offset }) =>
+    signature.every((byte, i) => header[offset + i] === byte),
+  );
+}
+
 type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
 
@@ -49,6 +73,12 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
     throw new Error(
       `파일 크기가 제한을 초과합니다: ${(file.size / 1024 / 1024).toFixed(1)}MB. 최대 허용 크기: 10MB`,
     );
+  }
+
+  // 파일 매직 바이트 검증 — 클라이언트 위조 MIME/확장자 방어
+  const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+  if (!isValidImageMagicBytes(header)) {
+    throw new Error("파일 내용이 허용된 이미지 형식과 일치하지 않습니다.");
   }
 
   const supabase = await createClient();
