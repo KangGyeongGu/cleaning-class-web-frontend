@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { getUser } from "@/shared/lib/supabase/auth";
-import { createClient } from "@/shared/lib/supabase/server";
-import type {
-  ReviewTokenRow,
-  CustomerReviewRow,
-} from "@/shared/types/database";
+import {
+  getReviewTokens,
+  getAdminCustomerReviews,
+} from "@/shared/lib/queries/customer-review";
 import {
   TokenListSection,
   CustomerReviewsList,
@@ -18,20 +17,10 @@ export const metadata: Metadata = {
 export default async function CustomerReviewsPage(): Promise<React.ReactElement> {
   await getUser();
 
-  const supabase = await createClient();
-
-  const { data: tokensData } = await supabase
-    .from("review_tokens")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  const { data: reviewsData } = await supabase
-    .from("customer_reviews")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  const tokens = (tokensData as ReviewTokenRow[] | null) ?? [];
-  const reviews = (reviewsData as CustomerReviewRow[] | null) ?? [];
+  const [tokens, reviews] = await Promise.all([
+    getReviewTokens(),
+    getAdminCustomerReviews(),
+  ]);
 
   return (
     <div className="mx-auto max-w-7xl p-8">

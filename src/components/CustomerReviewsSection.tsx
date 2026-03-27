@@ -1,34 +1,7 @@
-import { createStaticClient } from "@/shared/lib/supabase/static";
+import { getCustomerReviews } from "@/shared/lib/home";
 import { StarRating } from "@/components/StarRating";
 import { CustomerReviewsReveal } from "@/components/CustomerReviewsReveal.client";
-
-interface CustomerReviewRow {
-  id: string;
-  rating: number;
-  comment: string;
-  created_at: string;
-}
-
-async function getCustomerReviews(): Promise<CustomerReviewRow[]> {
-  try {
-    const supabase = createStaticClient();
-    const { data, error } = await supabase
-      .from("customer_reviews" as Parameters<typeof supabase.from>[0])
-      .select("id, rating, comment, created_at")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      // 테이블 미존재(42P01) 등 마이그레이션 전 예상 에러는 빈 배열로 조용히 처리
-      console.info("[getCustomerReviews] DB query skipped:", error.message);
-      return [];
-    }
-
-    return (data as CustomerReviewRow[] | null) ?? [];
-  } catch (err) {
-    console.error("[getCustomerReviews] Unexpected error:", err);
-    return [];
-  }
-}
+import type { CustomerReviewRow } from "@/shared/types/database";
 
 function formatRelativeDate(dateStr: string): string {
   const now = new Date();

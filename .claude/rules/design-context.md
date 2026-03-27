@@ -22,7 +22,7 @@
 2. **Content-first** — Typography and images carry the message. Decorative elements are minimal and purposeful.
 3. **Restraint** — Fewer elements, done well. No gradients, no glassmorphism, no heavy shadows. Subtle borders and spacing define structure.
 4. **Consistency** — Predictable grid systems, symmetric layouts, uniform spacing scale. Users should never feel lost.
-5. **Performance** — CSS-only animations for LCP elements, lazy IntersectionObserver for below-fold, no JavaScript motion libraries.
+5. **Performance** — CSS-only animations for LCP elements, lazy IntersectionObserver for below-fold. JS motion libraries are allowed when they provide better performance or UX than a pure CSS/IO approach (e.g. scroll-linked animations).
 
 ### Technical Constraints (DO NOT CHANGE)
 - **Font**: Pretendard Variable via CDN inline (font-display: optional). Do NOT suggest alternative fonts or font pairing. Pretendard is the only font.

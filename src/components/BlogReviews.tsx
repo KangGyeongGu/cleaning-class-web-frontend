@@ -8,15 +8,18 @@ import Slider, { type CustomArrowProps } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
-import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { NaverBlogIcon } from "@/components/icons/SocialIcons";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
 
+export interface ReviewWithUrl extends Review {
+  imageUrl: string;
+}
+
 interface BlogReviewsProps {
-  reviews: Review[];
+  reviews: ReviewWithUrl[];
   blogUrl?: string;
   instagramUrl?: string;
   reviewDescription?: string;
@@ -50,12 +53,12 @@ function PrevArrow(props: CustomArrowProps) {
   );
 }
 
-function ReviewCard({ review }: { review: Review }) {
+function ReviewCard({ review }: { review: ReviewWithUrl }) {
   return (
     <div className="flex h-full flex-col">
       <div className="relative mb-5 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:aspect-4/3">
         <Image
-          src={getReviewImageUrl(review.image_path)}
+          src={review.imageUrl}
           alt={review.title}
           fill
           sizes="(max-width: 768px) 85vw, (max-width: 1280px) 33vw, 25vw"
@@ -96,7 +99,7 @@ function ReviewCardWrapper({
   review,
   blogUrl,
 }: {
-  review: Review;
+  review: ReviewWithUrl;
   blogUrl?: string;
 }) {
   const cardUrl = review.link_url || blogUrl || null;

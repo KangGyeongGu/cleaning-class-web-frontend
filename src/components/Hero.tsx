@@ -61,7 +61,7 @@ export async function Hero(): Promise<React.JSX.Element> {
                   src={heroImage1}
                   fill
                   priority
-                  alt=""
+                  alt={`${displayName} 청소 서비스`}
                   className="object-cover"
                   style={{ objectPosition: `${focal1.x}% ${focal1.y}%` }}
                   sizes={hasImage2 ? "60vw" : "100vw"}
@@ -87,7 +87,8 @@ export async function Hero(): Promise<React.JSX.Element> {
                 <Image
                   src={heroImage2}
                   fill
-                  alt=""
+                  priority={!hasImage1}
+                  alt={`${displayName} 청소 서비스 현장`}
                   className="object-cover"
                   style={{ objectPosition: `${focal2.x}% ${focal2.y}%` }}
                   sizes={hasImage1 ? "60vw" : "100vw"}

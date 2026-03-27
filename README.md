@@ -14,16 +14,16 @@
 
 ## 설계
 
-### isr
+### ISR
 
-공개 페이지는 ISR(Incremental Static Regeneration)으로 제공됩니다.
+공개 페이지 ISR(Incremental Static Regeneration) 기반 구현
 
 - Supabase에서 데이터를 가져와 정적으로 빌드하고, 일정 주기마다 백그라운드에서 재생성
 - 인증이 필요 없는 읽기 전용 Supabase 클라이언트를 사용하여 `cookies()` 호출 없이 정적 경로 유지
 
-### baas
+### BaaS
 
-데이터 레이어는 Supabase BaaS 기반이며, 별도의 백엔드 서버 없이 운영됩니다.
+데이터 레이어는 Supabase BaaS 기반 운영
 
 - **데이터베이스** — Supabase PostgreSQL
 - **파일 저장소** — Supabase Storage (리뷰 썸네일 이미지)
