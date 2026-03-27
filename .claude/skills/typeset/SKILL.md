@@ -18,7 +18,7 @@ Invoke /frontend-design — it contains design principles, anti-patterns, and th
 Analyze what's weak or generic about the current type:
 
 1. **Font choices**:
-   - Is the project font being used consistently? (Check .impeccable.md for the designated font)
+   - Is the project font being used consistently? (Check .claude/rules/design-context.md for the designated font)
    - Does the font weight usage match the brand personality?
    - Are there too many font families? (More than 2-3 is almost always a mess)
 
@@ -50,7 +50,7 @@ Consult the [typography reference](reference/typography.md) from the frontend-de
 
 Create a systematic plan:
 
-- **Font selection**: Is the designated project font used consistently? Do NOT replace fonts unless .impeccable.md explicitly allows it.
+- **Font selection**: Is the designated project font used consistently? Do NOT replace fonts unless .claude/rules/design-context.md explicitly allows it.
 - **Type scale**: Establish a modular scale (e.g., 1.25 ratio) with clear hierarchy
 - **Weight strategy**: Which weights serve which roles? (Regular for body, Semibold for labels, Bold for headings — or whatever fits)
 - **Spacing**: Line-heights, letter-spacing, and margins between typographic elements
@@ -59,7 +59,7 @@ Create a systematic plan:
 
 ### Font Selection
 
-Check `.impeccable.md` for the project's designated font before making any font changes.
+Check `.claude/rules/design-context.md` for the project's designated font before making any font changes.
 - If a project font is specified, do NOT replace it — focus on weight, sizing, and spacing instead
 - If no project font is specified and fonts need replacing: choose fonts that reflect the brand personality
 - Ensure web font loading doesn't cause layout shift (`font-display: swap` or `font-display: optional`)

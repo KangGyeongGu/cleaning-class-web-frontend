@@ -19,39 +19,6 @@ const CLARITY_ID = ANALYTICS_ID_PATTERN.test(
   ? (process.env.NEXT_PUBLIC_CLARITY_ID ?? "")
   : "";
 
-const PRETENDARD_CSS_URL =
-  "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css";
-
-/**
- * Pretendard CDN CSS를 fetch하여 인라인 삽입.
- * - font-display: swap 유지 → 첫 방문에서도 폰트 교체 보장 (1회성 방문 서비스 특성)
- * - ISR(revalidate=86400)로 캐시되므로 매 요청마다 fetch하지 않음
- * - 인라인 <style>로 삽입하여 외부 CSS 요청 및 render-blocking 완전 제거
- */
-async function getPretendardCss(): Promise<string> {
-  try {
-    const res = await fetch(PRETENDARD_CSS_URL, {
-      next: { revalidate: 86400 },
-    });
-    if (!res.ok) return "";
-    // Content-Type이 text/css가 아닌 경우 오염된 응답으로 간주하여 인라인 거부
-    const contentType = res.headers.get("content-type");
-    if (!contentType || !contentType.includes("text/css")) return "";
-    let css = await res.text();
-    // 상대 경로를 CDN 절대 경로로 변환 (인라인 시 서버 도메인 기준 해석 방지)
-    const cdnBase =
-      "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/variable/";
-    css = css.replace(
-      /url\(\.\.\/\.\.\/\.\.\/packages\/pretendard\/dist\/web\/variable\//g,
-      `url(${cdnBase}`,
-    );
-    // </style> 및 <!-- 시퀀스 이스케이프: CDN 응답이 style 태그 탈출이나 HTML 주석 주입을 시도하는 경우 방어
-    css = css.replace(/<\/style/gi, "<\\/style").replace(/<!--/g, "<\\!--");
-    return css;
-  } catch {
-    return "";
-  }
-}
 
 export const revalidate = 3600;
 
@@ -123,10 +90,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [siteConfig, pretendardCss] = await Promise.all([
-    getSiteConfig(),
-    getPretendardCss(),
-  ]);
+  const siteConfig = await getSiteConfig();
   const jsonLd = generateLocalBusinessJsonLd(siteConfig);
   const webSiteJsonLd = generateWebSiteJsonLd(siteConfig);
   const breadcrumbListJsonLd = generateBreadcrumbListJsonLd([
@@ -136,10 +100,10 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {pretendardCss && (
-          // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 인라인. XSS 위험 없음 (고정 URL, Content-Type 검증 완료)
-          <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
-        )}
+        <link
+          rel="stylesheet"
+          href="/fonts/pretendard/pretendard.css"
+        />
       </head>
       <body className="font-sans antialiased">
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
