@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
@@ -52,29 +54,61 @@ export async function Services() {
 
         {cleaningServices.length > 0 && (
           <div className="mb-16 md:mb-24">
-            <div className="mb-8">
-              <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
-                Cleaning
-              </p>
-              <h3 className="text-lg font-black tracking-tight text-slate-900">
-                청소 서비스
-              </h3>
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
+                  Cleaning
+                </p>
+                <h3 className="text-lg font-black tracking-tight text-slate-900">
+                  청소 서비스
+                </h3>
+              </div>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/contact"
+                  className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
+                >
+                  문의하기 <ArrowUpRight size={12} aria-hidden="true" />
+                </Link>
+                <a
+                  href={`tel:${cleaningPhone}`}
+                  className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
+                >
+                  전화문의 <ArrowUpRight size={12} aria-hidden="true" />
+                </a>
+              </div>
             </div>
-            <ServiceGrid services={cleaningServices} phone={cleaningPhone} />
+            <ServiceGrid services={cleaningServices} />
           </div>
         )}
 
         {movingServices.length > 0 && (
           <div>
-            <div className="mb-8">
-              <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
-                Moving
-              </p>
-              <h3 className="text-lg font-black tracking-tight text-slate-900">
-                이사 서비스
-              </h3>
+            <div className="mb-8 flex items-end justify-between">
+              <div>
+                <p className="mb-1 text-xs font-bold tracking-widest text-slate-400 uppercase">
+                  Moving
+                </p>
+                <h3 className="text-lg font-black tracking-tight text-slate-900">
+                  이사 서비스
+                </h3>
+              </div>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/contact"
+                  className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
+                >
+                  문의하기 <ArrowUpRight size={12} aria-hidden="true" />
+                </Link>
+                <a
+                  href={`tel:${movingPhone}`}
+                  className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
+                >
+                  전화문의 <ArrowUpRight size={12} aria-hidden="true" />
+                </a>
+              </div>
             </div>
-            <ServiceGrid services={movingServices} phone={movingPhone} />
+            <ServiceGrid services={movingServices} />
           </div>
         )}
       </div>

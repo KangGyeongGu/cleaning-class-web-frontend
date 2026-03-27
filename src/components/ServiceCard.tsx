@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
@@ -21,7 +20,6 @@ export interface ServiceCardProps {
     afterFocalX?: number;
     afterFocalY?: number;
   };
-  phone: string;
   priority: boolean;
   /** 부모에서 동기화된 before/after 토글 (모바일 전용) */
   showAfter?: boolean;
@@ -29,7 +27,6 @@ export interface ServiceCardProps {
 
 export function ServiceCard({
   service,
-  phone,
   priority,
   showAfter = false,
 }: ServiceCardProps) {
@@ -121,23 +118,9 @@ export function ServiceCard({
         <h3 className="text-heading-4 mb-2 transition-colors duration-300 group-hover:text-black">
           {service.title}
         </h3>
-        <p className="mb-3 text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-600">
+        <p className="text-xs text-slate-400 transition-colors duration-300 group-hover:text-slate-600">
           {service.tags.join(" · ")}
         </p>
-        <div className="flex items-center gap-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Link
-            href="/contact"
-            className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
-          >
-            문의하기 <ArrowUpRight size={12} aria-hidden="true" />
-          </Link>
-          <a
-            href={`tel:${phone}`}
-            className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
-          >
-            전화문의 <ArrowUpRight size={12} aria-hidden="true" />
-          </a>
-        </div>
       </div>
     </div>
   );

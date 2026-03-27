@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Instagram } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Slider, { type CustomArrowProps } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -296,6 +297,33 @@ export function BlogReviews({
               ))}
             </div>
 
+            {(hasBlogUrl || hasInstagramUrl) && (
+              <div className="mt-6 flex flex-col items-center gap-3 text-center md:hidden">
+                {hasBlogUrl && (
+                  <a
+                    href={blogUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
+                  >
+                    <NaverBlogIcon size={16} /> BLOG{" "}
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </a>
+                )}
+                {hasInstagramUrl && (
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
+                  >
+                    <Instagram size={16} /> INSTAGRAM{" "}
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            )}
+
             <div className="relative hidden px-2 md:block">
               <Slider ref={sliderRef} {...slickSettings}>
                 {filteredReviews.map((review) => (
@@ -308,32 +336,14 @@ export function BlogReviews({
           </>
         )}
 
-        {(hasBlogUrl || hasInstagramUrl) && (
-          <div className="mt-12 flex flex-col items-center gap-3 text-center md:hidden">
-            {hasBlogUrl && (
-              <a
-                href={blogUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
-              >
-                <NaverBlogIcon size={16} /> BLOG{" "}
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </a>
-            )}
-            {hasInstagramUrl && (
-              <a
-                href={instagramUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
-              >
-                <Instagram size={16} /> INSTAGRAM{" "}
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </a>
-            )}
-          </div>
-        )}
+        <div className="mt-8 text-center">
+          <Link
+            href="/reviews"
+            className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"
+          >
+            전체 보기 →
+          </Link>
+        </div>
       </div>
     </section>
   );

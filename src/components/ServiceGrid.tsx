@@ -22,10 +22,9 @@ interface ServiceItem {
  */
 interface ServiceGridProps {
   services: ServiceItem[];
-  phone: string;
 }
 
-export function ServiceGrid({ services, phone }: ServiceGridProps) {
+export function ServiceGrid({ services }: ServiceGridProps) {
   const [showAfter, setShowAfter] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
@@ -76,7 +75,6 @@ export function ServiceGrid({ services, phone }: ServiceGridProps) {
         <ServiceCard
           key={service.id}
           service={service}
-          phone={phone}
           priority={false}
           showAfter={isTouchDevice && showAfter && !!service.afterImageUrl}
         />

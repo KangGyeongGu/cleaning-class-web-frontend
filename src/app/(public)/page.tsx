@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 import { Hero } from "@/components/Hero";
 import { Services } from "@/components/Services";
@@ -90,14 +89,6 @@ export default function Home() {
       <Suspense fallback={<ReviewsSkeleton />}>
         <BlogReviewsSection />
       </Suspense>
-      <div className="bg-white pb-2 text-center">
-        <Link
-          href="/reviews"
-          className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"
-        >
-          전체 보기 →
-        </Link>
-      </div>
 
       <Suspense fallback={<CustomerReviewsSkeleton />}>
         <CustomerReviewsSection />
