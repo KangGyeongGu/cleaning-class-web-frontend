@@ -1,8 +1,3 @@
-/**
- * 리뷰 목록 섹션 서버 컴포넌트
- * 리뷰 데이터를 조회하여 ReviewListClient에 전달합니다.
- */
-
 import { getReviews } from "@/shared/lib/queries/review";
 import { ReviewListClient } from "@/app/admin/reviews/ReviewListClient";
 

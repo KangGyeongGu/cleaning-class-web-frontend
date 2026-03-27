@@ -1,4 +1,3 @@
-// 개인정보처리방침 페이지 — policy.md 제1부 본문을 정적 서버 컴포넌트로 렌더링
 import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 
@@ -26,7 +25,6 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  // BreadcrumbList JSON-LD — 홈 → 개인정보처리방침 경로 구조화
   const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
     {
@@ -46,7 +44,6 @@ export default function PrivacyPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      {/* 페이지 제목 — h1은 페이지 전체에 1개만 존재 */}
       <header className="mb-12">
         <h1 className="mb-4 text-3xl font-black tracking-tighter text-slate-900">
           청소클라쓰 개인정보처리방침
@@ -61,7 +58,6 @@ export default function PrivacyPage() {
         </p>
       </header>
 
-      {/* 주요 개인정보 처리 표시 — 약관규제법 제3조에 따라 핵심 항목 강조 */}
       <section
         aria-labelledby="key-info-label"
         className="mb-12 rounded-sm border border-slate-200 bg-slate-50 p-6"
@@ -100,7 +96,6 @@ export default function PrivacyPage() {
         </ul>
       </section>
 
-      {/* 목차 */}
       <nav aria-label="개인정보처리방침 목차" className="mb-12">
         <p className="mb-4 text-xs font-bold tracking-widest text-slate-500 uppercase">
           목차
@@ -157,9 +152,7 @@ export default function PrivacyPage() {
         </ol>
       </nav>
 
-      {/* 본문 조항 */}
       <div className="space-y-12">
-        {/* 제1조 */}
         <section aria-labelledby="article-1">
           <h2 id="article-1" className="mb-4 text-lg font-bold text-slate-900">
             제1조 (개인정보의 처리 목적, 수집 항목, 보유기간)
@@ -169,12 +162,10 @@ export default function PrivacyPage() {
             범위에서 개인정보를 수집·이용합니다.
           </p>
 
-          {/* 1. 정보주체의 동의를 받아 처리하는 개인정보 항목 */}
           <div className="mb-6">
             <p className="mb-3 text-sm font-medium text-slate-800">
               1. 정보주체의 동의를 받아 처리하는 개인정보 항목
             </p>
-            {/* ASCII 박스 테이블 → HTML <table> 변환 */}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
@@ -230,7 +221,6 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          {/* 2. 관련 법령에 따른 보유 */}
           <div>
             <p className="mb-3 text-sm font-medium text-slate-800">
               2. 관련 법령에 따른 보유
@@ -264,7 +254,6 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        {/* 제2조 */}
         <section aria-labelledby="article-2">
           <h2 id="article-2" className="mb-4 text-lg font-bold text-slate-900">
             제2조 (개인정보의 파기 절차 및 방법)
@@ -297,7 +286,6 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        {/* 제3조 */}
         <section aria-labelledby="article-3">
           <h2 id="article-3" className="mb-4 text-lg font-bold text-slate-900">
             제3조 (정보주체와 법정대리인의 권리·의무 및 행사방법)
@@ -332,7 +320,6 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        {/* 제4조 */}
         <section aria-labelledby="article-4">
           <h2 id="article-4" className="mb-4 text-lg font-bold text-slate-900">
             제4조 (개인정보의 안전성 확보조치)
@@ -368,7 +355,6 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        {/* 제5조 */}
         <section aria-labelledby="article-5">
           <h2 id="article-5" className="mb-4 text-lg font-bold text-slate-900">
             제5조 (개인정보 보호책임자 및 고충사항을 처리하는 부서)
@@ -380,7 +366,6 @@ export default function PrivacyPage() {
               같이 개인정보 보호책임자를 지정하고 있습니다.
             </p>
 
-            {/* 보호책임자 정보 테이블 */}
             <div className="overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
@@ -498,7 +483,6 @@ export default function PrivacyPage() {
           </div>
         </section>
 
-        {/* 제6조 */}
         <section aria-labelledby="article-6">
           <h2 id="article-6" className="mb-4 text-lg font-bold text-slate-900">
             제6조 (개인정보 처리방침의 변경)
@@ -512,7 +496,6 @@ export default function PrivacyPage() {
               부터 적용됩니다.
             </p>
             <p>② 이전의 개인정보 처리방침은 아래에서 확인하실 수 있습니다.</p>
-            {/* 최초 버전이므로 이전 처리방침 없음 — 빈 상태로 처리 */}
           </div>
         </section>
       </div>

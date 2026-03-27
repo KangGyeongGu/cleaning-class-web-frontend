@@ -1,16 +1,5 @@
-/**
- * Schema.org JSON-LD 생성
- * @see https://schema.org/LocalBusiness
- * @see https://schema.org/CleaningService
- * @see https://schema.org/WebSite
- * @see https://schema.org/Service
- * @see https://schema.org/FAQPage
- * @see https://schema.org/BreadcrumbList
- */
-
 import type { SiteConfig } from "@/shared/types/database";
 
-// 업체 주소 정보
 const BUSINESS_STREET_ADDRESS = "전북 전주시 덕진구 우아8길 11";
 const BUSINESS_POSTAL_CODE = "54908";
 const BUSINESS_LATITUDE = 35.850913;
@@ -62,13 +51,11 @@ interface LocalBusinessJsonLd {
   };
   serviceType: string[];
   priceRange: string;
-  /** 소셜 프로필 URL 목록 — Schema.org sameAs 프로퍼티 */
   sameAs?: string[];
 }
 
 interface ServiceInput {
   title: string;
-  /** 서비스 특징 태그 목록 — Schema.org description으로 변환됨 */
   tags: string[];
 }
 
@@ -133,7 +120,6 @@ export function generateLocalBusinessJsonLd(
 ): LocalBusinessJsonLd {
   const siteUrl = siteConfig?.site_url ?? "https://www.cleaningclass.co.kr";
 
-  // 소셜 프로필 URL을 sameAs 배열로 구성 (빈 값/undefined 필터링)
   const sameAs = [
     siteConfig?.blog_url,
     siteConfig?.instagram_url,
@@ -195,14 +181,10 @@ export function generateLocalBusinessJsonLd(
       "상가청소",
     ],
     priceRange: "$$",
-    // sameAs는 URL이 하나 이상 존재할 때만 포함
     ...(sameAs.length > 0 && { sameAs }),
   };
 }
 
-/**
- * 서비스 배열을 받아 Schema.org Service 스키마 배열을 생성합니다.
- */
 export function generateServiceJsonLd(
   services: ServiceInput[],
   siteUrl = "https://www.cleaningclass.co.kr",
@@ -212,7 +194,6 @@ export function generateServiceJsonLd(
     "@type": "Service",
     serviceType: service.title,
     name: service.title,
-    // tags 배열을 쉼표 구분 문자열로 변환하여 Schema.org description 필드에 매핑
     description: service.tags.join(", "),
     provider: {
       "@id": `${siteUrl}/#organization`,
@@ -220,10 +201,6 @@ export function generateServiceJsonLd(
   }));
 }
 
-/**
- * 청소 서비스 관련 FAQ 5개 이상으로 FAQPage 스키마를 생성합니다.
- * 정적 기본 FAQ에 추가 항목을 병합할 수 있습니다.
- */
 const DEFAULT_FAQ_ITEMS: QuestionItem[] = [
   {
     question: "청소 예약은 어떻게 하나요?",
@@ -253,7 +230,7 @@ const DEFAULT_FAQ_ITEMS: QuestionItem[] = [
 ];
 
 export function generateFaqPageJsonLd(items?: QuestionItem[]): FaqPageJsonLd {
-  // DB FAQ가 전달되면 DB 데이터만 사용, 없으면 정적 기본 항목 사용 (fallback)
+  // DB FAQ가 없을 때 정적 기본 항목을 fallback으로 사용
   const allItems = items && items.length > 0 ? items : DEFAULT_FAQ_ITEMS;
   return {
     "@context": "https://schema.org",
@@ -269,9 +246,6 @@ export function generateFaqPageJsonLd(items?: QuestionItem[]): FaqPageJsonLd {
   };
 }
 
-/**
- * 브레드크럼 배열을 받아 BreadcrumbList 스키마를 생성합니다.
- */
 export function generateBreadcrumbListJsonLd(
   items: BreadcrumbItem[],
 ): BreadcrumbListJsonLd {

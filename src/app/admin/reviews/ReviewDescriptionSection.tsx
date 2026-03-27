@@ -1,8 +1,3 @@
-/**
- * 리뷰 섹션 안내 문구 편집기 서버 컴포넌트
- * site_config에서 review_description을 조회하여 InlineDescriptionEditor에 전달합니다.
- */
-
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
 import { updateReviewDescription } from "@/shared/actions/site-config";

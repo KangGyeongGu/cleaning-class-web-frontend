@@ -11,10 +11,9 @@ export async function Hero() {
 
   return (
     <section className="relative flex min-h-[calc(100svh-var(--header-height))] w-full flex-col items-center justify-center overflow-hidden bg-white py-12 text-slate-900 md:py-16">
-      {/* Background Abstract Elements */}
       <div className="pointer-events-none absolute top-0 left-0 h-full w-full bg-linear-to-br from-slate-100 via-white to-white opacity-5" />
 
-      {/* Floating Elements — 모바일에서 hidden으로 GPU 절약, md 이상에서만 표시 */}
+      {/* 모바일에서 hidden으로 GPU 절약, md 이상에서만 표시 */}
       <div
         className="absolute top-1/4 right-1/4 hidden h-64 w-64 animate-[floatUp_6s_ease-in-out_infinite] rounded-full bg-linear-to-b from-slate-50 to-white opacity-60 md:block md:blur-2xl"
         aria-hidden="true"
@@ -24,7 +23,7 @@ export async function Hero() {
         aria-hidden="true"
       />
 
-      {/* Main Content — h1, p는 CSS animation 사용 (motion 미사용 → JS 무관하게 SSR 즉시 표시, LCP 최적화) */}
+      {/* CSS animation 사용: motion 미사용으로 JS 무관하게 SSR 즉시 표시, LCP 최적화 */}
       <div className="z-10 mx-auto max-w-5xl px-4 text-center">
         <h1 className="mb-8 animate-[slideUp_1s_cubic-bezier(0.16,1,0.3,1)_both] text-4xl leading-tight font-semibold tracking-tighter text-slate-900 md:text-6xl">
           {displayName}.

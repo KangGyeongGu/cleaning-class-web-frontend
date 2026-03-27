@@ -38,7 +38,6 @@ export function FocalPointPicker({
     startFocalY: number;
   } | null>(null);
 
-  // 이미지 로드 시 원본 크기 감지
   const handleImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget;
@@ -47,7 +46,6 @@ export function FocalPointPicker({
     [],
   );
 
-  // 가이드 직사각형 크기 계산 (컨테이너 기준 비율)
   const getGuideRect = useCallback(() => {
     if (!naturalSize) return null;
 
@@ -85,7 +83,6 @@ export function FocalPointPicker({
     };
   }, [naturalSize, focalX, focalY]);
 
-  // 드래그 핸들러
   const handlePointerDown = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
       e.preventDefault();
@@ -113,7 +110,6 @@ export function FocalPointPicker({
     const canDragX = imageRatio > TARGET_RATIO;
     const canDragY = imageRatio < TARGET_RATIO;
 
-    // 가이드 크기 비율
     const guideW = canDragX ? TARGET_RATIO / imageRatio : 1;
     const guideH = canDragY ? imageRatio / TARGET_RATIO : 1;
     const maxOffsetX = 1 - guideW;
@@ -193,7 +189,6 @@ export function FocalPointPicker({
         </p>
       )}
 
-      {/* 원본 이미지 + 가이드 직사각형 */}
       {/* aspect-square로 CLS 방지: width/height prop이 h-auto에 의해 오버라이드되므로 컨테이너에서 공간 확보 */}
       <div
         ref={containerRef}
@@ -215,18 +210,14 @@ export function FocalPointPicker({
 
         {guide && (guide.canDragX || guide.canDragY) && (
           <>
-            {/* 어두운 오버레이 (가이드 영역 바깥) - 4면 분할 */}
-            {/* 위 */}
             <div
               className="pointer-events-none absolute top-0 right-0 left-0 bg-black/50"
               style={{ height: `${guide.y * 100}%` }}
             />
-            {/* 아래 */}
             <div
               className="pointer-events-none absolute right-0 bottom-0 left-0 bg-black/50"
               style={{ height: `${(1 - guide.y - guide.h) * 100}%` }}
             />
-            {/* 왼쪽 */}
             <div
               className="pointer-events-none absolute left-0 bg-black/50"
               style={{
@@ -235,7 +226,6 @@ export function FocalPointPicker({
                 width: `${guide.x * 100}%`,
               }}
             />
-            {/* 오른쪽 */}
             <div
               className="pointer-events-none absolute right-0 bg-black/50"
               style={{
@@ -245,7 +235,6 @@ export function FocalPointPicker({
               }}
             />
 
-            {/* 가이드 직사각형 (드래그 영역) */}
             <div
               role="application"
               tabIndex={0}
@@ -261,7 +250,6 @@ export function FocalPointPicker({
               onMouseDown={handlePointerDown}
               onTouchStart={handlePointerDown}
             >
-              {/* 방향 힌트 */}
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <p className="text-xs font-bold text-white/70 drop-shadow-md">
                   {guide.canDragX ? "← 좌우 드래그 →" : "↑ 상하 드래그 ↓"}
@@ -286,7 +274,6 @@ export function FocalPointPicker({
         </p>
       )}
 
-      {/* aspect-3/4 미리보기 */}
       <div>
         <p className="mb-2 text-xs text-slate-500">실제 표시 미리보기 (3:4)</p>
         <div className="relative aspect-3/4 w-32 overflow-hidden border border-slate-200 bg-slate-100">

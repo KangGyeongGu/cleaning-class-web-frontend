@@ -5,7 +5,6 @@ interface IconProps {
   className?: string;
 }
 
-/** 네이버 공식 로고 인라인 SVG */
 export function NaverBlogIcon({
   size = 20,
   className,
@@ -24,7 +23,6 @@ export function NaverBlogIcon({
   );
 }
 
-/** 인스타그램 공식 로고 인라인 SVG */
 export function InstagramIcon({
   size = 20,
   className,
@@ -53,7 +51,6 @@ export function InstagramIcon({
   );
 }
 
-/** 당근마켓 공식 로고 인라인 SVG — 공식 SVG 원본 path, 정사각형 viewBox로 중앙 정렬 */
 export function DaangnIcon({
   size = 20,
   className,

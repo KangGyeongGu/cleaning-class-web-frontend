@@ -1,5 +1,3 @@
-// FAQ 섹션 서버 컴포넌트 — 데이터 조회, faqDescription 결정, FAQPage JSON-LD 주입을 담당
-// page.tsx가 데이터 페칭 없이 composition-only 역할을 유지할 수 있도록 분리
 import { getActiveFaqs } from "@/shared/lib/queries/faq";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { generateFaqPageJsonLd } from "@/shared/lib/json-ld";
@@ -18,7 +16,6 @@ export async function FaqSection() {
   const faqDescription =
     siteConfig?.faq_description?.trim() || DEFAULT_FAQ_DESCRIPTION;
 
-  // DB FAQ 데이터 기반 FAQPage JSON-LD 생성
   const faqPageJsonLd = generateFaqPageJsonLd(
     faqs.map((faq) => ({ question: faq.question, answer: faq.answer })),
   );
@@ -34,7 +31,6 @@ export async function FaqSection() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      {/* FAQ 설명 및 목록 섹션 */}
       <p className="mb-16 text-sm leading-relaxed font-light text-slate-600">
         {faqDescription}
       </p>

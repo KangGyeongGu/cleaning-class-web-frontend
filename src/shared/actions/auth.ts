@@ -8,10 +8,6 @@ type LoginState = {
   error?: string;
 };
 
-/**
- * 관리자 로그인 Server Action
- * REQ-FILE-008, REQ-FUNC-001
- */
 export async function login(
   prevState: LoginState | null,
   formData: FormData,
@@ -19,7 +15,6 @@ export async function login(
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  // Zod 검증
   const result = loginFormSchema.safeParse({ email, password });
 
   if (!result.success) {
@@ -42,14 +37,9 @@ export async function login(
     };
   }
 
-  // 로그인 성공 시 /admin 리다이렉트
   redirect("/admin");
 }
 
-/**
- * 관리자 로그아웃 Server Action
- * REQ-FUNC-001
- */
 export async function logout() {
   const supabase = await createClient();
   try {

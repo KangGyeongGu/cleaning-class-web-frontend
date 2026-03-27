@@ -1,4 +1,4 @@
-// Supabase Database 타입 정의 (supabase gen types 기반)
+// supabase gen types 기반 자동 생성 — 수동 편집 금지
 
 export type Json =
   | string
@@ -56,7 +56,6 @@ export interface Database {
       services: {
         Row: {
           created_at: string;
-          // description: TASK-STR-003 전환 전까지 하위 호환 유지 (DB 컬럼이 남아있을 수 있음)
           description?: string;
           id: string;
           image_after_focal_x: number;
@@ -214,7 +213,6 @@ export interface Database {
   };
 }
 
-// 편의 타입 별칭
 export type SiteConfigRow = Database["public"]["Tables"]["site_config"]["Row"];
 export type SiteConfigInsert =
   Database["public"]["Tables"]["site_config"]["Insert"];

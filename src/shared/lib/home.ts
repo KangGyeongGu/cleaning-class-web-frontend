@@ -5,9 +5,7 @@ import type { Review, Service } from "@/shared/types/database";
 export type ServiceWithImageUrls = {
   id: string;
   title: string;
-  // description: TASK-STR-003 완료 전 하위 호환 유지 (빈 문자열 fallback)
   description: string;
-  // tags 배열: TASK-LOG-001에서 추가됨
   tags: string[];
   imageUrl: string;
   afterImageUrl?: string;
@@ -19,10 +17,6 @@ export type ServiceWithImageUrls = {
   updated_at: string;
 };
 
-/**
- * 공개된 리뷰 목록을 sort_order 기준으로 조회합니다.
- * 오류 발생 시 빈 배열을 반환합니다.
- */
 export async function getPublishedReviews(): Promise<Review[]> {
   try {
     const supabase = await createClient();
@@ -44,10 +38,6 @@ export async function getPublishedReviews(): Promise<Review[]> {
   }
 }
 
-/**
- * 공개된 서비스 목록을 sort_order 기준으로 조회하고, 이미지 URL을 매핑하여 반환합니다.
- * 오류 발생 시 빈 배열을 반환합니다.
- */
 export async function getPublishedServicesWithImageUrls(): Promise<
   ServiceWithImageUrls[]
 > {
@@ -69,7 +59,6 @@ export async function getPublishedServicesWithImageUrls(): Promise<
     return services.map((s) => ({
       id: s.id,
       title: s.title,
-      // TASK-STR-003 완료 전 하위 호환: description이 없으면 빈 문자열 사용
       description: s.description ?? "",
       tags: s.tags ?? [],
       imageUrl: getServiceImageUrl(s.image_path),

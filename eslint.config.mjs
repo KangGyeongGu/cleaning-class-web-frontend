@@ -10,16 +10,13 @@ import betterTailwindcss from "eslint-plugin-better-tailwindcss";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // Override default ignores of eslint-config-next.
   globalIgnores([
-    // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
     "legacy/**",
     "next-env.d.ts",
   ]),
-  // 1. boundaries — 의존성 방향
   {
     plugins: { boundaries },
     settings: {
@@ -43,7 +40,6 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  // 2. @typescript-eslint — any 금지 강화
   {
     files: ["**/*.ts", "**/*.tsx"],
     rules: {
@@ -56,7 +52,6 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  // 3. jsx-a11y — 시맨틱 HTML 강화
   {
     files: ["**/*.tsx"],
     rules: {
@@ -70,12 +65,10 @@ const eslintConfig = defineConfig([
       "jsx-a11y/label-has-associated-control": "error",
     },
   },
-  // 4. @eslint-react — "use client" 스코프 검증
   {
     files: ["**/*.tsx"],
     ...eslintReact.configs["recommended-typescript"],
   },
-  // 5. @vitest/eslint-plugin — 테스트 품질
   {
     files: ["__tests__/**/*.{ts,tsx}", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
     plugins: { vitest: vitestPlugin },
@@ -86,7 +79,6 @@ const eslintConfig = defineConfig([
       "vitest/no-disabled-tests": "warn",
     },
   },
-  // 6. eslint-plugin-better-tailwindcss — Tailwind v4 호환 클래스 검증
   {
     files: ["**/*.tsx"],
     plugins: { "better-tailwindcss": betterTailwindcss },
@@ -104,7 +96,6 @@ const eslintConfig = defineConfig([
       "better-tailwindcss/no-unknown-classes": "warn",
     },
   },
-  // 7. no-relative-import-paths — @/ alias 강제
   {
     plugins: { "no-relative-import-paths": noRelativeImportPaths },
     rules: {

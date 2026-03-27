@@ -73,7 +73,6 @@ function PrevArrow(props: CustomArrowProps) {
 function ReviewCard({ review }: { review: Review }) {
   return (
     <div className="flex h-full flex-col">
-      {/* 이미지 영역 — 리뷰 섹션은 폴드 아래에 위치하므로 priority 없이 지연 로드 */}
       <div className="relative mb-5 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:aspect-4/3">
         <Image
           src={getReviewImageUrl(review.image_path)}
@@ -86,9 +85,7 @@ function ReviewCard({ review }: { review: Review }) {
         />
       </div>
 
-      {/* 콘텐츠 영역 */}
       <div className="flex flex-1 flex-col px-5 pb-6">
-        {/* 해시태그 */}
         <div className="mb-1.5 flex min-h-5 flex-wrap gap-2">
           {review.tags.map((tag) => (
             <span
@@ -174,12 +171,10 @@ export function BlogReviews({
     return () => el.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // 리뷰가 없으면 섹션 숨김
   if (!reviews || reviews.length === 0) {
     return null;
   }
 
-  // 선택된 필터에 따라 표시할 리뷰 목록 결정
   const filteredReviews = activeFilter
     ? reviews.filter((r) => r.tags.includes(activeFilter))
     : reviews;
@@ -187,13 +182,10 @@ export function BlogReviews({
   const hasBlogUrl = blogUrl && blogUrl.trim() !== "";
   const hasInstagramUrl = instagramUrl && instagramUrl.trim() !== "";
 
-  // 필터 탭 변경 시 슬라이더와 모바일 스크롤 인덱스를 초기화하는 핸들러
   const handleFilterChange = (filter: string | null) => {
     setActiveFilter(filter);
     setActiveIndex(0);
-    // 데스크톱 슬라이더 첫 번째 슬라이드로 이동
     sliderRef.current?.slickGoTo(0);
-    // 모바일 스크롤 위치 초기화
     if (scrollRef.current) {
       scrollRef.current.scrollTo({ left: 0, behavior: "instant" });
     }
@@ -262,7 +254,6 @@ export function BlogReviews({
           </div>
         </div>
 
-        {/* 서비스 카테고리 필터 탭 — 모바일에서 가로 스크롤 가능 */}
         <div className="scrollbar-hide mb-8 flex gap-2 overflow-x-auto md:px-2">
           <button
             type="button"
@@ -291,7 +282,6 @@ export function BlogReviews({
           ))}
         </div>
 
-        {/* 필터 결과가 없을 때 빈 상태 UI */}
         {filteredReviews.length === 0 ? (
           <div className="flex min-h-48 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 md:px-2">
             <p className="text-sm font-light text-slate-500">
@@ -300,7 +290,6 @@ export function BlogReviews({
           </div>
         ) : (
           <>
-            {/* 모바일: CSS scroll-snap (JS 의존 없음) */}
             <div
               ref={scrollRef}
               className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
@@ -311,7 +300,6 @@ export function BlogReviews({
                 </div>
               ))}
             </div>
-            {/* 모바일 인디케이터 */}
             <div className="mt-4 flex justify-center gap-2 md:hidden">
               {filteredReviews.map((review, index) => (
                 <button
@@ -335,7 +323,6 @@ export function BlogReviews({
               ))}
             </div>
 
-            {/* 데스크톱: slick carousel */}
             <div className="relative hidden px-2 md:block">
               <Slider ref={sliderRef} {...slickSettings}>
                 {filteredReviews.map((review) => (

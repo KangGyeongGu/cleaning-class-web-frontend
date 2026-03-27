@@ -17,7 +17,6 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
     null,
   );
 
-  // 수정 성공 시 FAQ 목록 페이지로 이동
   useEffect(() => {
     if (state && "success" in state && state.success) {
       router.push("/admin/faq");
@@ -26,7 +25,6 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
 
   return (
     <form action={formAction} className="space-y-8">
-      {/* 질문 */}
       <div>
         <label
           htmlFor="question"
@@ -52,7 +50,6 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         )}
       </div>
 
-      {/* 답변 */}
       <div>
         <label
           htmlFor="answer"
@@ -76,7 +73,6 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         )}
       </div>
 
-      {/* 표시 순서 */}
       <div>
         <label
           htmlFor="display_order"
@@ -100,7 +96,6 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         )}
       </div>
 
-      {/* 활성 여부 */}
       <div>
         <div className="flex items-center gap-3">
           <input
@@ -124,12 +119,10 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
         </p>
       </div>
 
-      {/* 일반 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

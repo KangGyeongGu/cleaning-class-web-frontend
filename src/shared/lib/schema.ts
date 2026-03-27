@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// 견적문의 폼 스키마
 export const contactFormSchema = z.object({
   name: z.string().min(1, "이름을 입력해주세요"),
   phone: z
@@ -17,7 +16,6 @@ export const contactFormSchema = z.object({
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
 
-// 관리자 로그인 폼 스키마
 export const loginFormSchema = z.object({
   email: z.string().email("올바른 이메일 형식이 아닙니다"),
   password: z.string().min(6, "비밀번호는 최소 6자 이상이어야 합니다"),
@@ -25,7 +23,6 @@ export const loginFormSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginFormSchema>;
 
-// 리뷰 폼 스키마
 export const reviewFormSchema = z.object({
   title: z
     .string()
@@ -58,7 +55,6 @@ export type ReviewFormData = z.infer<typeof reviewFormSchema>;
 const PHONE_REGEX =
   /^(02|01[016-9]|0[3-9]\d{1,2})-\d{3,4}-\d{4}$|^0[5-9]0[4-9]-\d{4}-\d{4}$/;
 
-// 업체 정보 폼 스키마
 const BUSINESS_NUMBER_REGEX = /^\d{3}-\d{2}-\d{5}$/;
 
 export const siteConfigFormSchema = z.object({
@@ -118,13 +114,11 @@ export const siteConfigFormSchema = z.object({
 
 export type SiteConfigFormData = z.infer<typeof siteConfigFormSchema>;
 
-// 서비스 폼 스키마
 export const serviceFormSchema = z.object({
   title: z
     .string()
     .min(1, "서비스명을 입력해주세요")
     .max(50, "서비스명은 50자 이하여야 합니다"),
-  // description 대신 tags 배열로 전환: 서비스 특성 태그 최소 1개 필요
   tags: z.array(z.string()).min(1, "최소 1개 이상의 태그를 입력해주세요"),
   sort_order: z
     .number()
@@ -139,7 +133,6 @@ export const serviceFormSchema = z.object({
 
 export type ServiceFormData = z.infer<typeof serviceFormSchema>;
 
-// FAQ 폼 스키마
 export const faqFormSchema = z.object({
   question: z
     .string()

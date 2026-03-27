@@ -6,7 +6,6 @@ import { BlogReviewsSection } from "@/components/BlogReviewsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { buildDescription } from "@/shared/lib/format";
 
-// ISR: 1시간마다 재검증
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,7 +32,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// 섹션별 로딩 스켈레톤 — Suspense 경계로 스트리밍 렌더링 지원
 function ServicesSkeleton() {
   return (
     <div className="py-16 md:py-32">

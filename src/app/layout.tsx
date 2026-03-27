@@ -53,7 +53,6 @@ async function getPretendardCss(): Promise<string> {
   }
 }
 
-// ISR: layout 수준에서도 1시간마다 재검증
 export const revalidate = 3600;
 
 export const viewport: Viewport = {
@@ -137,19 +136,12 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Pretendard: CDN CSS를 인라인화 (font-display:swap 유지) */}
         {pretendardCss && (
           // eslint-disable-next-line @eslint-react/dom/no-dangerously-set-innerhtml -- 서버에서 fetch한 CDN CSS를 인라인. XSS 위험 없음 (고정 URL, Content-Type 검증 완료)
           <style dangerouslySetInnerHTML={{ __html: pretendardCss }} />
         )}
       </head>
       <body className="font-sans antialiased">
-        {/*
-          JSON-LD 구조화 데이터 삽입.
-          dangerouslySetInnerHTML은 Next.js 공식 권장 패턴입니다.
-          @see https://nextjs.org/docs/app/building-your-application/optimizing/metadata#json-ld
-          jsonLd 객체는 서버에서 생성되며 사용자 입력을 포함하지 않으므로 XSS 위험 없음.
-        */}
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- Next.js 공식 JSON-LD 패턴, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"
@@ -178,7 +170,6 @@ export default async function RootLayout({
         />
         {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
         {children}
-        {/* GA_ID가 설정된 경우에만 Google Analytics 스크립트 삽입 */}
         {GA_ID && (
           <>
             <Script
@@ -195,7 +186,6 @@ export default async function RootLayout({
             </Script>
           </>
         )}
-        {/* CLARITY_ID가 설정된 경우에만 Microsoft Clarity 스크립트 삽입 */}
         {CLARITY_ID && (
           <Script id="ms-clarity" strategy="afterInteractive">
             {`

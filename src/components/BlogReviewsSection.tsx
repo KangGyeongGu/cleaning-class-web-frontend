@@ -1,7 +1,3 @@
-/**
- * BlogReviews 서버 래퍼 컴포넌트
- * BlogReviews는 "use client" 컴포넌트이므로 데이터 조회는 이 서버 컴포넌트에서 담당합니다.
- */
 import { getPublishedReviews } from "@/shared/lib/home";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { BlogReviews } from "@/components/BlogReviews";

@@ -1,21 +1,11 @@
-/**
- * 관리자 대시보드 전용 Supabase 쿼리 헬퍼
- * 여러 테이블의 집계 데이터를 한 번에 조회합니다.
- */
-
 import { createClient } from "@/shared/lib/supabase/server";
 
-/** 관리자 대시보드 통계 데이터 */
 export interface AdminDashboardData {
   serviceCount: number;
   reviewCount: number;
   faqCount: number;
 }
 
-/**
- * 관리자 대시보드용 집계 데이터 조회
- * 서비스 수, 리뷰 수, FAQ 수를 병렬로 조회합니다.
- */
 export async function getAdminDashboardData(): Promise<AdminDashboardData> {
   const supabase = await createClient();
 

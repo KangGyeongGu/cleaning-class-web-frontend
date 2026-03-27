@@ -1,9 +1,6 @@
 import { createBrowserClient } from "@supabase/ssr";
 import type { Database } from "@/shared/types/database";
 
-/**
- * Client Component용 Supabase 클라이언트 생성
- */
 export function createClient() {
   return createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

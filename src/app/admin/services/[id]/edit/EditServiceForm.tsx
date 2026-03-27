@@ -27,7 +27,6 @@ export function EditServiceForm({
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
-  // 기존 서비스의 tags 배열로 초기 상태 설정
   const [tags, setTags] = useState<string[]>(service.tags ?? []);
   const [tagInput, setTagInput] = useState("");
   const [focalX, setFocalX] = useState(service.image_focal_x);
@@ -80,14 +79,12 @@ export function EditServiceForm({
     }
   };
 
-  // 성공 시 리다이렉트
   useEffect(() => {
     if (state && "success" in state && state.success) {
       router.push("/admin/services");
     }
   }, [state, router]);
 
-  // 태그 추가: 중복 및 최대 30자 제한 적용
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
     if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
@@ -96,12 +93,10 @@ export function EditServiceForm({
     }
   };
 
-  // 태그 삭제: 인덱스 기준으로 제거
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
-  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
   const handleSubmit = async (formData: FormData) => {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
@@ -112,7 +107,6 @@ export function EditServiceForm({
 
   return (
     <form action={handleSubmit} className="space-y-8">
-      {/* 서비스명 */}
       <div>
         <label
           htmlFor="title"
@@ -135,7 +129,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 서비스 태그 */}
       <div>
         <label
           htmlFor="tagInput"
@@ -170,7 +163,6 @@ export function EditServiceForm({
             <Plus size={14} />
           </button>
         </div>
-        {/* 추가된 태그 목록 (pill 형태), 기존 데이터 포함 */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
@@ -193,7 +185,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
           <label
@@ -270,7 +261,6 @@ export function EditServiceForm({
         </div>
       </div>
 
-      {/* 정렬 순서 */}
       <div>
         <label
           htmlFor="sort_order"
@@ -293,7 +283,6 @@ export function EditServiceForm({
         )}
       </div>
 
-      {/* 게시 여부 */}
       <div className="flex items-center gap-3">
         <input
           id="is_published"
@@ -311,12 +300,10 @@ export function EditServiceForm({
         </label>
       </div>
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"

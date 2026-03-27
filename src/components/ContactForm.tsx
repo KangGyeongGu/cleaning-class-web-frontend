@@ -6,7 +6,6 @@ import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
 import { formatPhoneNumber } from "@/shared/lib/format";
 
-// 커스텀 드롭다운 컴포넌트
 interface CustomDropdownProps {
   label: string;
   name: string;
@@ -31,7 +30,6 @@ function CustomDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     function handleClickOutside(event: PointerEvent) {
       if (
@@ -117,7 +115,7 @@ export function ContactForm({ phone }: ContactFormProps) {
   const isSuccess = state?.success === true;
   const showSuccess = isSuccess && !isReset;
 
-  // 언마운트 시 최신 previewUrls를 해제하기 위한 ref
+  // 언마운트 시점에 최신 URL 목록을 참조하기 위한 ref (클로저 stale 방지)
   const previewUrlsRef = useRef(previewUrls);
 
   useEffect(() => {
@@ -130,7 +128,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     };
   }, []);
 
-  // IntersectionObserver로 섹션 진입 애니메이션
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -149,15 +146,11 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => observer.disconnect();
   }, []);
 
-  // 전송 성공 시 3초간 메시지 표시 후 폼 리셋
   useEffect(() => {
     if (!isSuccess || isReset) return;
 
     const timer = setTimeout(() => {
-      // blob URL 해제
       previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
-
-      // React 상태 초기화
       setImages([]);
       setPreviewUrls([]);
       setMessageLength(0);
@@ -166,7 +159,6 @@ export function ContactForm({ phone }: ContactFormProps) {
       setRegion("");
       setIsReset(true);
 
-      // DOM 입력 필드 초기화
       if (nameRef.current) nameRef.current.value = "";
       if (phoneRef.current) phoneRef.current.value = "";
       if (messageRef.current) messageRef.current.value = "";
@@ -202,12 +194,10 @@ export function ContactForm({ phone }: ContactFormProps) {
       return;
     }
 
-    // 새 파일들의 blob URL 생성
     const newUrls = files.map((file) => URL.createObjectURL(file));
     setImages(newImages);
     setPreviewUrls((prev) => [...prev, ...newUrls]);
 
-    // DataTransfer API를 사용하여 input.files 갱신
     if (fileInputRef.current) {
       const dataTransfer = new DataTransfer();
       newImages.forEach((file) => dataTransfer.items.add(file));
@@ -216,7 +206,6 @@ export function ContactForm({ phone }: ContactFormProps) {
   };
 
   const handleImageRemove = (index: number) => {
-    // 제거될 이미지의 blob URL 해제
     URL.revokeObjectURL(previewUrls[index]);
 
     const newImages = images.filter((_, i) => i !== index);
@@ -224,7 +213,6 @@ export function ContactForm({ phone }: ContactFormProps) {
     setImages(newImages);
     setPreviewUrls(newUrls);
 
-    // DataTransfer API를 사용하여 input.files 갱신
     if (fileInputRef.current) {
       const dataTransfer = new DataTransfer();
       newImages.forEach((file) => dataTransfer.items.add(file));
@@ -404,10 +392,8 @@ export function ContactForm({ phone }: ContactFormProps) {
                 </span>
               </div>
 
-              {/* 이미지 첨부 */}
               <div className="mt-4">
                 <div className="flex items-center gap-4">
-                  {/* 이미지 미리보기 그리드 */}
                   {images.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {images.map((file, index) => (
@@ -437,7 +423,6 @@ export function ContactForm({ phone }: ContactFormProps) {
                     </div>
                   )}
 
-                  {/* 파일 추가 버튼 */}
                   <label className="group/add flex shrink-0 cursor-pointer items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center border border-slate-200 text-slate-400 transition-colors group-hover/add:border-slate-900 group-hover/add:text-slate-900">
                       <Plus size={20} />

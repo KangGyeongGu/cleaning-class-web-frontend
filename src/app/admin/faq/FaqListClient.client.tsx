@@ -121,7 +121,6 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
         </div>
       )}
 
-      {/* 테이블 헤더 */}
       <div className="hidden grid-cols-12 gap-4 border-b border-slate-200 bg-slate-50 p-4 md:grid">
         <div className="col-span-1 text-xs font-bold tracking-widest text-slate-500 uppercase">
           순서
@@ -143,7 +142,6 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
         </div>
       </div>
 
-      {/* 테이블 바디 */}
       <ul role="list" className="divide-y divide-slate-200">
         {faqs.map((faq, index) => (
           <li
@@ -161,7 +159,6 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
                   : ""
             }`}
           >
-            {/* 드래그 핸들 */}
             <div className="col-span-1 flex items-center gap-2">
               <GripVertical
                 size={16}
@@ -170,21 +167,18 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
               <span className="text-xs text-slate-400">{index}</span>
             </div>
 
-            {/* 질문 */}
             <div className="col-span-4">
               <p className="line-clamp-2 text-sm font-bold text-slate-900">
                 {faq.question}
               </p>
             </div>
 
-            {/* 답변 미리보기 */}
             <div className="col-span-3">
               <p className="line-clamp-2 text-xs text-slate-500">
                 {faq.answer}
               </p>
             </div>
 
-            {/* 활성 상태 */}
             <div className="col-span-1 text-center">
               <button
                 type="button"
@@ -203,14 +197,12 @@ export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
               </button>
             </div>
 
-            {/* 등록일 */}
             <div className="col-span-1">
               <span className="text-xs text-slate-500">
                 {new Date(faq.created_at).toLocaleDateString("ko-KR")}
               </span>
             </div>
 
-            {/* 작업 버튼 */}
             <div className="col-span-2 flex justify-end gap-2">
               <Link
                 href={`/admin/faq/${faq.id}/edit`}

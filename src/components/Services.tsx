@@ -16,7 +16,6 @@ export async function Services() {
 
   const serviceDescription = siteConfig?.service_description ?? undefined;
 
-  // 서비스 JSON-LD를 이 컴포넌트에서 직접 주입
   const serviceJsonLd = generateServiceJsonLd(
     servicesWithImageUrls,
     siteConfig?.site_url,

@@ -31,7 +31,6 @@ export function ServiceCard({
   const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // IntersectionObserver: 진입 애니메이션 (1회)
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
@@ -113,7 +112,6 @@ export function ServiceCard({
         <h3 className="mb-2 origin-center text-base font-bold text-slate-900 transition-all duration-300 group-hover:scale-110 group-hover:text-black">
           {service.title}
         </h3>
-        {/* 서비스 특징 태그 칩 목록 — 줄바꿈 방지(whitespace-nowrap) */}
         <div className="flex flex-wrap justify-center gap-2">
           {service.tags.map((tag) => (
             <span

@@ -1,8 +1,3 @@
-/**
- * 리뷰 관리 페이지 (composition-only)
- * 인증 확인 후 섹션 서버 컴포넌트들을 조합합니다.
- */
-
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { getUser } from "@/shared/lib/supabase/auth";
@@ -10,7 +5,6 @@ import { ReviewDescriptionSection } from "@/app/admin/reviews/ReviewDescriptionS
 import { ReviewListSection } from "@/app/admin/reviews/ReviewListSection";
 
 export default async function ReviewsPage(): Promise<React.ReactElement> {
-  // 인증 확인: 미인증 시 getUser 내부에서 리다이렉트
   await getUser();
 
   return (
@@ -26,10 +20,7 @@ export default async function ReviewsPage(): Promise<React.ReactElement> {
         </Link>
       </div>
 
-      {/* 안내 문구 편집기 — site_config 조회는 ReviewDescriptionSection에서 처리 */}
       <ReviewDescriptionSection />
-
-      {/* 리뷰 목록 — 데이터 조회는 ReviewListSection에서 처리 */}
       <ReviewListSection />
     </div>
   );

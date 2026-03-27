@@ -1,8 +1,3 @@
-/**
- * Supabase Storage 서버 전용 유틸리티
- * Server Action에서 이미지 업로드/삭제에 사용합니다.
- */
-
 import { createClient } from "@/shared/lib/supabase/server";
 
 const ALLOWED_MIME_TYPES = [
@@ -14,7 +9,7 @@ const ALLOWED_MIME_TYPES = [
 
 const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png", "webp", "gif"] as const;
 
-const MAX_UPLOAD_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 
 type AllowedMimeType = (typeof ALLOWED_MIME_TYPES)[number];
 type AllowedExtension = (typeof ALLOWED_EXTENSIONS)[number];
@@ -27,12 +22,6 @@ function isAllowedExtension(value: string): value is AllowedExtension {
   return (ALLOWED_EXTENSIONS as readonly string[]).includes(value);
 }
 
-/**
- * 이미지 파일을 Supabase Storage에 업로드
- * @param bucket - Storage 버킷 이름 (e.g. "review-images", "service-images")
- * @param file - 업로드할 파일
- * @returns 저장된 파일명
- */
 export async function uploadImage(bucket: string, file: File): Promise<string> {
   if (!isAllowedMimeType(file.type)) {
     throw new Error(
@@ -70,11 +59,6 @@ export async function uploadImage(bucket: string, file: File): Promise<string> {
   return fileName;
 }
 
-/**
- * Supabase Storage에서 이미지 삭제
- * @param bucket - Storage 버킷 이름
- * @param imagePath - 삭제할 이미지 경로
- */
 export async function deleteImage(
   bucket: string,
   imagePath: string,
@@ -86,6 +70,6 @@ export async function deleteImage(
 
   if (error) {
     console.error("이미지 삭제 실패:", error.message);
-    // 이미지 삭제 실패는 치명적이지 않으므로 에러를 throw하지 않음
+    // 이미지 삭제 실패는 치명적이지 않으므로 throw하지 않음
   }
 }

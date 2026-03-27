@@ -1,4 +1,3 @@
-// 이용약관 페이지 — policy.md 제2부 본문을 정적 서버 컴포넌트로 렌더링
 import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 
@@ -26,7 +25,6 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  // BreadcrumbList JSON-LD — 홈 → 이용약관 경로 구조화
   const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
     { name: "홈", url: "https://www.cleaningclass.co.kr" },
     {
@@ -46,16 +44,13 @@ export default function TermsPage() {
       />
       {/* eslint-enable @eslint-react/dom/no-dangerously-set-innerhtml */}
 
-      {/* 페이지 제목 — h1은 페이지 전체에 1개만 존재 */}
       <header className="mb-12">
         <h1 className="mb-4 text-3xl font-black tracking-tighter text-slate-900">
           청소클라쓰 이용약관
         </h1>
       </header>
 
-      {/* 본문 조항 */}
       <div className="space-y-12">
-        {/* 제1조 */}
         <section aria-labelledby="article-1">
           <h2 id="article-1" className="mb-4 text-lg font-bold text-slate-900">
             제1조 (목적)
@@ -68,7 +63,6 @@ export default function TermsPage() {
           </p>
         </section>
 
-        {/* 제2조 */}
         <section aria-labelledby="article-2">
           <h2 id="article-2" className="mb-4 text-lg font-bold text-slate-900">
             제2조 (정의)
@@ -94,13 +88,11 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제3조 */}
         <section aria-labelledby="article-3">
           <h2 id="article-3" className="mb-4 text-lg font-bold text-slate-900">
             제3조 (약관의 효력 및 변경)
           </h2>
           <ol className="space-y-4 text-sm leading-relaxed font-light text-slate-700">
-            {/* 약관규제법 제3조 — 약관 동의 간주 문구 강조 */}
             <li>
               1. 이 약관은 사이트에 게시함으로써 효력이 발생합니다.{" "}
               <strong className="font-medium text-slate-900">
@@ -128,7 +120,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제4조 */}
         <section aria-labelledby="article-4">
           <h2 id="article-4" className="mb-4 text-lg font-bold text-slate-900">
             제4조 (서비스의 제공)
@@ -146,7 +137,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제5조 */}
         <section aria-labelledby="article-5">
           <h2 id="article-5" className="mb-4 text-lg font-bold text-slate-900">
             제5조 (서비스의 변경 및 중단)
@@ -175,7 +165,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제6조 */}
         <section aria-labelledby="article-6">
           <h2 id="article-6" className="mb-4 text-lg font-bold text-slate-900">
             제6조 (견적문의)
@@ -197,7 +186,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제7조 */}
         <section aria-labelledby="article-7">
           <h2 id="article-7" className="mb-4 text-lg font-bold text-slate-900">
             제7조 (이용자의 의무)
@@ -215,7 +203,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제8조 */}
         <section aria-labelledby="article-8">
           <h2 id="article-8" className="mb-4 text-lg font-bold text-slate-900">
             제8조 (회사의 의무)
@@ -236,7 +223,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제9조 */}
         <section aria-labelledby="article-9">
           <h2 id="article-9" className="mb-4 text-lg font-bold text-slate-900">
             제9조 (저작권 및 지적재산권)
@@ -253,13 +239,11 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제10조 */}
         <section aria-labelledby="article-10">
           <h2 id="article-10" className="mb-4 text-lg font-bold text-slate-900">
             제10조 (면책사항)
           </h2>
           <ol className="space-y-3 text-sm leading-relaxed font-light text-slate-700">
-            {/* 약관규제법 제7조 준수 — 고의·중과실 면책 제외 문구 강조 */}
             <li>
               1. 회사는 천재지변, 전쟁, 기간통신사업자의 서비스 중지 등
               불가항력적인 사유로 서비스를 제공할 수 없는 경우에는 책임이
@@ -280,7 +264,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 제11조 */}
         <section aria-labelledby="article-11">
           <h2 id="article-11" className="mb-4 text-lg font-bold text-slate-900">
             제11조 (분쟁해결 및 관할법원)
@@ -297,7 +280,6 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        {/* 부칙 */}
         <section aria-labelledby="addendum">
           <h2 id="addendum" className="mb-4 text-lg font-bold text-slate-900">
             부칙

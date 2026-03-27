@@ -15,7 +15,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
 
   return (
     <form action={formAction} className="space-y-8">
-      {/* 업체명 */}
       <div>
         <label
           htmlFor="business_name"
@@ -39,7 +38,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 대표자명 */}
       <div>
         <label
           htmlFor="representative"
@@ -62,7 +60,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 사업자번호 */}
       <div>
         <label
           htmlFor="business_registration_number"
@@ -98,7 +95,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           )}
       </div>
 
-      {/* 전화번호 */}
       <div>
         <label
           htmlFor="phone"
@@ -124,7 +120,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 이메일 */}
       <div>
         <label
           htmlFor="email"
@@ -146,7 +141,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 블로그 URL */}
       <div>
         <label
           htmlFor="blog_url"
@@ -169,7 +163,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 인스타그램 URL */}
       <div>
         <label
           htmlFor="instagram_url"
@@ -192,7 +185,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 당근마켓 URL */}
       <div>
         <label
           htmlFor="daangn_url"
@@ -215,7 +207,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 소개글 */}
       <div>
         <label
           htmlFor="description"
@@ -239,7 +230,6 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 주소 */}
       <div>
         <label
           htmlFor="address"
@@ -260,17 +250,14 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
         )}
       </div>
 
-      {/* 성공 메시지 */}
       {state && "message" in state && state.message && (
         <p className="text-sm text-green-600">{state.message}</p>
       )}
 
-      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 저장 버튼 */}
       <div className="pt-4">
         <button
           type="submit"

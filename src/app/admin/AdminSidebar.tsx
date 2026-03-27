@@ -34,7 +34,6 @@ export function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile Header */}
       <header className="fixed top-0 right-0 left-0 z-40 border-b border-slate-200 bg-white md:hidden">
         <div className="flex items-center justify-between p-4">
           <div className="text-xl font-black text-slate-900">
@@ -51,7 +50,6 @@ export function AdminSidebar() {
         </div>
       </header>
 
-      {/* Desktop Sidebar */}
       <aside className="fixed top-0 left-0 hidden h-screen w-64 border-r border-slate-200 bg-white md:block">
         <div className="p-8">
           <div className="mb-12 text-2xl font-black text-slate-900">
@@ -101,7 +99,6 @@ export function AdminSidebar() {
         </div>
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-30 bg-white md:hidden">
           <nav className="space-y-2 px-4 pt-20">

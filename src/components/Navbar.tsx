@@ -29,7 +29,6 @@ const menuItems: MenuItem[] = [
   { kind: "link", label: "자주묻는질문", href: "/help" },
 ];
 
-/** 청소클라쓰 로고 — next/image로 최적화 렌더링 */
 function LogoIcon(): React.JSX.Element {
   return (
     <Image
@@ -168,7 +167,6 @@ export function Navbar({
             {displayName}
           </button>
 
-          {/* Desktop Menu */}
           <div className="hidden items-center gap-6 md:flex">
             <div className="flex items-center gap-8">
               {menuItems.map((item) =>
@@ -234,7 +232,6 @@ export function Navbar({
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             ref={hamburgerRef}
             type="button"

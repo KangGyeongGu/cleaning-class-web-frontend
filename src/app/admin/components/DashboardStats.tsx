@@ -1,8 +1,3 @@
-/**
- * 관리자 대시보드 통계 카드 섹션 서버 컴포넌트
- * 데이터 조회와 렌더링을 담당하며 page.tsx로부터 분리됩니다.
- */
-
 import { getAdminDashboardData } from "@/shared/lib/queries/admin";
 
 export async function DashboardStats(): Promise<React.ReactElement> {

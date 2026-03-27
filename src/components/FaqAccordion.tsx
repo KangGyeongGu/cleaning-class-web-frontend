@@ -63,7 +63,7 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
               </button>
             </h3>
 
-            {/* 답변 패널 — max-height 전환으로 부드러운 열기/닫기 */}
+            {/* 답변 패널 — grid-rows 전환으로 부드러운 열기/닫기 */}
             <div
               id={answerId}
               role="region"

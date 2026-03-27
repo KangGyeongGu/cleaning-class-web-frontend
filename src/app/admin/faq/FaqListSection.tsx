@@ -1,8 +1,3 @@
-/**
- * FAQ 목록 섹션 서버 컴포넌트
- * FAQ 데이터를 조회하여 FaqListClient에 전달합니다.
- */
-
 import { getAllFaqs } from "@/shared/lib/queries/faq";
 import { FaqListClient } from "@/app/admin/faq/FaqListClient.client";
 

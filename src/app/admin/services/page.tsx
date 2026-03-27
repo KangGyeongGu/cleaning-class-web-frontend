@@ -1,8 +1,3 @@
-/**
- * 서비스 관리 페이지 (composition-only)
- * 인증 확인 후 섹션 서버 컴포넌트들을 조합합니다.
- */
-
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { getUser } from "@/shared/lib/supabase/auth";
@@ -10,7 +5,6 @@ import { ServiceDescriptionSection } from "@/app/admin/services/ServiceDescripti
 import { ServiceListSection } from "@/app/admin/services/ServiceListSection";
 
 export default async function ServicesPage(): Promise<React.ReactElement> {
-  // 인증 확인: 미인증 시 getUser 내부에서 리다이렉트
   await getUser();
 
   return (
@@ -26,10 +20,7 @@ export default async function ServicesPage(): Promise<React.ReactElement> {
         </Link>
       </div>
 
-      {/* 안내 문구 편집기 — site_config 조회는 ServiceDescriptionSection에서 처리 */}
       <ServiceDescriptionSection />
-
-      {/* 서비스 목록 — 데이터 조회는 ServiceListSection에서 처리 */}
       <ServiceListSection />
     </div>
   );

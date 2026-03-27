@@ -32,7 +32,6 @@ export function Footer({ siteConfig }: FooterProps) {
       <div className="container mx-auto px-4">
         <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-4">
           <div className="col-span-1 md:col-span-2">
-            {/* SEO-003: h2 → p 전환 (시각적 스타일 유지) */}
             <p className="mb-4 text-3xl font-black tracking-tighter">
               {businessName}
             </p>
@@ -127,7 +126,6 @@ export function Footer({ siteConfig }: FooterProps) {
           </div>
         </div>
 
-        {/* 하단 링크 바: 저작권 + 개인정보처리방침 + 이용약관 + 고객센터 중앙 정렬 */}
         <div className="flex items-center justify-center gap-0 pt-8 text-xs font-light text-slate-400">
           <span>&copy; 청소클라쓰</span>
           <span className="mx-3 select-none">|</span>

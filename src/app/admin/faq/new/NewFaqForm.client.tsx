@@ -13,7 +13,6 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(createFaq, null);
 
-  // 등록 성공 시 FAQ 목록 페이지로 이동
   useEffect(() => {
     if (state && "success" in state && state.success) {
       router.push("/admin/faq");
@@ -22,7 +21,6 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
 
   return (
     <form action={formAction} className="space-y-8">
-      {/* 질문 */}
       <div>
         <label
           htmlFor="question"
@@ -47,7 +45,6 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
         )}
       </div>
 
-      {/* 답변 */}
       <div>
         <label
           htmlFor="answer"
@@ -70,7 +67,6 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
         )}
       </div>
 
-      {/* 표시 순서 */}
       <div>
         <label
           htmlFor="display_order"
@@ -94,7 +90,6 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
         )}
       </div>
 
-      {/* 활성 여부 */}
       <div>
         <div className="flex items-center gap-3">
           <input
@@ -118,12 +113,10 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
         </p>
       </div>
 
-      {/* 일반 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
-      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"
