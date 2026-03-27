@@ -288,11 +288,22 @@
   }
 }
 
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
 @layer components {
   /* ── 타이포그래피 스케일 ── */
 
   .text-display {
-    @apply text-4xl leading-tight font-black tracking-tighter text-slate-900;
+    @apply text-3xl leading-tight font-black tracking-tighter text-slate-900;
   }
   @media (min-width: 768px) {
     .text-display {
@@ -322,7 +333,7 @@
   }
 
   .text-subtitle {
-    @apply text-xl font-light tracking-wide text-slate-600;
+    @apply text-base font-light tracking-wide text-slate-600;
   }
   @media (min-width: 768px) {
     .text-subtitle {
@@ -357,7 +368,7 @@
   }
 
   .btn-filter {
-    @apply rounded-full border px-4 py-1.5 text-sm font-medium tracking-wide transition-colors;
+    @apply rounded-full border px-3 py-1 text-xs font-medium tracking-wide transition-colors md:px-4 md:py-1.5 md:text-sm;
   }
 
   .btn-filter-active {

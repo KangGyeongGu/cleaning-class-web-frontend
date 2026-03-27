@@ -29,43 +29,50 @@ export async function Hero(): Promise<React.JSX.Element> {
 
   const hasImage1 = heroImage1 !== "";
   const hasImage2 = heroImage2 !== "";
+  const hasBothImages = hasImage1 && hasImage2;
   const hasAnyImage = hasImage1 || hasImage2;
 
   return (
     <section
       className={[
-        "relative flex min-h-[50vh] w-full flex-col items-center justify-center overflow-hidden py-16 md:py-20",
+        "relative flex w-full flex-col items-center justify-center overflow-hidden",
+        "h-[50vh] py-12 md:h-auto md:min-h-[50vh] md:py-20",
         hasAnyImage ? "bg-slate-900 text-white" : "bg-white text-slate-900",
       ].join(" ")}
     >
       {hasAnyImage ? (
         <>
-          {/* 2장이면 대각선으로 분할(각 60% 너비, 20% 겹침), 1장이면 전체 */}
           <div className="absolute inset-0">
             {hasImage1 && (
               <div
                 className="absolute top-0 bottom-0 left-0 overflow-hidden"
                 style={{
-                  ...(hasImage2
-                    ? {
-                        width: "60%",
-                        clipPath: "polygon(0 0, 91.67% 0, 75% 100%, 0 100%)",
-                      }
+                  ...(hasBothImages
+                    ? { width: "100%" }
                     : { width: "100%" }),
-                  animation: hasImage2
+                  animation: hasBothImages
                     ? "heroImageSlideLeft 1.4s cubic-bezier(0.16,1,0.3,1) both"
                     : "heroImageReveal 1.6s cubic-bezier(0.16,1,0.3,1) both",
                 }}
               >
-                <Image
-                  src={heroImage1}
-                  fill
-                  priority
-                  alt={`${displayName} 청소 서비스`}
-                  className="object-cover"
-                  style={{ objectPosition: `${focal1.x}% ${focal1.y}%` }}
-                  sizes={hasImage2 ? "60vw" : "100vw"}
-                />
+                {/* 모바일: 상하 분할, 데스크톱: 좌우 대각선 분할 */}
+                <div
+                  className={
+                    hasBothImages
+                      ? "absolute inset-0 [clip-path:polygon(0_0,100%_0,0_100%)] md:[clip-path:polygon(0_0,91.67%_0,75%_100%,0_100%)] md:w-[60%]"
+                      : "absolute inset-0"
+                  }
+                >
+                  <Image
+                    src={heroImage1}
+                    fill
+                    priority
+                    alt={`${displayName} 청소 서비스`}
+                    className="object-cover"
+                    style={{ objectPosition: `${focal1.x}% ${focal1.y}%` }}
+                    sizes={hasBothImages ? "(max-width: 768px) 100vw, 60vw" : "100vw"}
+                  />
+                </div>
               </div>
             )}
             {hasImage2 && (
@@ -73,26 +80,30 @@ export async function Hero(): Promise<React.JSX.Element> {
                 className="absolute top-0 right-0 bottom-0 overflow-hidden"
                 style={{
                   ...(hasImage1
-                    ? {
-                        width: "60%",
-                        clipPath:
-                          "polygon(25% 0, 100% 0, 100% 100%, 8.33% 100%)",
-                      }
+                    ? { width: "100%" }
                     : { width: "100%" }),
                   animation: hasImage1
                     ? "heroImageSlideRight 1.4s 0.15s cubic-bezier(0.16,1,0.3,1) both"
                     : "heroImageReveal 1.6s cubic-bezier(0.16,1,0.3,1) both",
                 }}
               >
-                <Image
-                  src={heroImage2}
-                  fill
-                  priority={!hasImage1}
-                  alt={`${displayName} 청소 서비스 현장`}
-                  className="object-cover"
-                  style={{ objectPosition: `${focal2.x}% ${focal2.y}%` }}
-                  sizes={hasImage1 ? "60vw" : "100vw"}
-                />
+                <div
+                  className={
+                    hasImage1
+                      ? "absolute inset-0 [clip-path:polygon(100%_0,100%_100%,0_100%)] md:[clip-path:polygon(25%_0,100%_0,100%_100%,8.33%_100%)] md:absolute md:top-0 md:right-0 md:bottom-0 md:left-auto md:w-[60%]"
+                      : "absolute inset-0"
+                  }
+                >
+                  <Image
+                    src={heroImage2}
+                    fill
+                    priority={!hasImage1}
+                    alt={`${displayName} 청소 서비스 현장`}
+                    className="object-cover"
+                    style={{ objectPosition: `${focal2.x}% ${focal2.y}%` }}
+                    sizes={hasImage1 ? "(max-width: 768px) 100vw, 60vw" : "100vw"}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -134,7 +145,7 @@ export async function Hero(): Promise<React.JSX.Element> {
       >
         <p
           className={[
-            "text-label mb-6 tracking-widest",
+            "text-label mb-4 tracking-widest md:mb-6",
             hasAnyImage ? "text-white/70" : "text-slate-400",
           ].join(" ")}
           style={
@@ -148,7 +159,7 @@ export async function Hero(): Promise<React.JSX.Element> {
 
         <h1
           className={[
-            "text-display mb-6",
+            "text-display mb-4 md:mb-6",
             hasAnyImage ? "text-white" : "",
           ].join(" ")}
           style={
@@ -162,7 +173,7 @@ export async function Hero(): Promise<React.JSX.Element> {
 
         <p
           className={[
-            "text-subtitle mb-12",
+            "text-subtitle mb-8 md:mb-12",
             hasAnyImage ? "font-light text-white/85" : "",
           ].join(" ")}
           style={

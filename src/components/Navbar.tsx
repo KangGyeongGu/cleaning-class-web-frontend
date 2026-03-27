@@ -38,7 +38,7 @@ function LogoIcon(): React.JSX.Element {
       width={36}
       height={36}
       aria-hidden={true}
-      className="rounded-sm"
+      className="h-7 w-7 rounded-sm md:h-9 md:w-9"
     />
   );
 }
@@ -135,11 +135,11 @@ export function Navbar({
 
   return (
     <>
-      <nav className="sticky top-0 right-0 left-0 z-[60] bg-white/80 py-4 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6">
+      <nav className="sticky top-0 right-0 left-0 z-[60] bg-white/80 py-2.5 backdrop-blur-md md:py-4">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 md:px-6">
           <button
             type="button"
-            className="relative flex min-h-10 cursor-pointer items-center gap-2 border-0 bg-transparent text-xl font-black tracking-tighter text-slate-900"
+            className="relative flex min-h-10 cursor-pointer items-center gap-1.5 border-0 bg-transparent text-lg font-black tracking-tighter text-slate-900 md:gap-2 md:text-xl"
             aria-label="청소클라쓰 홈으로 이동"
             onClick={handleLogoClick}
           >
@@ -206,7 +206,7 @@ export function Navbar({
             type="button"
             aria-label="메뉴 열기/닫기"
             aria-expanded={isOpen}
-            className="relative flex h-12 w-12 items-center justify-center text-slate-900 md:hidden"
+            className="relative flex h-10 w-10 items-center justify-center text-slate-900 md:hidden"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <X /> : <Menu />}
@@ -221,7 +221,7 @@ export function Navbar({
         aria-modal="true"
         aria-label="내비게이션 메뉴"
         aria-hidden={!isOpen}
-        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-white transition-opacity duration-200 md:hidden ${
+        className={`fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-white transition-opacity duration-200 md:hidden ${
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -233,13 +233,13 @@ export function Navbar({
             href={item.href}
             tabIndex={isOpen ? 0 : -1}
             onClick={() => setIsOpen(false)}
-            className="text-2xl font-black tracking-tighter text-slate-900"
+            className="text-2xl font-medium tracking-wide text-slate-900"
           >
             {item.label}
           </Link>
         ))}
         {(hasBlogUrl || hasInstagramUrl || hasDaangnUrl) && (
-          <div className="mt-2 flex items-center gap-6 border-t border-slate-200 pt-6">
+          <div className="mt-2 flex items-center gap-5 border-t border-slate-200 pt-6">
             {hasBlogUrl && (
               <a
                 href={blogUrl}
@@ -250,7 +250,7 @@ export function Navbar({
                 aria-label="네이버 블로그"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
-                <NaverBlogIcon size={28} />
+                <NaverBlogIcon size={24} />
               </a>
             )}
             {hasInstagramUrl && (
@@ -263,7 +263,7 @@ export function Navbar({
                 aria-label="인스타그램"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
-                <InstagramIcon size={28} />
+                <InstagramIcon size={24} />
               </a>
             )}
             {hasDaangnUrl && (
@@ -276,7 +276,7 @@ export function Navbar({
                 aria-label="당근마켓"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
-                <DaangnIcon size={28} />
+                <DaangnIcon size={24} />
               </a>
             )}
           </div>

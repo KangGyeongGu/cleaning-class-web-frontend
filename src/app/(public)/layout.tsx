@@ -22,7 +22,12 @@ export default async function PublicLayout({ children }: PublicLayoutProps) {
       />
       <main>{children}</main>
       <Footer siteConfig={siteConfig} />
-      {siteConfig?.phone && <MobilePhoneButton phone={siteConfig.phone} />}
+      {siteConfig?.phone && (
+        <MobilePhoneButton
+          phone={siteConfig.phone}
+          movingPhone={siteConfig.moving_phone ?? undefined}
+        />
+      )}
     </>
   );
 }

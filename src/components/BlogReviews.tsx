@@ -56,20 +56,20 @@ function PrevArrow(props: CustomArrowProps) {
 function ReviewCard({ review }: { review: ReviewWithUrl }) {
   return (
     <div className="flex h-full flex-col">
-      <div className="relative mb-5 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:aspect-4/3">
+      <div className="relative mb-3 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:mb-5 md:aspect-4/3">
         <Image
           src={review.imageUrl}
           alt={review.title}
           fill
-          sizes="(max-width: 768px) 85vw, (max-width: 1280px) 33vw, 25vw"
+          sizes="(max-width: 768px) 75vw, (max-width: 1280px) 33vw, 25vw"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
       </div>
 
-      <div className="flex flex-1 flex-col px-5 pb-6">
-        <div className="mb-1.5 flex min-h-5 flex-wrap gap-2">
+      <div className="flex flex-1 flex-col px-3.5 pb-4 md:px-5 md:pb-6">
+        <div className="mb-1 flex min-h-4 flex-wrap gap-1.5 md:mb-1.5 md:min-h-5 md:gap-2">
           {review.tags.map((tag) => (
             <span key={tag} className="tag-pill">
               {tag}
@@ -77,17 +77,17 @@ function ReviewCard({ review }: { review: ReviewWithUrl }) {
           ))}
         </div>
 
-        <h3 className="text-heading-3 mb-2 line-clamp-2 min-h-12 leading-snug transition-colors group-hover:text-slate-700">
+        <h3 className="mb-1.5 line-clamp-2 min-h-10 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-slate-700 md:text-heading-3 md:mb-2 md:min-h-12">
           {review.title}
         </h3>
 
-        <p className="mb-4 line-clamp-2 min-h-10 text-sm leading-relaxed font-normal text-slate-700">
+        <p className="mb-3 line-clamp-2 min-h-8 text-xs leading-relaxed font-normal text-slate-700 md:mb-4 md:min-h-10 md:text-sm">
           {review.summary}
         </p>
 
         <div className="mt-auto flex justify-end">
-          <div className="text-label flex w-fit items-center gap-2 border-b border-transparent pb-1 text-slate-900 transition-all group-hover:border-slate-900">
-            More <ArrowUpRight size={12} aria-hidden="true" />
+          <div className="flex w-fit items-center gap-1.5 text-[10px] font-bold tracking-widest text-slate-900 uppercase md:text-label md:gap-2">
+            More <ArrowUpRight size={10} className="md:h-3 md:w-3" aria-hidden="true" />
           </div>
         </div>
       </div>
@@ -203,8 +203,8 @@ export function BlogReviews({
       id="reviews"
       className="relative overflow-hidden bg-white py-16 md:py-32"
     >
-      <div className="max-w-8xl container mx-auto px-4 md:px-20 lg:px-24">
-        <div className="mb-10 flex flex-col items-start justify-between md:flex-row md:items-end md:px-2">
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12">
+        <div className="mb-6 flex flex-col items-start justify-between md:mb-10 md:flex-row md:items-end md:px-2">
           <div>
             <h2 className="text-heading-1 mb-4">REVIEW</h2>
             <p className="text-body-sm max-w-lg tracking-wide text-slate-500 md:text-base">
@@ -239,7 +239,7 @@ export function BlogReviews({
           </div>
         </div>
 
-        <div className="scrollbar-hide mb-8 flex gap-2 overflow-x-auto md:px-2">
+        <div className="scrollbar-hide mb-5 flex gap-1.5 overflow-x-auto md:mb-8 md:gap-2 md:px-2">
           <button
             type="button"
             onClick={() => handleFilterChange(null)}
@@ -269,10 +269,10 @@ export function BlogReviews({
           <>
             <div
               ref={scrollRef}
-              className="scrollbar-hide flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 md:hidden"
+              className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 md:hidden"
             >
               {filteredReviews.map((review) => (
-                <div key={review.id} className="w-11/12 shrink-0 snap-center">
+                <div key={review.id} className="w-4/5 shrink-0 snap-center md:w-11/12">
                   <ReviewCardWrapper review={review} blogUrl={blogUrl} />
                 </div>
               ))}
