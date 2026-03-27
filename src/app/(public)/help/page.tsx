@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 import { FaqSection } from "@/components/FaqSection";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "고객센터",
   description:

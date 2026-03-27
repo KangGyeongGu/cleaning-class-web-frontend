@@ -1,4 +1,4 @@
-import { createClient } from "@/shared/lib/supabase/server";
+import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
 import type { Review, Service } from "@/shared/types/database";
 
@@ -19,7 +19,7 @@ export type ServiceWithImageUrls = {
 
 export async function getPublishedReviews(): Promise<Review[]> {
   try {
-    const supabase = await createClient();
+    const supabase = createStaticClient();
     const { data, error } = await supabase
       .from("reviews")
       .select("*")
@@ -42,7 +42,7 @@ export async function getPublishedServicesWithImageUrls(): Promise<
   ServiceWithImageUrls[]
 > {
   try {
-    const supabase = await createClient();
+    const supabase = createStaticClient();
     const { data, error } = await supabase
       .from("services")
       .select("*")

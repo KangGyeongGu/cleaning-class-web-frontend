@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
-import { createClient } from "@/shared/lib/supabase/server";
+import { createStaticClient } from "@/shared/lib/supabase/static";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const supabase = await createClient();
+  const supabase = createStaticClient();
 
   // 서비스, 리뷰, 사이트 설정 중 가장 최근 업데이트 시점을 조회
   const [
