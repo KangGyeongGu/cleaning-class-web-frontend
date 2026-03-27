@@ -2,27 +2,38 @@
 
 import { useActionState, useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { createService } from "@/shared/actions/service";
+import { updateService } from "@/shared/actions/service";
 import { Loader2, Plus, X } from "lucide-react";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
+import type { Service } from "@/shared/types/database";
 
-interface NewServiceFormProps {
-  defaultSortOrder?: number;
+interface EditServiceFormProps {
+  service: Service;
+  imageUrl: string;
+  afterImageUrl?: string;
 }
 
-export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
+export function EditServiceForm({
+  service,
+  imageUrl,
+  afterImageUrl,
+}: EditServiceFormProps) {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(createService, null);
+  const [state, formAction, isPending] = useActionState(
+    updateService.bind(null, String(service.id)),
+    null,
+  );
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [afterImagePreview, setAfterImagePreview] = useState<string | null>(
     null,
   );
-  const [tags, setTags] = useState<string[]>([]);
+  // 기존 서비스의 tags 배열로 초기 상태 설정
+  const [tags, setTags] = useState<string[]>(service.tags ?? []);
   const [tagInput, setTagInput] = useState("");
-  const [focalX, setFocalX] = useState(50);
-  const [focalY, setFocalY] = useState(50);
-  const [afterFocalX, setAfterFocalX] = useState(50);
-  const [afterFocalY, setAfterFocalY] = useState(50);
+  const [focalX, setFocalX] = useState(service.image_focal_x);
+  const [focalY, setFocalY] = useState(service.image_focal_y);
+  const [afterFocalX, setAfterFocalX] = useState(service.image_after_focal_x);
+  const [afterFocalY, setAfterFocalY] = useState(service.image_after_focal_y);
 
   // blob URL 메모리 누수 방지: ref로 최신 URL 추적
   const imagePreviewRef = useRef<string | null>(null);
@@ -47,12 +58,6 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (state && "success" in state && state.success) {
-      router.push("/admin/services");
-    }
-  }, [state, router]);
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -75,6 +80,14 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
+  // 성공 시 리다이렉트
+  useEffect(() => {
+    if (state && "success" in state && state.success) {
+      router.push("/admin/services");
+    }
+  }, [state, router]);
+
+  // 태그 추가: 중복 및 최대 30자 제한 적용
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
     if (trimmed && trimmed.length <= 30 && !tags.includes(trimmed)) {
@@ -83,19 +96,28 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
     }
   };
 
+  // 태그 삭제: 인덱스 기준으로 제거
   const handleRemoveTag = (index: number) => {
     setTags(tags.filter((_, i) => i !== index));
   };
 
+  // 폼 제출 시 태그 배열을 JSON 문자열로 직렬화하여 FormData에 추가
   const handleSubmit = async (formData: FormData) => {
     formData.set("tags", JSON.stringify(tags));
     await formAction(formData);
   };
 
+  const displayImageUrl = imagePreview || imageUrl;
+  const displayAfterImageUrl = afterImagePreview || afterImageUrl;
+
   return (
     <form action={handleSubmit} className="space-y-8">
+      {/* 서비스명 */}
       <div>
-        <label htmlFor="title" className="form-label">
+        <label
+          htmlFor="title"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           서비스명 (최대 50자)
         </label>
         <input
@@ -104,16 +126,21 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
           type="text"
           required
           maxLength={50}
-          className="form-input-lg placeholder:text-slate-300"
+          defaultValue={service.title}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="서비스명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.title && (
-          <p className="form-error">{state.errors.title[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.title[0]}</p>
         )}
       </div>
 
+      {/* 서비스 태그 */}
       <div>
-        <label htmlFor="tagInput" className="form-label">
+        <label
+          htmlFor="tagInput"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           서비스 태그
         </label>
         <div className="mb-3 flex gap-2">
@@ -132,7 +159,7 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
                 }
               }
             }}
-            className="form-input-lg flex-1 placeholder:text-slate-300"
+            className="flex-1 border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
             placeholder="태그 입력 후 추가 버튼 클릭 또는 Enter (최대 30자)"
           />
           <button
@@ -143,6 +170,7 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             <Plus size={14} />
           </button>
         </div>
+        {/* 추가된 태그 목록 (pill 형태), 기존 데이터 포함 */}
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, index) => (
             <span
@@ -161,13 +189,17 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
           ))}
         </div>
         {state && "errors" in state && state.errors?.tags && (
-          <p className="form-error">{state.errors.tags[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.tags[0]}</p>
         )}
       </div>
 
+      {/* Before/After 이미지 업로드 */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div>
-          <label htmlFor="image" className="form-label">
+          <label
+            htmlFor="image"
+            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+          >
             Before 이미지 (작업 전)
           </label>
           <input
@@ -183,11 +215,11 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             className="mb-4 inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
           >
             <Plus size={16} />
-            이미지 선택
+            {imagePreview ? "이미지 변경" : "새 이미지 선택"}
           </label>
           <FocalPointPicker
-            key={imagePreview}
-            imageUrl={imagePreview}
+            key={displayImageUrl}
+            imageUrl={displayImageUrl}
             focalX={focalX}
             focalY={focalY}
             onChange={(x, y) => {
@@ -201,7 +233,10 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </div>
 
         <div>
-          <label htmlFor="image_after" className="form-label">
+          <label
+            htmlFor="image_after"
+            className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+          >
             After 이미지 (작업 후, 선택)
           </label>
           <input
@@ -217,11 +252,11 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
             className="mb-4 inline-flex cursor-pointer items-center gap-2 border border-slate-200 px-6 py-3 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"
           >
             <Plus size={16} />
-            이미지 선택
+            {afterImagePreview ? "이미지 변경" : "새 이미지 선택"}
           </label>
           <FocalPointPicker
-            key={afterImagePreview}
-            imageUrl={afterImagePreview}
+            key={displayAfterImageUrl ?? "no-after"}
+            imageUrl={displayAfterImageUrl ?? null}
             focalX={afterFocalX}
             focalY={afterFocalY}
             onChange={(x, y) => {
@@ -235,8 +270,12 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
         </div>
       </div>
 
+      {/* 정렬 순서 */}
       <div>
-        <label htmlFor="sort_order" className="form-label">
+        <label
+          htmlFor="sort_order"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           정렬 순서
         </label>
         <input
@@ -244,60 +283,58 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
           name="sort_order"
           type="number"
           min="0"
-          defaultValue={defaultSortOrder}
-          className="form-input-lg"
+          defaultValue={service.sort_order}
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none focus:border-slate-900"
         />
         {state && "errors" in state && state.errors?.sort_order && (
-          <p className="form-error">{state.errors.sort_order[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.sort_order[0]}
+          </p>
         )}
       </div>
 
-      <div>
-        <div className="flex items-center gap-3">
-          <input
-            id="is_published"
-            name="is_published"
-            type="checkbox"
-            value="true"
-            defaultChecked
-            className="h-5 w-5"
-          />
-          <label
-            htmlFor="is_published"
-            className="text-sm font-bold text-slate-900"
-          >
-            즉시 게시
-          </label>
-        </div>
-        <p className="mt-2 text-xs text-slate-400">
-          체크 해제 시 저장만 되고 홈페이지에 노출되지 않습니다.
-        </p>
+      {/* 게시 여부 */}
+      <div className="flex items-center gap-3">
+        <input
+          id="is_published"
+          name="is_published"
+          type="checkbox"
+          value="true"
+          defaultChecked={service.is_published}
+          className="h-5 w-5"
+        />
+        <label
+          htmlFor="is_published"
+          className="text-sm font-bold text-slate-900"
+        >
+          게시
+        </label>
       </div>
 
+      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
         <p className="text-sm text-red-500">{state.error}</p>
       )}
 
+      {/* 버튼 */}
       <div className="flex gap-4 pt-4">
         <button
           type="submit"
-          disabled={
-            isPending || !!(state && "success" in state && state.success)
-          }
-          className="btn-primary px-8 py-4"
+          disabled={isPending}
+          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin" /> 등록 중...
+              <Loader2 className="h-4 w-4 animate-spin" /> 수정 중...
             </span>
           ) : (
-            "등록"
+            "수정"
           )}
         </button>
         <button
           type="button"
           onClick={() => router.back()}
-          className="btn-outline px-8 py-4"
+          className="border border-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-slate-900 transition-colors hover:bg-slate-900 hover:text-white"
         >
           취소
         </button>

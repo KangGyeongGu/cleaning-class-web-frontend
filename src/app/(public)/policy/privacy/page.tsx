@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 
+// 모듈 스코프에서 생성 — 정적 데이터이므로 매 렌더마다 재계산할 필요 없음
+const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
+  { name: "홈", url: "https://www.cleaningclass.co.kr" },
+  {
+    name: "개인정보처리방침",
+    url: "https://www.cleaningclass.co.kr/policy/privacy",
+  },
+]);
+
 export const metadata: Metadata = {
   title: "개인정보처리방침",
   description:
@@ -25,14 +34,6 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
-    { name: "홈", url: "https://www.cleaningclass.co.kr" },
-    {
-      name: "개인정보처리방침",
-      url: "https://www.cleaningclass.co.kr/policy/privacy",
-    },
-  ]);
-
   return (
     <article className="mx-auto max-w-3xl px-6 pt-16 pb-20 md:pt-20 md:pb-24">
       {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- BreadcrumbList JSON-LD, 서버 생성 정적 데이터로 XSS 위험 없음 */}

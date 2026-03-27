@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteConfig } from "@/shared/lib/site-config";
-import { SiteConfigForm } from "@/app/admin/config/SiteConfigForm";
+import { SiteConfigForm } from "@/app/admin/config/SiteConfigForm.client";
 
 export const metadata: Metadata = {
   title: "업체 정보",
@@ -12,7 +12,7 @@ export default async function SiteConfigPage() {
 
   return (
     <div className="mx-auto max-w-4xl p-8">
-      <h1 className="text-heading-1 mb-8">업체 정보</h1>
+      <h1 className="mb-8 text-3xl font-black text-slate-900">업체 정보</h1>
       {!config ? (
         <div className="border border-slate-200 p-12 text-center">
           <p className="font-light text-slate-500">

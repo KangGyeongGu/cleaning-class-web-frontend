@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LoginForm } from "@/app/admin/login/LoginForm";
+import { LoginForm } from "@/app/admin/login/LoginForm.client";
 
 export const metadata: Metadata = {
   title: "관리자 로그인",

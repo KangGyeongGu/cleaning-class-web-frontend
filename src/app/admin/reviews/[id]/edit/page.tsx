@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getReviewById } from "@/shared/lib/queries/review";
-import { EditReviewForm } from "@/app/admin/reviews/[id]/edit/EditReviewForm";
+import { EditReviewForm } from "@/app/admin/reviews/[id]/edit/EditReviewForm.client";
 
 interface EditReviewPageProps {
   params: Promise<{ id: string }>;

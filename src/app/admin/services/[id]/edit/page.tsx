@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getServiceById } from "@/shared/lib/queries/service";
-import { EditServiceForm } from "@/app/admin/services/[id]/edit/EditServiceForm";
+import { EditServiceForm } from "@/app/admin/services/[id]/edit/EditServiceForm.client";
 
 interface EditServicePageProps {
   params: Promise<{ id: string }>;

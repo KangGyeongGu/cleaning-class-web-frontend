@@ -15,8 +15,12 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
 
   return (
     <form action={formAction} className="space-y-8">
+      {/* 업체명 */}
       <div>
-        <label htmlFor="business_name" className="form-label">
+        <label
+          htmlFor="business_name"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           업체명
         </label>
         <input
@@ -25,16 +29,22 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           type="text"
           required
           defaultValue={config.business_name}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="업체명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.business_name && (
-          <p className="form-error">{state.errors.business_name[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.business_name[0]}
+          </p>
         )}
       </div>
 
+      {/* 대표자명 */}
       <div>
-        <label htmlFor="representative" className="form-label">
+        <label
+          htmlFor="representative"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           대표자명 (선택)
         </label>
         <input
@@ -42,16 +52,22 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           name="representative"
           type="text"
           defaultValue={config.representative ?? ""}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="대표자명을 입력하세요"
         />
         {state && "errors" in state && state.errors?.representative && (
-          <p className="form-error">{state.errors.representative[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.representative[0]}
+          </p>
         )}
       </div>
 
+      {/* 사업자번호 */}
       <div>
-        <label htmlFor="business_registration_number" className="form-label">
+        <label
+          htmlFor="business_registration_number"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           사업자번호 (선택)
         </label>
         <input
@@ -70,20 +86,24 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
               input.value = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
             }
           }}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="000-00-00000"
         />
         {state &&
           "errors" in state &&
           state.errors?.business_registration_number && (
-            <p className="form-error">
+            <p className="mt-1 text-xs text-red-500">
               {state.errors.business_registration_number[0]}
             </p>
           )}
       </div>
 
+      {/* 전화번호 */}
       <div>
-        <label htmlFor="phone" className="form-label">
+        <label
+          htmlFor="phone"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           전화번호
         </label>
         <input
@@ -96,16 +116,20 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
             const input = e.currentTarget;
             input.value = formatPhoneNumber(input.value);
           }}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="000-0000-0000 또는 0000-0000-0000"
         />
         {state && "errors" in state && state.errors?.phone && (
-          <p className="form-error">{state.errors.phone[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.phone[0]}</p>
         )}
       </div>
 
+      {/* 이메일 */}
       <div>
-        <label htmlFor="email" className="form-label">
+        <label
+          htmlFor="email"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           이메일
         </label>
         <input
@@ -114,16 +138,20 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           type="email"
           required
           defaultValue={config.email}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="contact@example.com"
         />
         {state && "errors" in state && state.errors?.email && (
-          <p className="form-error">{state.errors.email[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.email[0]}</p>
         )}
       </div>
 
+      {/* 블로그 URL */}
       <div>
-        <label htmlFor="blog_url" className="form-label">
+        <label
+          htmlFor="blog_url"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           블로그 URL (선택)
         </label>
         <input
@@ -131,16 +159,22 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           name="blog_url"
           type="url"
           defaultValue={config.blog_url || ""}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="https://blog.naver.com/..."
         />
         {state && "errors" in state && state.errors?.blog_url && (
-          <p className="form-error">{state.errors.blog_url[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.blog_url[0]}
+          </p>
         )}
       </div>
 
+      {/* 인스타그램 URL */}
       <div>
-        <label htmlFor="instagram_url" className="form-label">
+        <label
+          htmlFor="instagram_url"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           인스타그램 URL (선택)
         </label>
         <input
@@ -148,33 +182,22 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           name="instagram_url"
           type="url"
           defaultValue={config.instagram_url || ""}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="https://instagram.com/..."
         />
         {state && "errors" in state && state.errors?.instagram_url && (
-          <p className="form-error">{state.errors.instagram_url[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.instagram_url[0]}
+          </p>
         )}
       </div>
 
+      {/* 소개글 */}
       <div>
-        <label htmlFor="daangn_url" className="form-label">
-          당근마켓 URL (선택)
-        </label>
-        <input
-          id="daangn_url"
-          name="daangn_url"
-          type="url"
-          defaultValue={config.daangn_url || ""}
-          className="form-input-lg placeholder:text-slate-300"
-          placeholder="https://www.daangn.com/..."
-        />
-        {state && "errors" in state && state.errors?.daangn_url && (
-          <p className="form-error">{state.errors.daangn_url[0]}</p>
-        )}
-      </div>
-
-      <div>
-        <label htmlFor="description" className="form-label">
+        <label
+          htmlFor="description"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           소개글 (최대 500자, 선택)
         </label>
         <textarea
@@ -183,16 +206,22 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           maxLength={500}
           rows={4}
           defaultValue={config.description || ""}
-          className="form-input-lg resize-none placeholder:text-slate-300"
+          className="w-full resize-none border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="업체 소개글을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.description && (
-          <p className="form-error">{state.errors.description[0]}</p>
+          <p className="mt-1 text-xs text-red-500">
+            {state.errors.description[0]}
+          </p>
         )}
       </div>
 
+      {/* 주소 */}
       <div>
-        <label htmlFor="address" className="form-label">
+        <label
+          htmlFor="address"
+          className="mb-3 block text-xs font-bold tracking-widest text-slate-900 uppercase"
+        >
           주소 (선택)
         </label>
         <input
@@ -200,27 +229,30 @@ export function SiteConfigForm({ config }: SiteConfigFormProps) {
           name="address"
           type="text"
           defaultValue={config.address || ""}
-          className="form-input-lg placeholder:text-slate-300"
+          className="w-full border-b border-slate-200 bg-transparent pb-3 text-lg font-light transition-colors outline-none placeholder:text-slate-300 focus:border-slate-900"
           placeholder="전북특별자치도 전주시 완산구 ..."
         />
         {state && "errors" in state && state.errors?.address && (
-          <p className="form-error">{state.errors.address[0]}</p>
+          <p className="mt-1 text-xs text-red-500">{state.errors.address[0]}</p>
         )}
       </div>
 
+      {/* 성공 메시지 */}
       {state && "message" in state && state.message && (
-        <p className="form-success">{state.message}</p>
+        <p className="text-sm text-green-600">{state.message}</p>
       )}
 
+      {/* 에러 메시지 */}
       {state && "error" in state && state.error && (
-        <p className="form-error text-sm">{state.error}</p>
+        <p className="text-sm text-red-500">{state.error}</p>
       )}
 
+      {/* 저장 버튼 */}
       <div className="pt-4">
         <button
           type="submit"
           disabled={isPending}
-          className="btn-primary px-8 py-4"
+          className="bg-slate-900 px-8 py-4 text-sm font-bold tracking-widest text-white transition-colors hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">

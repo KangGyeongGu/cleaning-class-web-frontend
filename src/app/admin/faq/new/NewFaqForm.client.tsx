@@ -110,7 +110,7 @@ export function NewFaqForm({ defaultDisplayOrder = 0 }: NewFaqFormProps) {
           disabled={
             isPending || !!(state && "success" in state && state.success)
           }
-          className="btn-primary px-8 py-4"
+          className="btn-primary px-8 py-4 disabled:cursor-not-allowed disabled:opacity-70"
         >
           {isPending ? (
             <span className="flex items-center gap-2">

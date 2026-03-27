@@ -5,14 +5,7 @@ import { useRouter } from "next/navigation";
 import { createReview } from "@/shared/actions/review";
 import { Loader2, X, Plus } from "lucide-react";
 import Image from "next/image";
-
-const SERVICE_TYPES = [
-  "거주청소",
-  "정기청소",
-  "특수청소",
-  "쓰레기집청소",
-  "상가청소",
-];
+import { SERVICE_TYPES } from "@/shared/lib/constants";
 
 interface NewReviewFormProps {
   defaultSortOrder?: number;
@@ -143,7 +136,7 @@ export function NewReviewForm({ defaultSortOrder = 0 }: NewReviewFormProps) {
               key={type}
               type="button"
               onClick={() => {
-                const filtered = tags.filter((t) => !SERVICE_TYPES.includes(t));
+                const filtered = tags.filter((t) => !(SERVICE_TYPES as readonly string[]).includes(t));
                 setTags([...filtered, type]);
                 setSelectedService(type);
               }}

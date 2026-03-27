@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
 import { formatPhoneNumber } from "@/shared/lib/format";
+import { INQUIRY_SERVICE_OPTIONS } from "@/shared/lib/constants";
 
 interface CustomDropdownProps {
   label: string;
@@ -69,7 +70,7 @@ function CustomDropdown({
           <ArrowDown size={16} className="text-slate-400" />
         </button>
         {isOpen && (
-          <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 [&::-webkit-scrollbar-track]:bg-transparent">
+          <div className="scrollbar-thin absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg">
             {options.map((option) => (
               <button
                 key={option}
@@ -297,14 +298,7 @@ export function ContactForm({ phone }: ContactFormProps) {
             <CustomDropdown
               label="서비스 종류"
               name="serviceType"
-              options={[
-                "거주청소",
-                "정기청소",
-                "특수청소",
-                "쓰레기집청소",
-                "상가청소",
-                "기타 문의",
-              ]}
+              options={INQUIRY_SERVICE_OPTIONS}
               placeholder="서비스를 선택해주세요"
               required
               error={state?.errors?.serviceType?.[0]}
@@ -357,7 +351,7 @@ export function ContactForm({ phone }: ContactFormProps) {
                 rows={3}
                 maxLength={1000}
                 required
-                className="form-input resize-none overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-track]:bg-transparent"
+                className="scrollbar-thin form-input resize-none overflow-y-auto"
                 placeholder="문의 내용을 자유롭게 작성해주세요"
                 onInput={(e) => {
                   setMessageLength(e.currentTarget.value.length);

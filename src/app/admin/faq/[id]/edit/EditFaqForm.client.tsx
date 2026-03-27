@@ -37,7 +37,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           rows={3}
           defaultValue={faq.question}
           disabled={isPending}
-          className="form-input-lg w-full resize-none"
+          className="form-input-lg w-full resize-none disabled:opacity-50"
           placeholder="자주 묻는 질문을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.question && (
@@ -59,7 +59,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           rows={8}
           defaultValue={faq.answer}
           disabled={isPending}
-          className="form-input-lg w-full resize-none"
+          className="form-input-lg w-full resize-none disabled:opacity-50"
           placeholder="답변을 입력하세요"
         ></textarea>
         {state && "errors" in state && state.errors?.answer && (
@@ -78,7 +78,7 @@ export function EditFaqForm({ faq }: EditFaqFormProps) {
           min="0"
           defaultValue={faq.display_order}
           disabled={isPending}
-          className="form-input-lg w-full"
+          className="form-input-lg w-full disabled:opacity-50"
         />
         {state && "errors" in state && state.errors?.display_order && (
           <p className="mt-1 text-xs text-red-500">

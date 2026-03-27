@@ -9,18 +9,10 @@ import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { NaverBlogIcon } from "@/components/icons/SocialIcons";
+import { SERVICE_TYPES } from "@/shared/lib/constants";
 
 const BLUR_PLACEHOLDER =
   "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoIAAUAAkA4JZQCdAEO/hepgAAA/vxLOv98KRk4BgLv/5P/AOiV/wPYpn+N1Vf/UYx1Z//0YSz6Le/+igAAAA==";
-
-// 서비스 카테고리 목록 — 어드민 폼에서 사용하는 태그와 동일하게 유지
-const SERVICE_TYPES = [
-  "거주청소",
-  "정기청소",
-  "특수청소",
-  "쓰레기집청소",
-  "상가청소",
-] as const;
 
 interface BlogReviewsProps {
   reviews: Review[];

@@ -1,5 +1,5 @@
 import { getNextReviewSortOrder } from "@/shared/lib/queries/review";
-import { NewReviewForm } from "@/app/admin/reviews/new/NewReviewForm";
+import { NewReviewForm } from "@/app/admin/reviews/new/NewReviewForm.client";
 
 export default async function NewReviewPage() {
   const nextSortOrder = await getNextReviewSortOrder();

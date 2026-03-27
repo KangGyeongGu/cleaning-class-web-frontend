@@ -1,5 +1,5 @@
 import { getNextServiceSortOrder } from "@/shared/lib/queries/service";
-import { NewServiceForm } from "@/app/admin/services/new/NewServiceForm";
+import { NewServiceForm } from "@/app/admin/services/new/NewServiceForm.client";
 
 export default async function NewServicePage() {
   const nextSortOrder = await getNextServiceSortOrder();
