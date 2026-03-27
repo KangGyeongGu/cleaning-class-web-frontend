@@ -10,6 +10,14 @@ import type { ServiceInsert, ServiceUpdate } from "@/shared/types/database";
 const BUCKET = "service-images";
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const REVALIDATE_PATHS = ["/", "/services", "/admin/services"] as const;
+
+function revalidateServicePaths(): void {
+  for (const path of REVALIDATE_PATHS) {
+    revalidatePath(path);
+  }
+}
+
 export async function createService(prevState: unknown, formData: FormData) {
   try {
     await getUser();
@@ -126,9 +134,7 @@ export async function createService(prevState: unknown, formData: FormData) {
       return { success: false, error: "서비스 등록 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/services");
-    revalidatePath("/admin/services");
+    revalidateServicePaths();
 
     return {
       success: true,
@@ -307,9 +313,7 @@ export async function updateService(
       return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/services");
-    revalidatePath("/admin/services");
+    revalidateServicePaths();
 
     // DB 업데이트 성공 후 기존 이미지 정리 — 실패해도 사용자 응답에는 영향 없음
     const oldPaths: Array<{ oldPath: string; newPath: string }> = [
@@ -394,9 +398,7 @@ export async function deleteService(serviceId: string) {
       }
     }
 
-    revalidatePath("/");
-    revalidatePath("/services");
-    revalidatePath("/admin/services");
+    revalidateServicePaths();
 
     return {
       success: true,
@@ -435,9 +437,7 @@ export async function toggleServicePublish(
       };
     }
 
-    revalidatePath("/");
-    revalidatePath("/services");
-    revalidatePath("/admin/services");
+    revalidateServicePaths();
 
     return {
       success: true,
@@ -456,10 +456,7 @@ export async function reorderServices(
   orderedIds: string[],
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const user = await getUser();
-    if (!user) {
-      return { success: false, error: "인증이 필요합니다." };
-    }
+    await getUser();
 
     const supabase = await createClient();
 
@@ -475,9 +472,7 @@ export async function reorderServices(
       }
     }
 
-    revalidatePath("/");
-    revalidatePath("/services");
-    revalidatePath("/admin/services");
+    revalidateServicePaths();
 
     return { success: true };
   } catch (error) {

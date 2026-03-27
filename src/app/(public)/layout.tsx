@@ -3,6 +3,8 @@ import { Navbar } from "@/components/Navbar";
 import { MobilePhoneButton } from "@/components/MobilePhoneButton";
 import { getSiteConfig } from "@/shared/lib/site-config";
 
+export const revalidate = 3600;
+
 interface PublicLayoutProps {
   children: React.ReactNode;
 }

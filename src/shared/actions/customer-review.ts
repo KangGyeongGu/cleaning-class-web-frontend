@@ -10,6 +10,15 @@ import type { ReviewTokenRow } from "@/shared/types/database";
 /** 통일 에러 메시지 — 토큰 관련 모든 실패에 동일 문구 노출 */
 const TOKEN_ERROR_MESSAGE = "유효하지 않거나 만료된 링크입니다";
 
+/** 고객 리뷰 관련 revalidation 대상 경로 */
+const REVALIDATE_PATHS = ["/", "/admin/customer-reviews"] as const;
+
+function revalidateCustomerReviewPaths(): void {
+  for (const path of REVALIDATE_PATHS) {
+    revalidatePath(path);
+  }
+}
+
 /**
  * 고객 리뷰 토큰 생성 — 인증된 관리자만 호출 가능
  * 만료일은 현재로부터 30일
@@ -34,10 +43,10 @@ export async function generateReviewToken(): Promise<{
 
     if (error) {
       console.error("[generateReviewToken] DB error:", error);
-      throw new Error("토큰 생성 중 오류가 발생했습니다.");
+      return { success: false, error: "토큰 생성 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/admin/customer-reviews");
+    revalidateCustomerReviewPaths();
 
     return { success: true, token };
   } catch (err) {
@@ -66,7 +75,7 @@ export async function listReviewTokens(): Promise<{
 
     if (error) {
       console.error("[listReviewTokens] DB error:", error);
-      throw new Error("토큰 목록 조회 중 오류가 발생했습니다.");
+      return { success: false, error: "토큰 목록 조회 중 오류가 발생했습니다." };
     }
 
     return { success: true, tokens: (data as ReviewTokenRow[] | null) ?? [] };
@@ -98,10 +107,10 @@ export async function deleteReviewToken(tokenId: string): Promise<{
 
     if (error) {
       console.error("[deleteReviewToken] DB error:", error);
-      throw new Error("토큰 삭제 중 오류가 발생했습니다.");
+      return { success: false, error: "토큰 삭제 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/admin/customer-reviews");
+    revalidateCustomerReviewPaths();
 
     return { success: true };
   } catch (err) {
@@ -159,8 +168,7 @@ export async function submitCustomerReview(
       };
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/customer-reviews");
+    revalidateCustomerReviewPaths();
 
     return { success: true };
   } catch (err) {

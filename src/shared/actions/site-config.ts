@@ -12,10 +12,19 @@ import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-const FIELD_REVALIDATE_MAP: Record<string, string> = {
-  faq_description: "/admin/faq",
-  review_description: "/admin/reviews",
-  service_description: "/admin/services",
+/** 사이트 설정 변경 시 공통으로 revalidation 하는 경로 */
+const REVALIDATE_PATHS = ["/", "/admin/config"] as const;
+
+function revalidateSiteConfigPaths(): void {
+  for (const path of REVALIDATE_PATHS) {
+    revalidatePath(path);
+  }
+}
+
+const FIELD_REVALIDATE_MAP: Record<string, readonly string[]> = {
+  faq_description: ["/help", "/admin/faq"],
+  review_description: ["/reviews", "/admin/reviews"],
+  service_description: ["/services", "/admin/services"],
 };
 
 async function updateSiteConfigField(
@@ -54,8 +63,12 @@ async function updateSiteConfigField(
     }
 
     revalidatePath("/");
-    const adminPath = FIELD_REVALIDATE_MAP[field];
-    if (adminPath) revalidatePath(adminPath);
+    const extraPaths: readonly string[] | undefined = FIELD_REVALIDATE_MAP[field];
+    if (extraPaths) {
+      for (const p of extraPaths) {
+        revalidatePath(p);
+      }
+    }
 
     return { success: true };
   } catch (error) {
@@ -98,10 +111,10 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
 
     if (fetchConfigError) {
       console.error("updateSiteConfig fetch error:", fetchConfigError);
-      throw new Error("설정 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
     if (!current) {
-      throw new Error("설정 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
     const rawData = {
@@ -146,11 +159,10 @@ export async function updateSiteConfig(prevState: unknown, formData: FormData) {
 
     if (error) {
       console.error("updateSiteConfig update error:", error);
-      throw new Error("설정 처리 중 오류가 발생했습니다.");
+      return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/config");
+    revalidateSiteConfigPaths();
 
     return {
       success: true,
@@ -229,8 +241,7 @@ export async function updateHeroImage(
         await deleteImage("hero-images", currentPath);
       }
 
-      revalidatePath("/");
-      revalidatePath("/admin/config");
+      revalidateSiteConfigPaths();
       return {
         success: true,
         message: `${slotLabel} 히어로 이미지가 삭제되었습니다.`,
@@ -254,8 +265,7 @@ export async function updateHeroImage(
           return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
         }
 
-        revalidatePath("/");
-        revalidatePath("/admin/config");
+        revalidateSiteConfigPaths();
         return {
           success: true,
           message: `${slotLabel} 표시 영역이 업데이트되었습니다.`,
@@ -293,8 +303,7 @@ export async function updateHeroImage(
       await deleteImage("hero-images", currentPath);
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/config");
+    revalidateSiteConfigPaths();
     return {
       success: true,
       message: `${slotLabel} 히어로 이미지가 업데이트되었습니다.`,
@@ -359,8 +368,7 @@ export async function updateMovingSiteConfig(
       return { success: false, error: "설정 처리 중 오류가 발생했습니다." };
     }
 
-    revalidatePath("/");
-    revalidatePath("/admin/config");
+    revalidateSiteConfigPaths();
 
     return { success: true, message: "이사업체 정보가 수정되었습니다." };
   } catch (error) {

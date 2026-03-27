@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = createStaticClient();
 

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 
+export const revalidate = false;
+
 // 모듈 스코프에서 생성 — 정적 데이터이므로 매 렌더마다 재계산할 필요 없음
 const breadcrumbJsonLd = generateBreadcrumbListJsonLd([
   { name: "홈", url: "https://www.cleaningclass.co.kr" },

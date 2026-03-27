@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ReviewSubmitForm } from "@/components/ReviewSubmitForm.client";
 
+export const dynamic = "force-dynamic";
+
 // 리뷰 등록 페이지 — 검색 엔진 색인 제외 (토큰 기반 1회성 페이지)
 export const metadata: Metadata = {
   title: "리뷰 작성",
