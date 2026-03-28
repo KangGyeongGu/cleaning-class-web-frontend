@@ -17,10 +17,12 @@ export const metadata: Metadata = {
   title: "견적문의",
   description:
     "청소클라쓰에 청소·이사 견적을 문의하세요. 전화로도 편하게 연락하실 수 있습니다.",
+  alternates: { canonical: "/contact" },
   openGraph: {
     title: "견적문의 | 청소클라쓰",
     description:
       "청소클라쓰에 청소·이사 견적을 문의하세요. 전화로도 편하게 연락하실 수 있습니다.",
+    url: "/contact",
     images: [
       {
         url: "/opengraph-image",
@@ -61,7 +63,7 @@ export default async function ContactPage() {
         }}
       />
 
-      <main className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white">
         <section className="pt-12 pb-16 md:pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_2fr] lg:gap-20">
@@ -174,7 +176,7 @@ export default async function ContactPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

@@ -18,9 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
       absolute: title,
     },
     description,
+    alternates: { canonical: "/" },
     openGraph: {
       title,
       description,
+      url: "/",
       images: [
         {
           url: "/opengraph-image",
