@@ -8,7 +8,6 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-/** 관리자 레이아웃 — getUser()로 하위 모든 /admin/* 라우트를 일괄 보호 */
 export default async function AdminLayout({ children }: AdminLayoutProps) {
   await getUser();
 

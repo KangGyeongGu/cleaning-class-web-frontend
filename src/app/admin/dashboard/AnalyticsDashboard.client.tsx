@@ -30,8 +30,6 @@ interface Props {
   initialData: AnalyticsData | null;
 }
 
-// ─── slate 모노크롬 팔레트 ─────────────────────────────────────────────────
-
 const SLATE = {
   900: "#0f172a",
   700: "#334155",
@@ -44,8 +42,6 @@ const SLATE = {
 } as const;
 
 const PIE_COLORS = [SLATE[900], SLATE[700], SLATE[500], SLATE[400], SLATE[300]];
-
-// ─── 유틸 함수 ──────────────────────────────────────────────────────────────
 
 function formatNumber(n: number): string {
   return n.toLocaleString("ko-KR");
@@ -94,9 +90,6 @@ function translateChannel(channel: string): string {
 
 
 
-// ─── 지역명 표시 ─────────────────────────────────────────────────────────────
-
-/** GA4 지역명을 표시용으로 정리 (국내 데이터만 수신되므로 영문 그대로 표시) */
 function formatRegionLabel(region: string, city: string): string {
   const r = region && region !== "(not set)" ? region : "";
   const c = city && city !== "(not set)" ? city : "";
@@ -108,9 +101,6 @@ function formatRegionLabel(region: string, city: string): string {
   return `${r} · ${c}`;
 }
 
-// ─── 도움말 툴팁 ─────────────────────────────────────────────────────────────
-
-/** 제목 옆에 물음표 아이콘을 표시하고 호버/포커스 시 설명을 보여주는 컴포넌트 */
 function HelpTip({ text }: { text: string }): React.ReactElement {
   const [show, setShow] = useState(false);
   return (
@@ -138,7 +128,6 @@ function HelpTip({ text }: { text: string }): React.ReactElement {
   );
 }
 
-/** 섹션 제목 + HelpTip 조합 */
 function SectionTitle({
   children,
   help,
@@ -158,9 +147,6 @@ function SectionTitle({
   );
 }
 
-// ─── 새로고침 버튼 ───────────────────────────────────────────────────────────
-
-/** SVG 새로고침 아이콘 */
 function RefreshIcon({ size = 14 }: { size?: number }): React.ReactElement {
   return (
     <svg
@@ -181,7 +167,6 @@ function RefreshIcon({ size = 14 }: { size?: number }): React.ReactElement {
   );
 }
 
-/** 시각을 24시간제 HH:MM:SS 형태로 포맷 */
 function formatTime(iso: string): string {
   try {
     const d = new Date(iso);
@@ -194,7 +179,6 @@ function formatTime(iso: string): string {
   }
 }
 
-/** 섹션별 새로고침 버튼 + 갱신 시각 표시 */
 function RefreshButton({
   onClick,
   loading,
@@ -226,7 +210,6 @@ function RefreshButton({
   );
 }
 
-/** 전체 새로고침 버튼 (큰 사이즈, 대시보드 헤더용) */
 function RefreshAllButton({
   onClick,
   loading,
@@ -248,8 +231,6 @@ function RefreshAllButton({
     </button>
   );
 }
-
-// ─── 커스텀 Recharts 툴팁 ──────────────────────────────────────────────────
 
 interface TooltipPayloadItem {
   name?: string;
@@ -282,8 +263,6 @@ function ChartTooltip({
     </div>
   );
 }
-
-// ─── 서브 컴포넌트 ──────────────────────────────────────────────────────────
 
 function NoDataFallback(): React.ReactElement {
   return (
@@ -338,9 +317,6 @@ function EmptyState(): React.ReactElement {
   );
 }
 
-// ─── 차트 컴포넌트 ──────────────────────────────────────────────────────────
-
-/** 일별 방문자 추이 — Area Chart (전체 30일) */
 function DailyVisitorChart({
   data,
 }: {
@@ -401,7 +377,6 @@ function DailyVisitorChart({
   );
 }
 
-/** 유입 경로 — Horizontal Bar Chart */
 function TrafficSourceChart({
   data,
 }: {
@@ -445,14 +420,12 @@ function TrafficSourceChart({
   );
 }
 
-/** 초 단위를 m:ss 형식으로 변환 */
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = Math.round(seconds % 60);
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
-/** 디바이스 섹션 — 도넛 + 상세 테이블 통합 */
 function DeviceSection({
   breakdown,
   detail,
@@ -560,7 +533,6 @@ function DeviceSection({
   );
 }
 
-/** 브라우저별 분포 — Horizontal Bar Chart */
 function BrowserChart({
   data,
 }: {
