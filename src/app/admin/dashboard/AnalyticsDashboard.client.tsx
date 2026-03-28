@@ -41,7 +41,18 @@ const SLATE = {
   50: "#f8fafc",
 } as const;
 
-const PIE_COLORS = [SLATE[900], SLATE[700], SLATE[500], SLATE[400], SLATE[300]];
+const CHART = {
+  primary: "#2563eb",    // blue-600 — 주요 지표 (방문자, 세션)
+  secondary: "#7c3aed",  // violet-600 — 보조 지표
+  success: "#059669",    // emerald-600 — 긍정 지표 (전환)
+  warning: "#d97706",    // amber-600 — 주의 지표
+  accent: "#0891b2",     // cyan-600 — 강조
+  muted: "#94a3b8",      // slate-400 — 비활성
+  area: "#2563eb",       // 영역 차트 기본색
+  areaLight: "#dbeafe",  // blue-100 — 영역 그라데이션
+} as const;
+
+const PIE_COLORS = [CHART.primary, CHART.secondary, CHART.warning, CHART.accent, SLATE[300]];
 
 function formatNumber(n: number): string {
   return n.toLocaleString("ko-KR");
@@ -191,7 +202,7 @@ function RefreshButton({
   return (
     <div className="ml-auto flex shrink-0 items-center gap-1.5">
       {updatedAt && (
-        <span className="tabular-nums text-xs text-slate-400">
+        <span className="tabular-nums text-xs text-slate-500">
           {formatTime(updatedAt)}
         </span>
       )}
@@ -338,8 +349,8 @@ function DailyVisitorChart({
       <AreaChart data={chartData}>
         <defs>
           <linearGradient id="gradVisitor" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={SLATE[900]} stopOpacity={0.15} />
-            <stop offset="100%" stopColor={SLATE[900]} stopOpacity={0} />
+            <stop offset="0%" stopColor={CHART.primary} stopOpacity={0.2} />
+            <stop offset="100%" stopColor={CHART.primary} stopOpacity={0} />
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" stroke={SLATE[100]} />
@@ -360,14 +371,14 @@ function DailyVisitorChart({
         <Area
           type="monotone"
           dataKey="방문자"
-          stroke={SLATE[900]}
+          stroke={CHART.primary}
           strokeWidth={2}
           fill="url(#gradVisitor)"
         />
         <Area
           type="monotone"
           dataKey="세션"
-          stroke={SLATE[400]}
+          stroke={CHART.secondary}
           strokeWidth={1.5}
           fill="none"
           strokeDasharray="4 2"
@@ -414,7 +425,7 @@ function TrafficSourceChart({
           width={80}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Bar dataKey="세션" fill={SLATE[900]} radius={[0, 2, 2, 0]} />
+        <Bar dataKey="세션" fill={CHART.primary} radius={[0, 2, 2, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -444,7 +455,6 @@ function DeviceSection({
 
   return (
     <div className="space-y-5">
-      {/* 도넛 차트 + 범례 */}
       <div className="flex items-center gap-6">
         <ResponsiveContainer width={120} height={120}>
           <PieChart>
@@ -488,7 +498,6 @@ function DeviceSection({
         </ul>
       </div>
 
-      {/* 디바이스별 상세 지표 */}
       {detail.length > 0 && (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -568,7 +577,7 @@ function BrowserChart({
           width={90}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Bar dataKey="사용자" fill={SLATE[500]} radius={[0, 2, 2, 0]} />
+        <Bar dataKey="사용자" fill={CHART.accent} radius={[0, 2, 2, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
@@ -610,20 +619,17 @@ function ConversionChart({
           width={90}
         />
         <Tooltip content={<ChartTooltip />} />
-        <Bar dataKey="횟수" fill={SLATE[700]} radius={[0, 2, 2, 0]} />
+        <Bar dataKey="횟수" fill={CHART.success} radius={[0, 2, 2, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );
 }
-
-// ─── 메인 대시보드 ──────────────────────────────────────────────────────────
 
 export default function AnalyticsDashboard({
   initialData,
 }: Props): React.ReactElement {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
-  // 섹션별 마지막 갱신 시각 — 초기값은 서버에서 받은 전체 갱신 시각
   const [updatedAt, setUpdatedAt] = useState<Record<string, string>>(() => {
     const ts = initialData?.lastUpdated ?? new Date().toISOString();
     return { all: ts, summary: ts, daily: ts, traffic: ts, device: ts, pages: ts, region: ts };
@@ -636,7 +642,6 @@ export default function AnalyticsDashboard({
       try {
         return await fn();
       } catch {
-        // 서버 액션 오류·네트워크 오류 시 조용히 null 반환
         return null;
       } finally {
         setLoading((prev) => ({ ...prev, [key]: false }));
@@ -743,13 +748,11 @@ export default function AnalyticsDashboard({
 
   return (
     <div className="space-y-10">
-      {/* 대시보드 헤더: 제목 + 전체 새로고침 */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-black text-slate-900">대시보드</h1>
         <RefreshAllButton onClick={handleRefreshAll} loading={!!loading.all} />
       </div>
 
-      {/* KPI 카드 */}
       <section>
         <div className="mb-4 flex items-center">
           <SectionTitle
@@ -769,7 +772,6 @@ export default function AnalyticsDashboard({
         </div>
       </section>
 
-      {/* 일별 방문자 추이 */}
       <section>
         <div className="border border-slate-200 p-6">
           <div className="mb-4 flex items-center">
@@ -782,7 +784,6 @@ export default function AnalyticsDashboard({
         </div>
       </section>
 
-      {/* 3열 그리드: 유입 경로 / 디바이스 / 브라우저 */}
       <section>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="border border-slate-200 p-6">
@@ -817,7 +818,6 @@ export default function AnalyticsDashboard({
         </div>
       </section>
 
-      {/* 인기 페이지 + 지역별 방문자 */}
       <section>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="border border-slate-200 p-6">
@@ -890,7 +890,6 @@ export default function AnalyticsDashboard({
         </div>
       </section>
 
-      {/* 전환 이벤트 상세 */}
       <section>
         <div className="mb-4 flex items-center">
           <SectionTitle
