@@ -1,9 +1,7 @@
-import { getUser } from "@/shared/lib/supabase/auth";
 import { getNextFaqDisplayOrder } from "@/shared/lib/queries/faq";
 import { NewFaqForm } from "@/app/admin/faq/new/NewFaqForm.client";
 
 export default async function NewFaqPage() {
-  await getUser();
   const nextDisplayOrder = await getNextFaqDisplayOrder();
 
   return (
