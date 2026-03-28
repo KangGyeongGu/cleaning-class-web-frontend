@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { FaqRow } from "@/shared/types/database";
+import { trackFaqOpen } from "@/shared/lib/analytics";
 
 interface FaqAccordionProps {
   faqs: FaqRow[];
@@ -20,13 +21,15 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
     );
   }
 
-  function toggle(id: string): void {
+  function toggle(id: string, faq: FaqRow): void {
     setOpenIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
       } else {
+        // 새로 열리는 경우에만 이벤트 전송
         next.add(id);
+        trackFaqOpen({ faq_id: String(faq.id), faq_question: faq.question });
       }
       return next;
     });
@@ -47,7 +50,7 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
                 id={questionId}
                 aria-expanded={isOpen}
                 aria-controls={answerId}
-                onClick={() => toggle(faq.id)}
+                onClick={() => toggle(faq.id, faq)}
                 className="flex w-full items-start justify-between gap-4 py-5 text-left text-sm font-medium text-slate-900 transition-colors hover:text-slate-600"
               >
                 <span>{faq.question}</span>

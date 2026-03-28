@@ -1,3 +1,7 @@
+"use client";
+
+import { trackPhoneClick } from "@/shared/lib/analytics";
+
 interface MobilePhoneButtonProps {
   phone: string;
   movingPhone?: string;
@@ -15,6 +19,15 @@ export function MobilePhoneButton({
         <a
           href={`tel:${phone}`}
           className="flex flex-1 items-center justify-center py-3.5 text-sm font-bold tracking-wide text-slate-900 active:bg-slate-100"
+          onClick={() =>
+            trackPhoneClick({
+              currency: "KRW",
+              value: 0,
+              lead_source: "phone_click",
+              phone_type: "cleaning",
+              click_location: "mobile_bottom",
+            })
+          }
         >
           청소 상담
         </a>
@@ -25,6 +38,15 @@ export function MobilePhoneButton({
         <a
           href={`tel:${movingPhone}`}
           className="flex flex-1 items-center justify-center py-3.5 text-sm font-bold tracking-wide text-slate-900 active:bg-slate-100"
+          onClick={() =>
+            trackPhoneClick({
+              currency: "KRW",
+              value: 0,
+              lead_source: "phone_click",
+              phone_type: "moving",
+              click_location: "mobile_bottom",
+            })
+          }
         >
           이사 상담
         </a>
@@ -36,6 +58,15 @@ export function MobilePhoneButton({
     <a
       href={`tel:${phone}`}
       className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-50 flex items-center justify-center rounded-2xl border border-white/30 bg-white/70 py-3.5 text-center text-sm font-bold tracking-wide text-slate-900 shadow-lg backdrop-blur-xl md:hidden"
+      onClick={() =>
+        trackPhoneClick({
+          currency: "KRW",
+          value: 0,
+          lead_source: "phone_click",
+          phone_type: "cleaning",
+          click_location: "mobile_bottom",
+        })
+      }
     >
       전화 상담
     </a>

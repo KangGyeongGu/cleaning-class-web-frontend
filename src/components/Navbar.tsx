@@ -10,6 +10,7 @@ import {
   InstagramIcon,
   DaangnIcon,
 } from "@/components/icons/SocialIcons";
+import { trackSnsClick, trackSelectContent } from "@/shared/lib/analytics";
 
 interface NavbarProps {
   businessName?: string;
@@ -154,6 +155,15 @@ export function Navbar({
                   key={item.label}
                   href={item.href}
                   className="text-xs font-black tracking-widest text-slate-500 transition-colors hover:text-slate-900"
+                  onClick={
+                    item.href === "/contact"
+                      ? () =>
+                          trackSelectContent({
+                            content_type: "cta_button",
+                            content_id: "navbar_contact",
+                          })
+                      : undefined
+                  }
                 >
                   {item.label}
                 </Link>
@@ -169,6 +179,12 @@ export function Navbar({
                     aria-label="네이버 블로그"
                     title="네이버 블로그"
                     className="text-slate-400 transition-colors hover:text-slate-900"
+                    onClick={() =>
+                      trackSnsClick({
+                        sns_platform: "naver_blog",
+                        click_location: "navbar",
+                      })
+                    }
                   >
                     <NaverBlogIcon size={20} />
                   </a>
@@ -181,6 +197,12 @@ export function Navbar({
                     aria-label="인스타그램"
                     title="인스타그램"
                     className="text-slate-400 transition-colors hover:text-slate-900"
+                    onClick={() =>
+                      trackSnsClick({
+                        sns_platform: "instagram",
+                        click_location: "navbar",
+                      })
+                    }
                   >
                     <InstagramIcon size={20} />
                   </a>
@@ -193,6 +215,12 @@ export function Navbar({
                     aria-label="당근마켓"
                     title="당근마켓"
                     className="text-slate-400 transition-colors hover:text-slate-900"
+                    onClick={() =>
+                      trackSnsClick({
+                        sns_platform: "daangn",
+                        click_location: "navbar",
+                      })
+                    }
                   >
                     <DaangnIcon size={20} />
                   </a>
@@ -232,7 +260,16 @@ export function Navbar({
             key={item.label}
             href={item.href}
             tabIndex={isOpen ? 0 : -1}
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              // 견적문의 클릭 시 CTA 이벤트 전송
+              if (item.href === "/contact") {
+                trackSelectContent({
+                  content_type: "cta_button",
+                  content_id: "navbar_contact",
+                });
+              }
+            }}
             className="text-2xl font-medium tracking-wide text-slate-900"
           >
             {item.label}
@@ -246,7 +283,10 @@ export function Navbar({
                 target="_blank"
                 rel="noopener noreferrer"
                 tabIndex={isOpen ? 0 : -1}
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  trackSnsClick({ sns_platform: "naver_blog", click_location: "navbar" });
+                }}
                 aria-label="네이버 블로그"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
@@ -259,7 +299,10 @@ export function Navbar({
                 target="_blank"
                 rel="noopener noreferrer"
                 tabIndex={isOpen ? 0 : -1}
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  trackSnsClick({ sns_platform: "instagram", click_location: "navbar" });
+                }}
                 aria-label="인스타그램"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
@@ -272,7 +315,10 @@ export function Navbar({
                 target="_blank"
                 rel="noopener noreferrer"
                 tabIndex={isOpen ? 0 : -1}
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  trackSnsClick({ sns_platform: "daangn", click_location: "navbar" });
+                }}
                 aria-label="당근마켓"
                 className="text-slate-400 transition-colors hover:text-slate-900"
               >
