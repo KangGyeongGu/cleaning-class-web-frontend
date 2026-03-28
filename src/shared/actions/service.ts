@@ -293,21 +293,20 @@ export async function updateService(
 
     if (updateError) {
       console.error("updateService DB error:", updateError);
-      if (newImagePath !== existing.image_path) {
-        try {
-          await deleteImage(BUCKET, newImagePath);
-        } catch (rollbackErr) {
-          console.error("updateService: image rollback failed:", rollbackErr);
-        }
-      }
-      if (newImageAfterPath !== existing.image_after_path) {
-        try {
-          await deleteImage(BUCKET, newImageAfterPath);
-        } catch (rollbackErr) {
-          console.error(
-            "updateService: after-image rollback failed:",
-            rollbackErr,
-          );
+      // DB 실패 시 새로 업로드된 이미지를 모두 롤백 — orphan 파일 방지
+      const rollbackTargets = [
+        { newPath: newImagePath, oldPath: existing.image_path, label: "image" },
+        { newPath: newImageAfterPath, oldPath: existing.image_after_path, label: "after-image" },
+        { newPath: newDetailImagePath, oldPath: existing.detail_image_path, label: "detail-image" },
+        { newPath: newDetailAfterImagePath, oldPath: existing.detail_image_after_path, label: "detail-after-image" },
+      ];
+      for (const { newPath, oldPath, label } of rollbackTargets) {
+        if (newPath !== oldPath) {
+          try {
+            await deleteImage(BUCKET, newPath);
+          } catch (rollbackErr) {
+            console.error(`updateService: ${label} rollback failed:`, rollbackErr);
+          }
         }
       }
       return { success: false, error: "서비스 수정 중 오류가 발생했습니다." };
@@ -460,16 +459,16 @@ export async function reorderServices(
 
     const supabase = await createClient();
 
-    // 첫 실패 시 즉시 반환하여 불일치 범위 최소화 (순차 실행)
-    for (let i = 0; i < orderedIds.length; i++) {
-      const { error } = await supabase
-        .from("services")
-        .update({ sort_order: i })
-        .eq("id", orderedIds[i]);
-      if (error) {
-        console.error("reorderServices DB error:", error);
-        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
-      }
+    // 병렬로 일괄 업데이트 — 개별 순차 호출(N+1) 대비 DB 왕복 절감
+    const results = await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from("services").update({ sort_order: i }).eq("id", id),
+      ),
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      console.error("reorderServices DB error:", failed.error);
+      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
     }
 
     revalidateServicePaths();
