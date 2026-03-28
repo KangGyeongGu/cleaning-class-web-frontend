@@ -34,6 +34,8 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   // 언마운트 시 blob URL 해제를 위해 최신 URL을 ref로 추적
   const imagePreviewRef = useRef<string | null>(null);
   const afterImagePreviewRef = useRef<string | null>(null);
+  const detailImagePreviewRef = useRef<string | null>(null);
+  const detailAfterImagePreviewRef = useRef<string | null>(null);
 
   useEffect(() => {
     imagePreviewRef.current = imagePreview;
@@ -44,13 +46,19 @@ export function NewServiceForm({ defaultSortOrder = 0 }: NewServiceFormProps) {
   }, [afterImagePreview]);
 
   useEffect(() => {
+    detailImagePreviewRef.current = detailImagePreview;
+  }, [detailImagePreview]);
+
+  useEffect(() => {
+    detailAfterImagePreviewRef.current = detailAfterImagePreview;
+  }, [detailAfterImagePreview]);
+
+  useEffect(() => {
     return () => {
-      if (imagePreviewRef.current) {
-        URL.revokeObjectURL(imagePreviewRef.current);
-      }
-      if (afterImagePreviewRef.current) {
-        URL.revokeObjectURL(afterImagePreviewRef.current);
-      }
+      if (imagePreviewRef.current) URL.revokeObjectURL(imagePreviewRef.current);
+      if (afterImagePreviewRef.current) URL.revokeObjectURL(afterImagePreviewRef.current);
+      if (detailImagePreviewRef.current) URL.revokeObjectURL(detailImagePreviewRef.current);
+      if (detailAfterImagePreviewRef.current) URL.revokeObjectURL(detailAfterImagePreviewRef.current);
     };
   }, []);
 

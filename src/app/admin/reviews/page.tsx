@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getUser } from "@/shared/lib/supabase/auth";
 import { ReviewDescriptionSection } from "@/app/admin/reviews/ReviewDescriptionSection";
 import { ReviewListSection } from "@/app/admin/reviews/ReviewListSection";
 
 export default async function ReviewsPage(): Promise<React.ReactElement> {
-  await getUser();
-
   return (
     <div className="mx-auto max-w-7xl p-8">
       <div className="mb-4 flex items-center justify-between">

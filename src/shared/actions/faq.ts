@@ -236,19 +236,22 @@ export async function reorderFaqs(
       }
     }
 
-    // 첫 실패 시 즉시 반환하여 불일치 범위 최소화 (순차 실행)
+    // 병렬로 일괄 업데이트 — 개별 순차 호출(N+1) 대비 DB 왕복 절감
     const supabase = await createClient();
     const now = new Date().toISOString();
 
-    for (const item of items) {
-      const { error } = await supabase
-        .from("faqs")
-        .update({ display_order: item.display_order, updated_at: now })
-        .eq("id", item.id);
-      if (error) {
-        console.error("reorderFaqs DB error:", error);
-        return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
-      }
+    const results = await Promise.all(
+      items.map((item) =>
+        supabase
+          .from("faqs")
+          .update({ display_order: item.display_order, updated_at: now })
+          .eq("id", item.id),
+      ),
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) {
+      console.error("reorderFaqs DB error:", failed.error);
+      return { success: false, error: "순서 변경 중 오류가 발생했습니다." };
     }
 
     revalidateFaqPaths();

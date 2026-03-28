@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { trackSelectContent, trackPhoneClick } from "@/shared/lib/analytics";
 
 /**
  * HeroCTA 컴포넌트 변형
@@ -33,6 +34,12 @@ export function HeroCTA({
             ? "border-white text-white hover:text-slate-900"
             : "border-slate-900 text-slate-900 hover:text-white",
         ].join(" ")}
+        onClick={() =>
+          trackSelectContent({
+            content_type: "cta_button",
+            content_id: "hero_quote_button",
+          })
+        }
       >
         <span
           className={[
@@ -63,6 +70,15 @@ export function HeroCTA({
                     ? "text-white hover:text-white/80"
                     : "text-slate-900 hover:text-slate-700",
                 ].join(" ")}
+                onClick={() =>
+                  trackPhoneClick({
+                    currency: "KRW",
+                    value: 0,
+                    lead_source: "phone_click",
+                    phone_type: "cleaning",
+                    click_location: "hero_cta",
+                  })
+                }
               >
                 {phone}
               </a>
@@ -79,6 +95,15 @@ export function HeroCTA({
                     ? "text-white hover:text-white/80"
                     : "text-slate-900 hover:text-slate-700",
                 ].join(" ")}
+                onClick={() =>
+                  trackPhoneClick({
+                    currency: "KRW",
+                    value: 0,
+                    lead_source: "phone_click",
+                    phone_type: "moving",
+                    click_location: "hero_cta",
+                  })
+                }
               >
                 {movingPhone}
               </a>

@@ -10,10 +10,12 @@ export const metadata: Metadata = {
   title: "작업후기",
   description:
     "청소클라쓰의 실제 작업후기를 확인하세요. 거주청소, 정기청소, 특수청소, 이사청소 등 다양한 작업 사례를 소개합니다.",
+  alternates: { canonical: "/reviews" },
   openGraph: {
     title: "작업후기 | 청소클라쓰",
     description:
       "청소클라쓰의 실제 작업후기를 확인하세요. 거주청소, 정기청소, 특수청소, 이사청소 등 다양한 작업 사례를 소개합니다.",
+    url: "/reviews",
     images: [
       {
         url: "/opengraph-image",
@@ -48,7 +50,7 @@ export default async function ReviewsPage() {
         }}
       />
 
-      <main className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white">
         <section className="pt-12 md:pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <nav aria-label="현재 위치" className="mb-8">
@@ -82,7 +84,7 @@ export default async function ReviewsPage() {
             <ReviewsPageClient reviews={reviews} />
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

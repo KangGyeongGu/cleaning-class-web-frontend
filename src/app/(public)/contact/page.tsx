@@ -8,6 +8,8 @@ import {
   InstagramIcon,
   DaangnIcon,
 } from "@/components/icons/SocialIcons";
+import TrackedPhoneLink from "@/components/analytics/TrackedPhoneLink.client";
+import TrackedSnsLink from "@/components/analytics/TrackedSnsLink.client";
 
 export const revalidate = 3600;
 
@@ -15,10 +17,12 @@ export const metadata: Metadata = {
   title: "견적문의",
   description:
     "청소클라쓰에 청소·이사 견적을 문의하세요. 전화로도 편하게 연락하실 수 있습니다.",
+  alternates: { canonical: "/contact" },
   openGraph: {
     title: "견적문의 | 청소클라쓰",
     description:
       "청소클라쓰에 청소·이사 견적을 문의하세요. 전화로도 편하게 연락하실 수 있습니다.",
+    url: "/contact",
     images: [
       {
         url: "/opengraph-image",
@@ -59,7 +63,7 @@ export default async function ContactPage() {
         }}
       />
 
-      <main className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white">
         <section className="pt-12 pb-16 md:pt-16">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_2fr] lg:gap-20">
@@ -94,12 +98,15 @@ export default async function ContactPage() {
                       <p className="mb-1 text-sm font-bold text-slate-900">
                         청소 연락
                       </p>
-                      <a
+                      {/* 문의 페이지 사이드바 청소 전화 클릭 추적 */}
+                      <TrackedPhoneLink
                         href={`tel:${phone.replace(/\D/g, "")}`}
+                        phoneType="cleaning"
+                        location="contact_aside"
                         className="text-sm font-light text-slate-600 underline-offset-2 transition-colors hover:text-slate-900 hover:underline"
                       >
                         {phone}
-                      </a>
+                      </TrackedPhoneLink>
                     </div>
                   )}
 
@@ -108,49 +115,55 @@ export default async function ContactPage() {
                       <p className="mb-1 text-sm font-bold text-slate-900">
                         이사 연락
                       </p>
-                      <a
+                      {/* 문의 페이지 사이드바 이사 전화 클릭 추적 */}
+                      <TrackedPhoneLink
                         href={`tel:${movingPhone.replace(/\D/g, "")}`}
+                        phoneType="moving"
+                        location="contact_aside"
                         className="text-sm font-light text-slate-600 underline-offset-2 transition-colors hover:text-slate-900 hover:underline"
                       >
                         {movingPhone}
-                      </a>
+                      </TrackedPhoneLink>
                     </div>
                   )}
 
                   <div className="border-t border-slate-100 pt-6">
                     <div className="flex justify-center gap-4">
                       {blogUrl && (
-                        <a
+                        /* 문의 페이지 사이드바 네이버 블로그 클릭 추적 */
+                        <TrackedSnsLink
                           href={blogUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="네이버 블로그"
+                          platform="naver_blog"
+                          location="contact_aside"
+                          ariaLabel="네이버 블로그"
                           className="text-slate-400 transition-colors hover:text-slate-900"
                         >
                           <NaverBlogIcon size={20} />
-                        </a>
+                        </TrackedSnsLink>
                       )}
                       {instagramUrl && (
-                        <a
+                        /* 문의 페이지 사이드바 인스타그램 클릭 추적 */
+                        <TrackedSnsLink
                           href={instagramUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="인스타그램"
+                          platform="instagram"
+                          location="contact_aside"
+                          ariaLabel="인스타그램"
                           className="text-slate-400 transition-colors hover:text-slate-900"
                         >
                           <InstagramIcon size={20} />
-                        </a>
+                        </TrackedSnsLink>
                       )}
                       {daangnUrl && (
-                        <a
+                        /* 문의 페이지 사이드바 당근마켓 클릭 추적 */
+                        <TrackedSnsLink
                           href={daangnUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="당근마켓"
+                          platform="daangn"
+                          location="contact_aside"
+                          ariaLabel="당근마켓"
                           className="text-slate-400 transition-colors hover:text-slate-900"
                         >
                           <DaangnIcon size={20} />
-                        </a>
+                        </TrackedSnsLink>
                       )}
                     </div>
                   </div>
@@ -163,7 +176,7 @@ export default async function ContactPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

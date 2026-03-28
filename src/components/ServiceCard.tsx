@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import { trackSelectContent } from "@/shared/lib/analytics";
 
 export interface ServiceCardProps {
   service: {
@@ -60,7 +61,16 @@ export function ServiceCard({
       }`}
     >
       {service.imageUrl && (
-        <Link href={`/services#service-${service.id}`} className="block">
+        <Link
+          href={`/services#service-${service.id}`}
+          className="block"
+          onClick={() =>
+            trackSelectContent({
+              content_type: "cta_button",
+              content_id: `service_card_${service.id}`,
+            })
+          }
+        >
           <div className="relative mb-3 aspect-square overflow-hidden bg-slate-200 transition-all duration-500 ease-out hover:-translate-y-3 hover:shadow-2xl md:mb-5 md:aspect-3/4">
             {service.afterImageUrl ? (
               <>

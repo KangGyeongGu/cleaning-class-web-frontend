@@ -12,6 +12,11 @@ import { NaverBlogIcon } from "@/components/icons/SocialIcons";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import {
+  trackReviewCardClick,
+  trackSnsClick,
+  trackReviewFilter,
+} from "@/shared/lib/analytics";
 
 export interface ReviewWithUrl extends Review {
   imageUrl: string;
@@ -109,6 +114,15 @@ function ReviewCardWrapper({
         target="_blank"
         rel="noopener noreferrer"
         className="group block h-full overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:border-slate-400 hover:shadow-xl"
+        onClick={() =>
+          trackReviewCardClick({
+            review_id: String(review.id),
+            review_title: review.title,
+            service_type: review.tags[0] ?? "",
+            click_source: "home_carousel",
+            destination_url: cardUrl,
+          })
+        }
       >
         <ReviewCard review={review} />
       </a>
@@ -175,6 +189,8 @@ export function BlogReviews({
     if (scrollRef.current) {
       scrollRef.current.scrollTo({ left: 0, behavior: "instant" });
     }
+    // 필터 변경 이벤트 전송 — 카테고리별 리뷰 탐색 패턴 파악
+    trackReviewFilter({ filter_category: filter ?? "전체", filter_source: "home" });
   };
 
   const slickSettings = {
@@ -219,6 +235,12 @@ export function BlogReviews({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
+                onClick={() =>
+                  trackSnsClick({
+                    sns_platform: "naver_blog",
+                    click_location: "reviews_section",
+                  })
+                }
               >
                 <NaverBlogIcon size={16} /> BLOG{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -230,6 +252,12 @@ export function BlogReviews({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm font-medium tracking-wide text-slate-500 transition-colors hover:text-slate-900"
+                onClick={() =>
+                  trackSnsClick({
+                    sns_platform: "instagram",
+                    click_location: "reviews_section",
+                  })
+                }
               >
                 <Instagram size={16} /> INSTAGRAM{" "}
                 <ArrowUpRight size={16} aria-hidden="true" />
@@ -307,6 +335,12 @@ export function BlogReviews({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
+                    onClick={() =>
+                      trackSnsClick({
+                        sns_platform: "naver_blog",
+                        click_location: "reviews_section",
+                      })
+                    }
                   >
                     <NaverBlogIcon size={16} /> BLOG{" "}
                     <ArrowUpRight size={16} aria-hidden="true" />
@@ -318,6 +352,12 @@ export function BlogReviews({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 transition-colors hover:text-slate-600"
+                    onClick={() =>
+                      trackSnsClick({
+                        sns_platform: "instagram",
+                        click_location: "reviews_section",
+                      })
+                    }
                   >
                     <Instagram size={16} /> INSTAGRAM{" "}
                     <ArrowUpRight size={16} aria-hidden="true" />

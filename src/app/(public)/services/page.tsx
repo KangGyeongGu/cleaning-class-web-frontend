@@ -7,6 +7,7 @@ import type { ServiceWithImageUrls } from "@/shared/lib/home";
 import { ServiceBeforeAfter } from "@/components/ServiceBeforeAfter.client";
 import { HashHighlight } from "@/app/(public)/services/HashHighlight.client";
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import TrackedCtaLink from "@/components/analytics/TrackedCtaLink.client";
 
 export const revalidate = 3600;
 
@@ -16,9 +17,11 @@ const PAGE_DESCRIPTION =
 export const metadata: Metadata = {
   title: "서비스 소개",
   description: PAGE_DESCRIPTION,
+  alternates: { canonical: "/services" },
   openGraph: {
     title: "서비스 소개 | 청소클라쓰",
     description: "청소클라쓰의 전문 청소·이사 서비스를 소개합니다.",
+    url: "/services",
     images: [
       {
         url: "/opengraph-image",
@@ -274,12 +277,14 @@ export default async function ServicesPage() {
             원하시는 서비스가 있으신가요? 부담 없이 연락 주시면 빠르게 안내해
             드립니다.
           </p>
-          <Link
+          {/* 서비스 소개 페이지 하단 견적 문의하기 CTA 추적 */}
+          <TrackedCtaLink
             href="/contact"
+            contentId="services_page_quote"
             className="btn-primary inline-block px-8 py-3 text-sm"
           >
             견적 문의하기
-          </Link>
+          </TrackedCtaLink>
         </div>
       </section>
     </div>
