@@ -8,6 +8,10 @@ import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import {
+  trackReviewCardClick,
+  trackReviewFilter,
+} from "@/shared/lib/analytics";
 
 interface ReviewsPageClientProps {
   reviews: Review[];
@@ -66,6 +70,16 @@ function ReviewCard({ review }: { review: Review }) {
         rel="noopener noreferrer"
         className="block h-full"
         aria-label={`${review.title} — 블로그에서 보기`}
+        onClick={() =>
+          trackReviewCardClick({
+            review_id: review.id,
+            review_title: review.title,
+            // tags 첫 번째 항목을 서비스 유형으로 사용
+            service_type: review.tags[0] ?? "",
+            click_source: "reviews_page",
+            destination_url: cardUrl,
+          })
+        }
       >
         {inner}
       </a>
@@ -93,7 +107,13 @@ export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
           type="button"
           role="tab"
           aria-selected={activeFilter === null}
-          onClick={() => setActiveFilter(null)}
+          onClick={() => {
+            setActiveFilter(null);
+            trackReviewFilter({
+              filter_category: "전체",
+              filter_source: "reviews_page",
+            });
+          }}
           className={`btn-filter shrink-0 ${activeFilter === null ? "btn-filter-active" : "btn-filter-inactive"}`}
         >
           전체
@@ -104,7 +124,13 @@ export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
             type="button"
             role="tab"
             aria-selected={activeFilter === type}
-            onClick={() => setActiveFilter(type)}
+            onClick={() => {
+              setActiveFilter(type);
+              trackReviewFilter({
+                filter_category: type,
+                filter_source: "reviews_page",
+              });
+            }}
             className={`btn-filter shrink-0 ${activeFilter === type ? "btn-filter-active" : "btn-filter-inactive"}`}
           >
             {type}

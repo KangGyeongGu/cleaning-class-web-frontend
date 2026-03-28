@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { getUser } from "@/shared/lib/supabase/auth";
 import { getFaqById } from "@/shared/lib/queries/faq";
 import { EditFaqForm } from "@/app/admin/faq/[id]/edit/EditFaqForm.client";
 
@@ -8,7 +7,6 @@ interface EditFaqPageProps {
 }
 
 export default async function EditFaqPage({ params }: EditFaqPageProps) {
-  await getUser();
   const { id } = await params;
   const faq = await getFaqById(id);
 

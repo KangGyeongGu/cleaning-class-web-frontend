@@ -4,6 +4,8 @@ import { getSiteConfig } from "@/shared/lib/site-config";
 import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
 import { ServiceGrid } from "@/components/ServiceGrid";
+import TrackedCtaLink from "@/components/analytics/TrackedCtaLink.client";
+import TrackedPhoneLink from "@/components/analytics/TrackedPhoneLink.client";
 
 export async function Services() {
   // 서비스 목록과 사이트 설정을 병렬 조회 (React cache()로 getSiteConfig 중복 요청 방지)
@@ -64,18 +66,23 @@ export async function Services() {
                 </h3>
               </div>
               <div className="flex items-center gap-3">
-                <Link
+                {/* 청소 서비스 문의하기 CTA 추적 */}
+                <TrackedCtaLink
                   href="/contact"
+                  contentId="services_cleaning_contact"
                   className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
                 >
                   문의하기 <ArrowUpRight size={12} aria-hidden="true" />
-                </Link>
-                <a
+                </TrackedCtaLink>
+                {/* 청소 서비스 전화문의 추적 */}
+                <TrackedPhoneLink
                   href={`tel:${cleaningPhone}`}
+                  phoneType="cleaning"
+                  location="services_section"
                   className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
                 >
                   전화문의 <ArrowUpRight size={12} aria-hidden="true" />
-                </a>
+                </TrackedPhoneLink>
               </div>
             </div>
             <ServiceGrid services={cleaningServices} />
@@ -102,18 +109,23 @@ export async function Services() {
                 </h3>
               </div>
               <div className="flex items-center gap-3">
-                <Link
+                {/* 이사 서비스 문의하기 CTA 추적 */}
+                <TrackedCtaLink
                   href="/contact"
+                  contentId="services_moving_contact"
                   className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
                 >
                   문의하기 <ArrowUpRight size={12} aria-hidden="true" />
-                </Link>
-                <a
+                </TrackedCtaLink>
+                {/* 이사 서비스 전화문의 추적 */}
+                <TrackedPhoneLink
                   href={`tel:${movingPhone}`}
+                  phoneType="moving"
+                  location="services_section"
                   className="flex items-center gap-0.5 text-xs text-slate-500 transition-colors hover:text-slate-900"
                 >
                   전화문의 <ArrowUpRight size={12} aria-hidden="true" />
-                </a>
+                </TrackedPhoneLink>
               </div>
             </div>
             <ServiceGrid services={movingServices} />

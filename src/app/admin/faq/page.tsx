@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getUser } from "@/shared/lib/supabase/auth";
 import { FaqDescriptionSection } from "@/app/admin/faq/FaqDescriptionSection";
 import { FaqListSection } from "@/app/admin/faq/FaqListSection";
 
 export default async function FaqPage(): Promise<React.ReactElement> {
-  await getUser();
-
   return (
     <div className="mx-auto max-w-7xl p-8">
       <div className="mb-4 flex items-center justify-between">

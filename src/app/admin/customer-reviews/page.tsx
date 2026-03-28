@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getUser } from "@/shared/lib/supabase/auth";
 import {
   getReviewTokens,
   getAdminCustomerReviews,
@@ -15,8 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default async function CustomerReviewsPage(): Promise<React.ReactElement> {
-  await getUser();
-
   const [tokens, reviews] = await Promise.all([
     getReviewTokens(),
     getAdminCustomerReviews(),

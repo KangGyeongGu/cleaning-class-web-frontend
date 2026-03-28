@@ -6,6 +6,8 @@ import {
   InstagramIcon,
   DaangnIcon,
 } from "@/components/icons/SocialIcons";
+import TrackedPhoneLink from "@/components/analytics/TrackedPhoneLink.client";
+import TrackedSnsLink from "@/components/analytics/TrackedSnsLink.client";
 
 interface FooterProps {
   siteConfig: SiteConfig | null;
@@ -52,12 +54,15 @@ export function Footer({ siteConfig }: FooterProps) {
                   )}
                   {phone && (
                     <li>
-                      <a
+                      {/* 청소 전화번호 클릭 추적 */}
+                      <TrackedPhoneLink
                         href={`tel:${phone}`}
+                        phoneType="cleaning"
+                        location="footer"
                         className="transition-colors hover:text-slate-900"
                       >
                         {phone}
-                      </a>
+                      </TrackedPhoneLink>
                     </li>
                   )}
                   {email && (
@@ -88,12 +93,15 @@ export function Footer({ siteConfig }: FooterProps) {
                     )}
                     {movingPhone && (
                       <li>
-                        <a
+                        {/* 이사 전화번호 클릭 추적 */}
+                        <TrackedPhoneLink
                           href={`tel:${movingPhone}`}
+                          phoneType="moving"
+                          location="footer"
                           className="transition-colors hover:text-slate-900"
                         >
                           {movingPhone}
-                        </a>
+                        </TrackedPhoneLink>
                       </li>
                     )}
                     {movingAddress && <li className="whitespace-normal">{movingAddress}</li>}
@@ -108,47 +116,53 @@ export function Footer({ siteConfig }: FooterProps) {
             <ul className="space-y-3 text-sm font-light text-slate-600">
               {hasBlogUrl && (
                 <li>
-                  <a
-                    href={blogUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* 네이버 블로그 SNS 클릭 추적 */}
+                  <TrackedSnsLink
+                    href={blogUrl!}
+                    platform="naver_blog"
+                    location="footer"
                     className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-slate-900 md:min-h-0"
+                    ariaLabel="네이버 블로그"
                   >
                     <span className="flex h-4 w-4 shrink-0 items-center justify-center">
                       <NaverBlogIcon size={16} />
                     </span>
                     블로그
-                  </a>
+                  </TrackedSnsLink>
                 </li>
               )}
               {hasInstagramUrl && (
                 <li>
-                  <a
-                    href={instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* 인스타그램 SNS 클릭 추적 */}
+                  <TrackedSnsLink
+                    href={instagramUrl!}
+                    platform="instagram"
+                    location="footer"
                     className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-slate-900 md:min-h-0"
+                    ariaLabel="인스타그램"
                   >
                     <span className="flex h-4 w-4 shrink-0 items-center justify-center">
                       <InstagramIcon size={16} />
                     </span>
                     인스타그램
-                  </a>
+                  </TrackedSnsLink>
                 </li>
               )}
               {hasDaangnUrl && (
                 <li>
-                  <a
-                    href={daangnUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  {/* 당근마켓 SNS 클릭 추적 */}
+                  <TrackedSnsLink
+                    href={daangnUrl!}
+                    platform="daangn"
+                    location="footer"
                     className="inline-flex min-h-11 items-center gap-2 transition-colors hover:text-slate-900 md:min-h-0"
+                    ariaLabel="당근마켓"
                   >
                     <span className="flex h-4 w-4 shrink-0 items-center justify-center">
                       <DaangnIcon size={16} />
                     </span>
                     당근
-                  </a>
+                  </TrackedSnsLink>
                 </li>
               )}
             </ul>
