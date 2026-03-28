@@ -158,18 +158,23 @@ export function ContactForm({ phone }: ContactFormProps) {
     return () => observer.disconnect();
   }, []);
 
-  // 전송 성공 시 GA4 리드 전환 이벤트 발화 — 중복 방지를 위해 isReset 체크
+  // 전송 성공 시 GA4 리드 전환 이벤트 발화 — useRef로 단일 발화 보장
+  const hasTrackedLead = useRef(false);
   useEffect(() => {
-    if (!isSuccess || isReset) return;
-
-    trackGenerateLead({
-      currency: "KRW",
-      value: 0,
-      lead_source: "quote_form",
-      service_type: serviceType,
-      inquiry_type: inquiryType,
-    });
-  }, [isSuccess, isReset, serviceType, inquiryType]);
+    if (isSuccess && !hasTrackedLead.current) {
+      hasTrackedLead.current = true;
+      trackGenerateLead({
+        currency: "KRW",
+        value: 0,
+        lead_source: "quote_form",
+        service_type: serviceType,
+        inquiry_type: inquiryType,
+      });
+    }
+    if (!isSuccess) {
+      hasTrackedLead.current = false;
+    }
+  }, [isSuccess, serviceType, inquiryType]);
 
   // 전송 성공 후 3초 뒤 폼 초기화 및 isReset 플래그 설정
   useEffect(() => {

@@ -110,24 +110,31 @@ function formatRegionLabel(region: string, city: string): string {
 
 // ─── 도움말 툴팁 ─────────────────────────────────────────────────────────────
 
-/** 제목 옆에 물음표 아이콘을 표시하고 호버 시 설명을 보여주는 컴포넌트 */
+/** 제목 옆에 물음표 아이콘을 표시하고 호버/포커스 시 설명을 보여주는 컴포넌트 */
 function HelpTip({ text }: { text: string }): React.ReactElement {
   const [show, setShow] = useState(false);
   return (
-    <span
+    <button
+      type="button"
       className="relative ml-1.5 inline-flex cursor-help"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
+      onFocus={() => setShow(true)}
+      onBlur={() => setShow(false)}
+      aria-label="도움말"
     >
       <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-300 text-[10px] font-medium text-slate-400">
         ?
       </span>
       {show && (
-        <span className="absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded border border-slate-200 bg-white px-3 py-2 text-xs font-normal leading-relaxed text-slate-600 shadow-md">
+        <span
+          role="tooltip"
+          className="absolute bottom-full left-1/2 z-20 mb-2 w-56 -translate-x-1/2 rounded border border-slate-200 bg-white px-3 py-2 text-xs font-normal leading-relaxed text-slate-600 shadow-md"
+        >
           {text}
         </span>
       )}
-    </span>
+    </button>
   );
 }
 
@@ -650,12 +657,15 @@ export default function AnalyticsDashboard({
     return { all: ts, summary: ts, daily: ts, traffic: ts, device: ts, pages: ts, region: ts };
   });
 
-  /** 특정 섹션의 로딩 상태 관리 헬퍼 */
+  /** 특정 섹션의 로딩 상태 관리 + 에러 처리 래퍼 */
   const withLoading = useCallback(
     async <T,>(key: string, fn: () => Promise<T>): Promise<T | null> => {
       setLoading((prev) => ({ ...prev, [key]: true }));
       try {
         return await fn();
+      } catch {
+        // 서버 액션 오류·네트워크 오류 시 조용히 null 반환
+        return null;
       } finally {
         setLoading((prev) => ({ ...prev, [key]: false }));
       }
@@ -685,56 +695,64 @@ export default function AnalyticsDashboard({
   /** KPI + 전환 이벤트 새로고침 */
   const handleRefreshSummary = useCallback(async (): Promise<void> => {
     const result = await withLoading("summary", refreshSummary);
-    if (result && data) {
-      setData({ ...data, summary: result.summary, conversionEvents: result.conversionEvents, lastUpdated: result.lastUpdated });
-      markUpdated("summary");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev
+        ? { ...prev, summary: result.summary, conversionEvents: result.conversionEvents, lastUpdated: result.lastUpdated }
+        : null,
+    );
+    markUpdated("summary");
+  }, [withLoading, markUpdated]);
 
   /** 일별 방문자 새로고침 */
   const handleRefreshDaily = useCallback(async (): Promise<void> => {
     const result = await withLoading("daily", refreshDailyVisitors);
-    if (result && data) {
-      setData({ ...data, dailyVisitors: result, lastUpdated: new Date().toISOString() });
-      markUpdated("daily");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev ? { ...prev, dailyVisitors: result, lastUpdated: new Date().toISOString() } : null,
+    );
+    markUpdated("daily");
+  }, [withLoading, markUpdated]);
 
   /** 유입 경로 새로고침 */
   const handleRefreshTraffic = useCallback(async (): Promise<void> => {
     const result = await withLoading("traffic", refreshTrafficSources);
-    if (result && data) {
-      setData({ ...data, trafficSources: result, lastUpdated: new Date().toISOString() });
-      markUpdated("traffic");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev ? { ...prev, trafficSources: result, lastUpdated: new Date().toISOString() } : null,
+    );
+    markUpdated("traffic");
+  }, [withLoading, markUpdated]);
 
   /** 디바이스 + 브라우저 새로고침 */
   const handleRefreshDevice = useCallback(async (): Promise<void> => {
     const result = await withLoading("device", refreshDevice);
-    if (result && data) {
-      setData({ ...data, ...result, lastUpdated: new Date().toISOString() });
-      markUpdated("device");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev ? { ...prev, ...result, lastUpdated: new Date().toISOString() } : null,
+    );
+    markUpdated("device");
+  }, [withLoading, markUpdated]);
 
   /** 인기 페이지 새로고침 */
   const handleRefreshPages = useCallback(async (): Promise<void> => {
     const result = await withLoading("pages", refreshTopPages);
-    if (result && data) {
-      setData({ ...data, topPages: result, lastUpdated: new Date().toISOString() });
-      markUpdated("pages");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev ? { ...prev, topPages: result, lastUpdated: new Date().toISOString() } : null,
+    );
+    markUpdated("pages");
+  }, [withLoading, markUpdated]);
 
   /** 지역별 방문자 새로고침 */
   const handleRefreshRegion = useCallback(async (): Promise<void> => {
     const result = await withLoading("region", refreshRegion);
-    if (result && data) {
-      setData({ ...data, regionBreakdown: result, lastUpdated: new Date().toISOString() });
-      markUpdated("region");
-    }
-  }, [withLoading, data, markUpdated]);
+    if (!result) return;
+    setData((prev) =>
+      prev ? { ...prev, regionBreakdown: result, lastUpdated: new Date().toISOString() } : null,
+    );
+    markUpdated("region");
+  }, [withLoading, markUpdated]);
 
   if (!data) {
     return <NoDataFallback />;

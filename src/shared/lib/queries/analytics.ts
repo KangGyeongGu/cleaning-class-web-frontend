@@ -59,10 +59,16 @@ function formatDate(dateString: string): string {
   return dateString;
 }
 
-/** 문자열을 숫자로 안전하게 변환 */
+/** 문자열을 정수로 안전하게 변환 */
 function toNumber(value: string | null | undefined): number {
   const num = parseInt(value ?? "0", 10);
-  return isNaN(num) ? 0 : num;
+  return Number.isNaN(num) ? 0 : num;
+}
+
+/** 문자열을 소수로 안전하게 변환 */
+function toFloat(value: string | null | undefined): number {
+  const num = parseFloat(value ?? "0");
+  return Number.isNaN(num) ? 0 : num;
 }
 
 /** GA4 공통 설정을 반환. 환경변수 미설정 시 null */
@@ -238,8 +244,8 @@ export async function getAnalyticsData(): Promise<AnalyticsData | null> {
     const deviceDetail = (deviceDetailResult[0]?.rows ?? []).map((row) => ({
       device: row.dimensionValues?.[0]?.value ?? "",
       sessions: toNumber(row.metricValues?.[0]?.value),
-      bounceRate: parseFloat(row.metricValues?.[1]?.value ?? "0"),
-      avgSessionDuration: parseFloat(row.metricValues?.[2]?.value ?? "0"),
+      bounceRate: toFloat(row.metricValues?.[1]?.value),
+      avgSessionDuration: toFloat(row.metricValues?.[2]?.value),
     }));
 
     // 브라우저별 사용자 분포 파싱

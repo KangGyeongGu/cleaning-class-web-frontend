@@ -22,14 +22,16 @@ export function FaqAccordion({ faqs }: FaqAccordionProps) {
   }
 
   function toggle(id: string, faq: FaqRow): void {
+    // 트래킹은 updater 바깥에서 1회만 실행 (Strict Mode 이중 호출 방지)
+    if (!openIds.has(id)) {
+      trackFaqOpen({ faq_id: String(faq.id), faq_question: faq.question });
+    }
     setOpenIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
       } else {
-        // 새로 열리는 경우에만 이벤트 전송
         next.add(id);
-        trackFaqOpen({ faq_id: String(faq.id), faq_question: faq.question });
       }
       return next;
     });
