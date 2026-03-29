@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
@@ -17,25 +17,30 @@ interface ReviewsPageClientProps {
   reviews: Review[];
 }
 
+function isSafeUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
+}
+
 function ReviewCard({ review }: { review: Review }) {
-  const cardUrl = review.link_url || null;
+  const rawUrl = review.link_url || null;
+  const cardUrl = rawUrl && isSafeUrl(rawUrl) ? rawUrl : null;
 
   const inner = (
     <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:border-slate-400 hover:shadow-lg">
-      <div className="relative aspect-video shrink-0 overflow-hidden bg-slate-100">
+      <div className="relative aspect-square shrink-0 overflow-hidden bg-slate-100">
         <Image
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
         />
       </div>
 
-      <div className="flex flex-1 flex-col px-5 py-5">
-        <div className="mb-3 flex min-h-5 flex-wrap gap-1.5">
+      <div className="flex flex-1 flex-col px-4 py-3">
+        <div className="mb-2 flex min-h-5 flex-wrap gap-1.5">
           {review.tags.map((tag) => (
             <span key={tag} className="tag-pill text-xs">
               {tag}
@@ -43,11 +48,11 @@ function ReviewCard({ review }: { review: Review }) {
           ))}
         </div>
 
-        <h3 className="text-heading-3 mb-2 line-clamp-2 leading-snug transition-colors group-hover:text-slate-700">
+        <h3 className="mb-1.5 line-clamp-2 text-sm font-bold leading-snug text-slate-900 transition-colors group-hover:text-slate-700">
           {review.title}
         </h3>
 
-        <p className="mb-4 line-clamp-2 text-sm leading-relaxed font-normal text-slate-500">
+        <p className="mb-3 line-clamp-2 text-xs leading-relaxed font-normal text-slate-500">
           {review.summary}
         </p>
 
@@ -89,12 +94,53 @@ function ReviewCard({ review }: { review: Review }) {
   return <div className="h-full">{inner}</div>;
 }
 
+const PER_PAGE = 12;
+
 export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const filteredReviews = activeFilter
     ? reviews.filter((r) => r.tags.includes(activeFilter))
     : reviews;
+
+  const totalPages = Math.ceil(filteredReviews.length / PER_PAGE);
+  const pagedReviews = filteredReviews.slice(
+    (currentPage - 1) * PER_PAGE,
+    currentPage * PER_PAGE,
+  );
+
+  const goToPage = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    },
+    [],
+  );
+
+  const handleFilterChange = (filter: string | null) => {
+    setActiveFilter(filter);
+    setCurrentPage(1);
+    trackReviewFilter({
+      filter_category: filter ?? "전체",
+      filter_source: "reviews_page",
+    });
+  };
+
+  // 페이지 번호 목록 생성 (최대 5개 표시)
+  const getPageNumbers = (): number[] => {
+    const maxVisible = 5;
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+    const end = Math.min(totalPages, start + maxVisible - 1);
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   return (
     <div>
@@ -107,13 +153,7 @@ export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
           type="button"
           role="tab"
           aria-selected={activeFilter === null}
-          onClick={() => {
-            setActiveFilter(null);
-            trackReviewFilter({
-              filter_category: "전체",
-              filter_source: "reviews_page",
-            });
-          }}
+          onClick={() => handleFilterChange(null)}
           className={`btn-filter shrink-0 ${activeFilter === null ? "btn-filter-active" : "btn-filter-inactive"}`}
         >
           전체
@@ -124,13 +164,7 @@ export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
             type="button"
             role="tab"
             aria-selected={activeFilter === type}
-            onClick={() => {
-              setActiveFilter(type);
-              trackReviewFilter({
-                filter_category: type,
-                filter_source: "reviews_page",
-              });
-            }}
+            onClick={() => handleFilterChange(type)}
             className={`btn-filter shrink-0 ${activeFilter === type ? "btn-filter-active" : "btn-filter-inactive"}`}
           >
             {type}
@@ -151,15 +185,93 @@ export function ReviewsPageClient({ reviews }: ReviewsPageClientProps) {
           </p>
 
           <ul
-            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            ref={listRef}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
             role="list"
           >
-            {filteredReviews.map((review) => (
+            {pagedReviews.map((review) => (
               <li key={review.id}>
                 <ReviewCard review={review} />
               </li>
             ))}
           </ul>
+
+          {totalPages > 1 && (
+            <nav
+              aria-label="페이지 탐색"
+              className="mt-12 flex items-center justify-center gap-1"
+            >
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                aria-label="이전 페이지"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              {getPageNumbers()[0] > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => goToPage(1)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-sm text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                  >
+                    1
+                  </button>
+                  {getPageNumbers()[0] > 2 && (
+                    <span className="flex h-9 w-9 items-center justify-center text-sm text-slate-300">
+                      …
+                    </span>
+                  )}
+                </>
+              )}
+
+              {getPageNumbers().map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  onClick={() => goToPage(page)}
+                  aria-current={page === currentPage ? "page" : undefined}
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm transition-colors ${
+                    page === currentPage
+                      ? "bg-slate-900 font-semibold text-white"
+                      : "text-slate-400 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              {getPageNumbers().at(-1)! < totalPages && (
+                <>
+                  {getPageNumbers().at(-1)! < totalPages - 1 && (
+                    <span className="flex h-9 w-9 items-center justify-center text-sm text-slate-300">
+                      …
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => goToPage(totalPages)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg text-sm text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                  >
+                    {totalPages}
+                  </button>
+                </>
+              )}
+
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                aria-label="다음 페이지"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-30"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </nav>
+          )}
         </>
       )}
     </div>

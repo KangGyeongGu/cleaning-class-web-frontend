@@ -60,7 +60,7 @@ function PrevArrow(props: CustomArrowProps) {
 function ReviewCard({ review }: { review: ReviewWithUrl }) {
   return (
     <div className="flex h-full flex-col">
-      <div className="relative mb-3 aspect-16/9 shrink-0 overflow-hidden bg-slate-200 md:mb-5 md:aspect-4/3">
+      <div className="relative mb-3 aspect-square shrink-0 overflow-hidden bg-slate-200 md:mb-4">
         <Image
           src={review.imageUrl}
           alt={review.title}
@@ -99,6 +99,10 @@ function ReviewCard({ review }: { review: ReviewWithUrl }) {
   );
 }
 
+function isSafeUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url);
+}
+
 function ReviewCardWrapper({
   review,
   blogUrl,
@@ -106,7 +110,8 @@ function ReviewCardWrapper({
   review: ReviewWithUrl;
   blogUrl?: string;
 }) {
-  const cardUrl = review.link_url || blogUrl || null;
+  const rawUrl = review.link_url || blogUrl || null;
+  const cardUrl = rawUrl && isSafeUrl(rawUrl) ? rawUrl : null;
   if (cardUrl) {
     return (
       <a
@@ -194,7 +199,7 @@ export function BlogReviews({
   };
 
   const slickSettings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 4,
@@ -299,36 +304,22 @@ export function BlogReviews({
               className="scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-3 md:hidden"
             >
               {filteredReviews.map((review) => (
-                <div key={review.id} className="w-4/5 shrink-0 snap-center md:w-11/12">
+                <div key={review.id} className="relative w-4/5 shrink-0 snap-center md:w-11/12">
                   <ReviewCardWrapper review={review} blogUrl={blogUrl} />
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex justify-center gap-2 md:hidden">
-              {filteredReviews.map((review, index) => (
-                <button
-                  key={review.id}
-                  type="button"
-                  aria-label={`리뷰 ${index + 1}`}
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    index === activeIndex ? "bg-slate-900" : "bg-slate-300"
-                  }`}
-                  onClick={() => {
-                    const el = scrollRef.current;
-                    if (!el) return;
-                    const cardWidth = el.firstElementChild?.clientWidth ?? 0;
-                    const gap = 16;
-                    el.scrollTo({
-                      left: index * (cardWidth + gap),
-                      behavior: "smooth",
-                    });
-                  }}
-                />
-              ))}
+            <div className="mt-6 text-center md:hidden">
+              <Link
+                href="/reviews"
+                className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"
+              >
+                전체 보기 →
+              </Link>
             </div>
 
             {(hasBlogUrl || hasInstagramUrl) && (
-              <div className="mt-6 flex flex-col items-center gap-3 text-center md:hidden">
+              <div className="mt-4 flex flex-col items-center gap-3 text-center md:hidden">
                 {hasBlogUrl && (
                   <a
                     href={blogUrl}
@@ -369,7 +360,7 @@ export function BlogReviews({
             <div className="relative hidden px-2 md:block">
               <Slider ref={sliderRef} {...slickSettings}>
                 {filteredReviews.map((review) => (
-                  <div key={review.id} className="px-3 py-4">
+                  <div key={review.id} className="relative px-3 py-4">
                     <ReviewCardWrapper review={review} blogUrl={blogUrl} />
                   </div>
                 ))}
@@ -378,7 +369,7 @@ export function BlogReviews({
           </>
         )}
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 hidden text-center md:block">
           <Link
             href="/reviews"
             className="inline-block text-sm font-medium tracking-widest text-slate-400 uppercase transition-colors hover:text-slate-900"

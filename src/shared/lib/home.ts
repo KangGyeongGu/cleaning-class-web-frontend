@@ -1,5 +1,6 @@
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 import type {
   CustomerReviewRow,
   Review,
@@ -24,23 +25,73 @@ export type ServiceWithImageUrls = {
   updated_at: string;
 };
 
+/** 홈페이지용: 카테고리별 최신 4개씩 (최대 20개) */
 export async function getPublishedReviews(): Promise<Review[]> {
+  try {
+    const supabase = createStaticClient();
+    const PER_CATEGORY = 4;
+
+    // 카테고리별 최신 4개를 병렬 조회
+    const queries = CLEANING_SERVICE_TYPES.map((type) =>
+      supabase
+        .from("reviews")
+        .select("*")
+        .eq("is_published", true)
+        .contains("tags", [type])
+        .order("created_at", { ascending: false })
+        .limit(PER_CATEGORY),
+    );
+
+    const results = await Promise.all(queries);
+
+    // 중복 제거 (여러 태그를 가진 리뷰가 겹칠 수 있음)
+    const seen = new Set<string>();
+    const reviews: Review[] = [];
+
+    for (const { data, error } of results) {
+      if (error) {
+        console.error("[getPublishedReviews] DB error:", error);
+        continue;
+      }
+      for (const review of (data as Review[] | null) ?? []) {
+        if (!seen.has(review.id)) {
+          seen.add(review.id);
+          reviews.push(review);
+        }
+      }
+    }
+
+    // 최신순 정렬
+    reviews.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+    );
+
+    return reviews;
+  } catch (err) {
+    console.error("[getPublishedReviews] Unexpected error:", err);
+    return [];
+  }
+}
+
+/** 전체 리뷰 페이지용: 게시된 리뷰 전체 조회 */
+export async function getAllPublishedReviews(): Promise<Review[]> {
   try {
     const supabase = createStaticClient();
     const { data, error } = await supabase
       .from("reviews")
       .select("*")
       .eq("is_published", true)
-      .order("sort_order", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) {
-      console.error("[getPublishedReviews] DB error:", error);
+      console.error("[getAllPublishedReviews] DB error:", error);
       return [];
     }
 
     return (data as Review[] | null) ?? [];
   } catch (err) {
-    console.error("[getPublishedReviews] Unexpected error:", err);
+    console.error("[getAllPublishedReviews] Unexpected error:", err);
     return [];
   }
 }
