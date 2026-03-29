@@ -95,7 +95,7 @@ export default async function ContactPage() {
 
                   {phone && (
                     <div className="mb-6">
-                      <p className="mb-1 text-sm font-bold text-slate-900">
+                      <p className="mb-1 text-sm font-medium text-slate-900">
                         청소 연락
                       </p>
                       {/* 문의 페이지 사이드바 청소 전화 클릭 추적 */}
@@ -103,7 +103,7 @@ export default async function ContactPage() {
                         href={`tel:${phone.replace(/\D/g, "")}`}
                         phoneType="cleaning"
                         location="contact_aside"
-                        className="text-sm font-light text-slate-600 underline-offset-2 transition-colors hover:text-slate-900 hover:underline"
+                        className="text-lg font-semibold text-slate-900 underline-offset-2 transition-colors hover:text-slate-600 hover:underline"
                       >
                         {phone}
                       </TrackedPhoneLink>
@@ -112,7 +112,7 @@ export default async function ContactPage() {
 
                   {movingPhone && (
                     <div className="mb-6">
-                      <p className="mb-1 text-sm font-bold text-slate-900">
+                      <p className="mb-1 text-sm font-medium text-slate-900">
                         이사 연락
                       </p>
                       {/* 문의 페이지 사이드바 이사 전화 클릭 추적 */}
@@ -120,7 +120,7 @@ export default async function ContactPage() {
                         href={`tel:${movingPhone.replace(/\D/g, "")}`}
                         phoneType="moving"
                         location="contact_aside"
-                        className="text-sm font-light text-slate-600 underline-offset-2 transition-colors hover:text-slate-900 hover:underline"
+                        className="text-lg font-semibold text-slate-900 underline-offset-2 transition-colors hover:text-slate-600 hover:underline"
                       >
                         {movingPhone}
                       </TrackedPhoneLink>
