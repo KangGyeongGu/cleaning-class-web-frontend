@@ -1,6 +1,6 @@
 import { getSiteConfig } from "@/shared/lib/site-config";
 import {
-  getPublishedReviews,
+  getAllPublishedReviews,
   getPublishedServicesWithImageUrls,
 } from "@/shared/lib/home";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
@@ -80,7 +80,7 @@ export async function GET(): Promise<Response> {
   const [config, services, reviews] = await Promise.all([
     getSiteConfig(),
     getPublishedServicesWithImageUrls(),
-    getPublishedReviews(),
+    getAllPublishedReviews(),
   ]);
   const xml = buildRssFeed(config, services, reviews);
 
