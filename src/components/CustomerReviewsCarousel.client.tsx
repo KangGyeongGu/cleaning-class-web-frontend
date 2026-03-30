@@ -65,6 +65,7 @@ export function CustomerReviewsCarousel({
 
   return (
     <div
+      role="region"
       className="overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
