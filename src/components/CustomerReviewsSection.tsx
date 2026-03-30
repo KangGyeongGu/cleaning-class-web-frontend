@@ -1,6 +1,7 @@
 import { getCustomerReviews } from "@/shared/lib/home";
-import { StarRating } from "@/components/StarRating";
-import { CustomerReviewsReveal } from "@/components/CustomerReviewsReveal.client";
+import { getSiteConfig } from "@/shared/lib/site-config";
+import { CustomerReviewsCarousel } from "@/components/CustomerReviewsCarousel.client";
+import { ReviewRatingHero } from "@/components/ReviewRatingHero.client";
 import type { CustomerReviewRow } from "@/shared/types/database";
 
 function formatRelativeDate(dateStr: string): string {
@@ -16,60 +17,70 @@ function formatRelativeDate(dateStr: string): string {
   return `${Math.floor(diffDays / 365)}년 전`;
 }
 
-interface ReviewCardProps {
-  review: CustomerReviewRow;
+interface ReviewCardData {
+  id: string;
+  rating: number;
+  comment: string;
+  nickname: string;
+  serviceType: string | null;
+  relativeDate: string;
 }
 
-function ReviewCard({ review }: ReviewCardProps): React.ReactElement {
-  return (
-    <article className="border-b border-slate-100 py-8 last:border-b-0">
-      <div className="mb-3 flex items-center justify-between">
-        <StarRating rating={review.rating} size={15} />
-        <span className="text-caption text-slate-400">
-          {formatRelativeDate(review.created_at)}
-        </span>
-      </div>
-
-      <p className="text-body leading-relaxed text-slate-700">
-        {review.comment}
-      </p>
-
-      <p className="mt-3 text-xs font-medium tracking-widest text-slate-400 uppercase">
-        고객
-      </p>
-    </article>
-  );
+function toCardData(review: CustomerReviewRow): ReviewCardData {
+  return {
+    id: review.id,
+    rating: review.rating,
+    comment: review.comment,
+    nickname: review.nickname,
+    serviceType: review.service_type,
+    relativeDate: formatRelativeDate(review.created_at),
+  };
 }
 
 export async function CustomerReviewsSection(): Promise<React.ReactElement | null> {
-  const reviews = await getCustomerReviews();
+  const [reviews, siteConfig] = await Promise.all([
+    getCustomerReviews(),
+    getSiteConfig(),
+  ]);
 
   if (reviews.length === 0) {
     return null;
   }
 
+  const description =
+    siteConfig?.customer_review_description?.trim() ||
+    "실제 의뢰인들의 솔직한 사용 후기입니다.";
+
+  const avgRating =
+    Math.round(
+      (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length) * 10,
+    ) / 10;
+
+  const cards = reviews.map(toCardData);
+
   return (
     <section
       id="customer-reviews"
-      className="bg-white py-16 md:py-32"
+      className="bg-slate-50 py-16 md:py-24"
       aria-labelledby="customer-reviews-heading"
     >
-      <div className="container mx-auto max-w-2xl px-4 md:px-8 lg:px-12">
-        <div className="mb-12">
-          <h2 id="customer-reviews-heading" className="text-heading-1 mb-4">
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12">
+        <div className="mb-12 flex flex-col items-center text-center md:mb-16">
+          <h2
+            id="customer-reviews-heading"
+            className="text-heading-1 mb-3"
+          >
             고객 리뷰
           </h2>
-          <p className="text-body-sm tracking-wide text-slate-500 md:text-base">
-            실제 의뢰인들의 솔직한 사용 후기입니다.
+          <p className="mb-8 text-sm tracking-wide text-slate-500 md:text-base">
+            {description}
           </p>
-        </div>
 
-        <CustomerReviewsReveal>
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
-        </CustomerReviewsReveal>
+          <ReviewRatingHero avgRating={avgRating} totalCount={reviews.length} />
+        </div>
       </div>
+
+      <CustomerReviewsCarousel cards={cards} />
     </section>
   );
 }
