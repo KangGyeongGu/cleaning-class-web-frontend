@@ -32,7 +32,7 @@ function ReviewCard({ review }: { review: Review }) {
           src={getReviewImageUrl(review.image_path)}
           alt={review.title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 286px"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"

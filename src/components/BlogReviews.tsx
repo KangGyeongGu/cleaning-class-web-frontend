@@ -65,7 +65,7 @@ function ReviewCard({ review }: { review: ReviewWithUrl }) {
           src={review.imageUrl}
           alt={review.title}
           fill
-          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 33vw, 25vw"
+          sizes="(max-width: 768px) 80vw, (max-width: 1280px) 33vw, 284px"
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
