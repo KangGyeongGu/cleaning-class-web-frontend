@@ -78,7 +78,7 @@ export function ServiceCard({
                   src={service.imageUrl}
                   alt={`${service.title} Before`}
                   fill
-                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 211px"
                   priority={priority}
                   placeholder="blur"
                   blurDataURL={BLUR_PLACEHOLDER}
@@ -93,7 +93,7 @@ export function ServiceCard({
                   src={service.afterImageUrl}
                   alt={`${service.title} After`}
                   fill
-                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                  sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 211px"
                   placeholder="blur"
                   blurDataURL={BLUR_PLACEHOLDER}
                   className={`absolute inset-0 object-cover opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100 ${
@@ -109,7 +109,7 @@ export function ServiceCard({
                 src={service.imageUrl}
                 alt={service.title}
                 fill
-                sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 20vw"
+                sizes="(max-width: 768px) calc(50vw - 8px), (max-width: 1024px) 33vw, 211px"
                 priority={priority}
                 placeholder="blur"
                 blurDataURL={BLUR_PLACEHOLDER}
