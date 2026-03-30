@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,6 +21,7 @@ export function ReviewListClient({
 }: ReviewListClientProps) {
   const router = useRouter();
   const [reviews, setReviews] = useState(initialReviews);
+  useEffect(() => setReviews(initialReviews), [initialReviews]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
