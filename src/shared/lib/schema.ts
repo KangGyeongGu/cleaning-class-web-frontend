@@ -244,11 +244,6 @@ export const customerReviewFormSchema = z.object({
     .string()
     .min(1, "리뷰 내용을 입력해주세요")
     .max(500, "리뷰 내용은 500자 이하로 작성해주세요"),
-  nickname: z
-    .string()
-    .max(20, "닉네임은 20자 이하로 작성해주세요")
-    .optional()
-    .default("익명"),
   service_type: z
     .enum([...CLEANING_SERVICE_TYPES] as [string, ...string[]])
     .optional(),

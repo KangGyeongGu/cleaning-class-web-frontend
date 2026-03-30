@@ -122,6 +122,61 @@ export async function deleteReviewToken(tokenId: string): Promise<{
   }
 }
 
+/** 고객 리뷰 삭제 — 관리자 인증 필수 */
+export async function deleteCustomerReview(
+  reviewId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await getUser();
+
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("customer_reviews")
+      .delete()
+      .eq("id", reviewId);
+
+    if (error) {
+      console.error("[deleteCustomerReview] DB error:", error);
+      return { success: false, error: "리뷰 삭제 중 오류가 발생했습니다." };
+    }
+
+    revalidateCustomerReviewPaths();
+    return { success: true };
+  } catch (err) {
+    console.error("[deleteCustomerReview] error:", err);
+    return { success: false, error: "리뷰 삭제 중 오류가 발생했습니다." };
+  }
+}
+
+/** 고객 리뷰 게시 상태 토글 — 관리자 인증 필수 */
+export async function toggleCustomerReviewPublish(
+  reviewId: string,
+  isPublished: boolean,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await getUser();
+
+    const supabase = await createClient();
+    const { error } = await supabase
+      .from("customer_reviews")
+      .update({ is_published: isPublished })
+      .eq("id", reviewId);
+
+    if (error) {
+      console.error("[toggleCustomerReviewPublish] DB error:", error);
+      return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
+    }
+
+    revalidateCustomerReviewPaths();
+    return {
+      success: true,
+    };
+  } catch (err) {
+    console.error("[toggleCustomerReviewPublish] error:", err);
+    return { success: false, error: "리뷰 처리 중 오류가 발생했습니다." };
+  }
+}
+
 /**
  * 고객 리뷰 제출 — 인증 불필요, 토큰 유효성은 RPC에서 원자적 검증
  * submit_customer_review RPC: SECURITY DEFINER, FOR UPDATE 락으로 중복 방지
@@ -140,7 +195,6 @@ export async function submitCustomerReview(
       token: formData.get("token"),
       rating: Number(formData.get("rating")),
       comment: formData.get("comment"),
-      nickname: (formData.get("nickname") as string) || "익명",
       service_type: formData.get("service_type") || undefined,
     };
 
@@ -152,7 +206,7 @@ export async function submitCustomerReview(
       };
     }
 
-    const { token, rating, comment, nickname, service_type } =
+    const { token, rating, comment, service_type } =
       validationResult.data;
 
     const supabase = createStaticClient();
@@ -160,7 +214,7 @@ export async function submitCustomerReview(
       p_token: token,
       p_rating: rating,
       p_comment: comment,
-      p_nickname: nickname,
+      p_nickname: "익명",
       p_service_type: service_type ?? null,
     });
 

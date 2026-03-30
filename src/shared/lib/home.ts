@@ -150,6 +150,7 @@ export async function getCustomerReviews(): Promise<CustomerReviewRow[]> {
     const { data, error } = await supabase
       .from("customer_reviews")
       .select("*")
+      .eq("is_published", true)
       .order("created_at", { ascending: false });
 
     if (error) {
