@@ -140,6 +140,8 @@ export async function submitCustomerReview(
       token: formData.get("token"),
       rating: Number(formData.get("rating")),
       comment: formData.get("comment"),
+      nickname: (formData.get("nickname") as string) || "익명",
+      service_type: formData.get("service_type") || undefined,
     };
 
     const validationResult = customerReviewFormSchema.safeParse(rawData);
@@ -150,13 +152,16 @@ export async function submitCustomerReview(
       };
     }
 
-    const { token, rating, comment } = validationResult.data;
+    const { token, rating, comment, nickname, service_type } =
+      validationResult.data;
 
     const supabase = createStaticClient();
     const { error } = await supabase.rpc("submit_customer_review", {
       p_token: token,
       p_rating: rating,
       p_comment: comment,
+      p_nickname: nickname,
+      p_service_type: service_type ?? null,
     });
 
     if (error) {

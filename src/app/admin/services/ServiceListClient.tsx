@@ -160,7 +160,92 @@ export function ServiceListClient({
                   : ""
             }`}
           >
-            <div className="col-span-1 flex items-center gap-2">
+            {/* 모바일 카드 */}
+            <div className="flex items-start gap-3 md:hidden">
+              <GripVertical
+                size={16}
+                className="mt-1 shrink-0 text-slate-300"
+              />
+              <div className="relative aspect-square h-12 w-12 shrink-0 border border-slate-200 bg-slate-100">
+                {service.imageUrl ? (
+                  <Image
+                    src={service.imageUrl}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                    sizes="48px"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[10px] text-slate-400">
+                    없음
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-slate-900">
+                  {service.title}
+                </p>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  <span className="text-[10px] text-slate-400">
+                    {service.category === "moving" ? "이사" : "청소"}
+                  </span>
+                  {(service.tags ?? []).map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-500"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleTogglePublish(service.id, service.is_published)
+                      }
+                      disabled={togglingId === service.id}
+                      className="inline-flex items-center gap-1 text-xs text-slate-500"
+                    >
+                      {togglingId === service.id ? (
+                        <Loader2 size={12} className="animate-spin" />
+                      ) : service.is_published ? (
+                        <Eye size={12} />
+                      ) : (
+                        <EyeOff size={12} />
+                      )}
+                    </button>
+                    <span className="text-[10px] text-slate-400">
+                      {new Date(service.created_at).toLocaleDateString("ko-KR")}
+                    </span>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <Link
+                      href={`/admin/services/${service.id}/edit`}
+                      className="rounded border border-slate-200 p-2 text-slate-500"
+                    >
+                      <Edit size={12} />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(service.id)}
+                      disabled={deletingId === service.id}
+                      className="rounded border border-slate-200 p-2 text-slate-500 disabled:opacity-50"
+                    >
+                      {deletingId === service.id ? (
+                        <Loader2 size={12} className="animate-spin" />
+                      ) : (
+                        <Trash2 size={12} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 데스크톱 그리드 */}
+            <div className="hidden md:col-span-1 md:flex md:items-center md:gap-2">
               <GripVertical
                 size={16}
                 className="shrink-0 text-slate-300 hover:text-slate-500"
@@ -168,7 +253,7 @@ export function ServiceListClient({
               <span className="text-xs text-slate-400">{index}</span>
             </div>
 
-            <div className="col-span-1">
+            <div className="hidden md:col-span-1 md:block">
               <div className="relative aspect-square h-16 w-16 border border-slate-200 bg-slate-100">
                 {service.imageUrl ? (
                   <Image
@@ -186,19 +271,19 @@ export function ServiceListClient({
               </div>
             </div>
 
-            <div className="col-span-2">
+            <div className="hidden md:col-span-2 md:block">
               <p className="text-sm font-bold text-slate-900">
                 {service.title}
               </p>
             </div>
 
-            <div className="col-span-1">
+            <div className="hidden md:col-span-1 md:block">
               <span className="text-xs text-slate-500">
                 {service.category === "moving" ? "이사" : "청소"}
               </span>
             </div>
 
-            <div className="col-span-3">
+            <div className="hidden md:col-span-3 md:block">
               <div className="flex flex-wrap gap-1">
                 {(service.tags ?? []).map((tag) => (
                   <span
@@ -211,7 +296,7 @@ export function ServiceListClient({
               </div>
             </div>
 
-            <div className="col-span-1 text-center">
+            <div className="hidden md:col-span-1 md:block md:text-center">
               <button
                 type="button"
                 onClick={() =>
@@ -231,13 +316,13 @@ export function ServiceListClient({
               </button>
             </div>
 
-            <div className="col-span-1">
+            <div className="hidden md:col-span-1 md:block">
               <span className="text-xs text-slate-500">
                 {new Date(service.created_at).toLocaleDateString("ko-KR")}
               </span>
             </div>
 
-            <div className="col-span-2 flex justify-end gap-2">
+            <div className="hidden md:col-span-2 md:flex md:justify-end md:gap-2">
               <Link
                 href={`/admin/services/${service.id}/edit`}
                 className="border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 transition-colors hover:border-slate-900 hover:text-slate-900"

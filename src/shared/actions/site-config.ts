@@ -22,13 +22,14 @@ function revalidateSiteConfigPaths(): void {
 }
 
 const FIELD_REVALIDATE_MAP: Record<string, readonly string[]> = {
+  customer_review_description: ["/", "/admin/customer-reviews"],
   faq_description: ["/help", "/admin/faq"],
   review_description: ["/reviews", "/admin/reviews"],
   service_description: ["/services", "/admin/services"],
 };
 
 async function updateSiteConfigField(
-  field: "faq_description" | "review_description" | "service_description",
+  field: "customer_review_description" | "faq_description" | "review_description" | "service_description",
   value: string,
 ) {
   try {
@@ -78,6 +79,10 @@ async function updateSiteConfigField(
       error: "설정 처리 중 오류가 발생했습니다.",
     };
   }
+}
+
+export async function updateCustomerReviewDescription(description: string) {
+  return updateSiteConfigField("customer_review_description", description);
 }
 
 export async function updateFaqDescription(description: string) {

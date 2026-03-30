@@ -83,7 +83,7 @@ function CustomerReviewsSkeleton() {
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
+    <div className="relative min-h-screen bg-white font-sans text-slate-900 selection:bg-slate-900 selection:text-white">
       {/* Hero는 h1 + LCP 요소이므로 Suspense 없이 렌더링 */}
       <Hero />
 
