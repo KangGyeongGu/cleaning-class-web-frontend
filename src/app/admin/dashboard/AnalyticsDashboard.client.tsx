@@ -631,7 +631,7 @@ export default function AnalyticsDashboard({
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
   const [updatedAt, setUpdatedAt] = useState<Record<string, string>>(() => {
-    const ts = initialData?.lastUpdated ?? new Date().toISOString();
+    const ts = initialData?.lastUpdated ?? "";
     return { all: ts, summary: ts, daily: ts, traffic: ts, device: ts, pages: ts, region: ts };
   });
 
