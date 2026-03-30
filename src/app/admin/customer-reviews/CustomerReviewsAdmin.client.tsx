@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, useMemo } from "react";
+import { useState, useTransition, useMemo } from "react";
 import {
   Loader2,
   Copy,
@@ -208,13 +208,12 @@ function getTokenStatus(token: ReviewTokenRow, now: number): { label: string; cl
 }
 
 export function TokenListSection({ tokens }: TokenListSectionProps) {
-  const [origin, setOrigin] = useState("");
-  const [now, setNow] = useState(0);
-
-  useEffect(() => {
-    setOrigin(window.location.origin);
-    setNow(Date.now());
-  }, []);
+  const [origin] = useState(() =>
+    typeof window !== "undefined" ? window.location.origin : "",
+  );
+  const [now] = useState(() =>
+    typeof window !== "undefined" ? Date.now() : 0,
+  );
   const [tokenPage, setTokenPage] = useState(1);
   const tokenTotalPages = Math.ceil(tokens.length / TOKENS_PER_PAGE);
   const pagedTokens = useMemo(
