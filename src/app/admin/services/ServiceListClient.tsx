@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,6 +21,7 @@ export function ServiceListClient({
 }: ServiceListClientProps) {
   const router = useRouter();
   const [services, setServices] = useState(initialServices);
+  useEffect(() => setServices(initialServices), [initialServices]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);

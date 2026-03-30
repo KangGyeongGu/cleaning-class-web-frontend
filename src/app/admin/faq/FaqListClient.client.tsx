@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Edit, Trash2, Eye, EyeOff, Loader2, GripVertical } from "lucide-react";
@@ -14,6 +14,7 @@ interface FaqListClientProps {
 export function FaqListClient({ faqs: initialFaqs }: FaqListClientProps) {
   const router = useRouter();
   const [faqs, setFaqs] = useState(initialFaqs);
+  useEffect(() => setFaqs(initialFaqs), [initialFaqs]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);

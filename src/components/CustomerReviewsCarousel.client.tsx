@@ -35,14 +35,10 @@ function ReviewCard({ card }: { card: ReviewCardData }): React.ReactElement {
       </div>
 
       <div className="mt-3 flex items-center gap-1.5">
-        <span className="text-xs font-medium text-slate-900">
-          {card.nickname}
-        </span>
+        <span className="text-xs font-medium text-slate-900">익명</span>
         {card.serviceType && (
           <>
-            <span className="text-slate-300" aria-hidden="true">
-              ·
-            </span>
+            <span className="text-slate-300" aria-hidden="true">·</span>
             <span className="text-xs text-slate-400">{card.serviceType}</span>
           </>
         )}

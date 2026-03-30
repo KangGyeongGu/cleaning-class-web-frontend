@@ -106,7 +106,7 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
           <StarRatingInput value={rating} onChange={setRating} />
         </div>
         {rating > 0 && (
-          <p className="mt-2 text-xs text-slate-500">
+          <span className="mt-2 flex items-center text-xs text-slate-500">
             <StarRating
               rating={rating}
               size={12}
@@ -114,41 +114,20 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
             />
             <span className="sr-only">선택된 별점:</span>
             {rating}점
-          </p>
+          </span>
         )}
         {state?.errors?.rating && (
           <p className="form-error mt-1">{state.errors.rating[0]}</p>
         )}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
-          <label
-            htmlFor="nickname"
-            className="mb-2 block text-sm font-medium text-slate-900"
-          >
-            닉네임
-          </label>
-          <input
-            id="nickname"
-            name="nickname"
-            type="text"
-            maxLength={20}
-            placeholder="익명"
-            className="form-input"
-          />
-          <p className="mt-1 text-xs text-slate-400">
-            미입력 시 &quot;익명&quot;으로 표시됩니다
-          </p>
-        </div>
-
-        <div>
-          <label
-            htmlFor="service_type"
-            className="mb-2 block text-sm font-medium text-slate-900"
-          >
-            이용 서비스
-          </label>
+      <div>
+        <label
+          htmlFor="service_type"
+          className="mb-2 block text-sm font-medium text-slate-900"
+        >
+          이용 서비스
+        </label>
           <select
             id="service_type"
             name="service_type"
@@ -164,7 +143,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
               </option>
             ))}
           </select>
-        </div>
       </div>
 
       <div>

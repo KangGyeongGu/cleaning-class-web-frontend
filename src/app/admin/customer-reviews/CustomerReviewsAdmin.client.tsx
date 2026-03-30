@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition, useMemo } from "react";
+import { useState, useEffect, useTransition, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Loader2,
   Copy,
@@ -9,10 +10,14 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import {
   generateReviewToken,
   deleteReviewToken,
+  deleteCustomerReview,
+  toggleCustomerReviewPublish,
 } from "@/shared/actions/customer-review";
 import type {
   ReviewTokenRow,
@@ -208,12 +213,14 @@ function getTokenStatus(token: ReviewTokenRow, now: number): { label: string; cl
 }
 
 export function TokenListSection({ tokens }: TokenListSectionProps) {
-  const [origin] = useState(() =>
-    typeof window !== "undefined" ? window.location.origin : "",
-  );
-  const [now] = useState(() =>
-    typeof window !== "undefined" ? Date.now() : 0,
-  );
+  const [origin, setOrigin] = useState("");
+  const [now, setNow] = useState(0);
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+    setNow(Date.now());
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만 실행
+  }, []);
   const [tokenPage, setTokenPage] = useState(1);
   const tokenTotalPages = Math.ceil(tokens.length / TOKENS_PER_PAGE);
   const pagedTokens = useMemo(
@@ -359,13 +366,143 @@ export function TokenListSection({ tokens }: TokenListSectionProps) {
   );
 }
 
+function ReviewCardMobile({ review }: { review: CustomerReviewRow }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  return (
+    <div className="rounded-lg border border-slate-100 p-4">
+      <div className="mb-2 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <StarDisplay rating={review.rating} />
+          <span className="text-xs text-slate-400">{review.rating}점</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              startTransition(async () => {
+                await toggleCustomerReviewPublish(
+                  review.id,
+                  !review.is_published,
+                );
+                router.refresh();
+              })
+            }
+            disabled={isPending}
+            className="inline-flex items-center gap-1 text-xs text-slate-400"
+          >
+            {review.is_published ? <Eye size={12} /> : <EyeOff size={12} />}
+            <span>{review.is_published ? "공개" : "비공개"}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              if (!confirm("이 리뷰를 삭제하시겠습니까?")) return;
+              startTransition(async () => {
+                await deleteCustomerReview(review.id);
+                router.refresh();
+              });
+            }}
+            disabled={isPending}
+            className="text-slate-400 hover:text-red-500"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      </div>
+      <p className="mb-2 text-sm leading-relaxed text-slate-700">
+        {review.comment}
+      </p>
+      <div className="flex items-center justify-between text-xs text-slate-400">
+        <span>{review.service_type ?? "-"}</span>
+        <span>{formatDate(review.created_at)}</span>
+      </div>
+    </div>
+  );
+}
+
+function ReviewRowDesktop({ review }: { review: CustomerReviewRow }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
+  return (
+    <tr className="border-b border-slate-100 last:border-0">
+      <td className="py-3 pr-4">
+        <div className="flex items-center gap-2">
+          <StarDisplay rating={review.rating} />
+          <span className="text-xs font-light text-slate-400">
+            {review.rating}점
+          </span>
+        </div>
+      </td>
+      <td className="py-3 pr-4 text-xs text-slate-400">
+        {review.service_type ?? "-"}
+      </td>
+      <td className="py-3 pr-4 font-light text-slate-700">
+        <p className="max-w-md leading-relaxed">{review.comment}</p>
+      </td>
+      <td className="py-3 pr-4 text-center">
+        <button
+          type="button"
+          onClick={() =>
+            startTransition(async () => {
+              await toggleCustomerReviewPublish(
+                review.id,
+                !review.is_published,
+              );
+              router.refresh();
+            })
+          }
+          disabled={isPending}
+          className="inline-flex items-center gap-1 text-xs font-bold text-slate-500 transition-colors hover:text-slate-900 disabled:opacity-50"
+        >
+          {isPending ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : review.is_published ? (
+            <Eye size={14} />
+          ) : (
+            <EyeOff size={14} />
+          )}
+          {review.is_published ? "공개" : "비공개"}
+        </button>
+      </td>
+      <td className="py-3 pr-4 text-sm font-light text-slate-400">
+        {formatDate(review.created_at)}
+      </td>
+      <td className="py-3 text-right">
+        <button
+          type="button"
+          onClick={() => {
+            if (!confirm("이 리뷰를 삭제하시겠습니까?")) return;
+            startTransition(async () => {
+              await deleteCustomerReview(review.id);
+            });
+          }}
+          disabled={isPending}
+          className="text-slate-400 transition-colors hover:text-red-500 disabled:opacity-50"
+        >
+          {isPending ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <Trash2 size={14} />
+          )}
+        </button>
+      </td>
+    </tr>
+  );
+}
+
 interface CustomerReviewsListProps {
   reviews: CustomerReviewRow[];
 }
 
 const REVIEWS_PER_PAGE = 10;
 
-export function CustomerReviewsList({ reviews }: CustomerReviewsListProps) {
+export function CustomerReviewsList({ reviews: initialReviews }: CustomerReviewsListProps) {
+  const [reviews, setReviews] = useState(initialReviews);
+  // eslint-disable-next-line -- props→state 동기화: router.refresh() 후 서버 데이터 반영
+  useEffect(() => setReviews(initialReviews), [initialReviews]);
   const [reviewPage, setReviewPage] = useState(1);
   const reviewTotalPages = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
   const pagedReviews = useMemo(
@@ -398,34 +535,7 @@ export function CustomerReviewsList({ reviews }: CustomerReviewsListProps) {
           {/* 모바일: 카드 레이아웃 */}
           <div className="space-y-3 md:hidden">
             {pagedReviews.map((review) => (
-              <div
-                key={review.id}
-                className="rounded-lg border border-slate-100 p-4"
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <StarDisplay rating={review.rating} />
-                    <span className="text-xs text-slate-400">
-                      {review.rating}점
-                    </span>
-                  </div>
-                  <span className="text-xs text-slate-400">
-                    {formatDate(review.created_at)}
-                  </span>
-                </div>
-                <p className="mb-2 text-sm leading-relaxed text-slate-700">
-                  {review.comment}
-                </p>
-                <div className="flex gap-2 text-xs text-slate-400">
-                  <span>{review.nickname}</span>
-                  {review.service_type && (
-                    <>
-                      <span>·</span>
-                      <span>{review.service_type}</span>
-                    </>
-                  )}
-                </div>
-              </div>
+              <ReviewCardMobile key={review.id} review={review} />
             ))}
           </div>
 
@@ -438,48 +548,25 @@ export function CustomerReviewsList({ reviews }: CustomerReviewsListProps) {
                     별점
                   </th>
                   <th className="py-3 pr-4 text-left text-xs font-bold tracking-widest text-slate-500 uppercase">
-                    닉네임
-                  </th>
-                  <th className="py-3 pr-4 text-left text-xs font-bold tracking-widest text-slate-500 uppercase">
                     서비스
                   </th>
                   <th className="py-3 pr-4 text-left text-xs font-bold tracking-widest text-slate-500 uppercase">
                     내용
                   </th>
-                  <th className="py-3 text-left text-xs font-bold tracking-widest text-slate-500 uppercase">
+                  <th className="py-3 pr-4 text-center text-xs font-bold tracking-widest text-slate-500 uppercase">
+                    공개
+                  </th>
+                  <th className="py-3 pr-4 text-left text-xs font-bold tracking-widest text-slate-500 uppercase">
                     등록일
+                  </th>
+                  <th className="py-3 text-right text-xs font-bold tracking-widest text-slate-500 uppercase">
+                    삭제
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {pagedReviews.map((review) => (
-                  <tr
-                    key={review.id}
-                    className="border-b border-slate-100 last:border-0"
-                  >
-                    <td className="py-3 pr-4">
-                      <div className="flex items-center gap-2">
-                        <StarDisplay rating={review.rating} />
-                        <span className="text-xs font-light text-slate-400">
-                          {review.rating}점
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-3 pr-4 text-xs text-slate-600">
-                      {review.nickname}
-                    </td>
-                    <td className="py-3 pr-4 text-xs text-slate-400">
-                      {review.service_type ?? "-"}
-                    </td>
-                    <td className="py-3 pr-4 font-light text-slate-700">
-                      <p className="max-w-md leading-relaxed">
-                        {review.comment}
-                      </p>
-                    </td>
-                    <td className="py-3 text-sm font-light text-slate-400">
-                      {formatDate(review.created_at)}
-                    </td>
-                  </tr>
+                  <ReviewRowDesktop key={review.id} review={review} />
                 ))}
               </tbody>
             </table>

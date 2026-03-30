@@ -19,6 +19,7 @@ export type Database = {
           comment: string;
           created_at: string;
           id: string;
+          is_published: boolean;
           nickname: string;
           rating: number;
           service_type: string | null;
@@ -28,6 +29,7 @@ export type Database = {
           comment: string;
           created_at?: string;
           id?: string;
+          is_published?: boolean;
           nickname?: string;
           rating: number;
           service_type?: string | null;
@@ -37,6 +39,7 @@ export type Database = {
           comment?: string;
           created_at?: string;
           id?: string;
+          is_published?: boolean;
           nickname?: string;
           rating?: number;
           service_type?: string | null;
