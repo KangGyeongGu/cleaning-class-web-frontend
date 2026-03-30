@@ -110,12 +110,12 @@ export default async function RootLayout({
   ]);
 
   return (
-    <html lang="ko">
+    <html lang="ko" className="relative">
       <head>
         {/* eslint-disable-next-line @next/next/no-css-tags -- public 셀프 호스팅 폰트, CSS 모듈 import 불가 */}
         <link rel="stylesheet" href="/fonts/pretendard/pretendard.css" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="relative font-sans antialiased">
         {/* eslint-disable @eslint-react/dom/no-dangerously-set-innerhtml -- JSON-LD 구조화 데이터, < → \u003c 치환으로 XSS 방어 적용 */}
         <script
           type="application/ld+json"

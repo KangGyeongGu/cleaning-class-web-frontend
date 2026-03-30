@@ -155,7 +155,7 @@ function HeroImageForm({ config }: HeroImageFormProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
         <HeroSlotForm
           slot="1"
           label="좌측 이미지"
