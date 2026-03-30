@@ -237,13 +237,21 @@ export const customerReviewFormSchema = z.object({
   token: z.string().uuid("유효하지 않은 토큰 형식입니다"),
   rating: z
     .number()
-    .int("별점은 정수여야 합니다")
     .min(1, "별점은 최소 1점이어야 합니다")
-    .max(5, "별점은 최대 5점이어야 합니다"),
+    .max(5, "별점은 최대 5점이어야 합니다")
+    .refine((v) => v % 0.5 === 0, "별점은 0.5 단위여야 합니다"),
   comment: z
     .string()
     .min(1, "리뷰 내용을 입력해주세요")
     .max(500, "리뷰 내용은 500자 이하로 작성해주세요"),
+  nickname: z
+    .string()
+    .max(20, "닉네임은 20자 이하로 작성해주세요")
+    .optional()
+    .default("익명"),
+  service_type: z
+    .enum([...CLEANING_SERVICE_TYPES] as [string, ...string[]])
+    .optional(),
 });
 
 export type CustomerReviewFormData = z.infer<typeof customerReviewFormSchema>;

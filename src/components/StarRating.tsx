@@ -6,6 +6,9 @@ interface StarRatingProps {
   className?: string;
 }
 
+const STAR_PATH =
+  "M10 1.667l2.575 5.217 5.758.838-4.166 4.063.983 5.732L10 14.583l-5.15 2.934.983-5.732L1.667 7.722l5.758-.838L10 1.667z";
+
 export function StarRating({
   rating,
   size = 16,
@@ -18,7 +21,11 @@ export function StarRating({
       role="img"
     >
       {Array.from({ length: 5 }, (_, i) => {
-        const filled = i < Math.round(rating);
+        const diff = rating - i;
+        // 1 이상: 꽉 찬 별, 0.5: 반 별, 그 외: 빈 별
+        const fillType = diff >= 1 ? "full" : diff >= 0.5 ? "half" : "empty";
+        const clipId = `half-star-${i}-${size}`;
+
         return (
           <svg
             key={i}
@@ -29,14 +36,50 @@ export function StarRating({
             xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true"
           >
-            <path
-              d="M10 1.667l2.575 5.217 5.758.838-4.166 4.063.983 5.732L10 14.583l-5.15 2.934.983-5.732L1.667 7.722l5.758-.838L10 1.667z"
-              fill={filled ? "#0f172a" : "none"}
-              stroke={filled ? "#0f172a" : "#cbd5e1"}
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
+            {fillType === "half" && (
+              <defs>
+                <clipPath id={clipId}>
+                  <rect x="0" y="0" width="10" height="20" />
+                </clipPath>
+              </defs>
+            )}
+
+            {/* 빈 별 배경 (반별, 빈별 공통) */}
+            {fillType !== "full" && (
+              <path
+                d={STAR_PATH}
+                fill="none"
+                stroke="#cbd5e1"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+
+            {/* 꽉 찬 별 */}
+            {fillType === "full" && (
+              <path
+                d={STAR_PATH}
+                fill="#0f172a"
+                stroke="#0f172a"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            )}
+
+            {/* 반 별: 왼쪽 절반만 채움 */}
+            {fillType === "half" && (
+              <path
+                d={STAR_PATH}
+                fill="#0f172a"
+                stroke="#0f172a"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                clipPath={`url(#${clipId})`}
+              />
+            )}
           </svg>
         );
       })}

@@ -422,7 +422,7 @@ function TrafficSourceChart({
           tick={{ fontSize: 11, fill: SLATE[500] }}
           axisLine={false}
           tickLine={false}
-          width={80}
+          width={50}
         />
         <Tooltip content={<ChartTooltip />} />
         <Bar dataKey="세션" fill={CHART.primary} radius={[0, 2, 2, 0]} />
@@ -574,7 +574,7 @@ function BrowserChart({
           tick={{ fontSize: 11, fill: SLATE[500] }}
           axisLine={false}
           tickLine={false}
-          width={90}
+          width={60}
         />
         <Tooltip content={<ChartTooltip />} />
         <Bar dataKey="사용자" fill={CHART.accent} radius={[0, 2, 2, 0]} />
@@ -616,7 +616,7 @@ function ConversionChart({
           tick={{ fontSize: 12, fill: SLATE[500] }}
           axisLine={false}
           tickLine={false}
-          width={90}
+          width={60}
         />
         <Tooltip content={<ChartTooltip />} />
         <Bar dataKey="횟수" fill={CHART.success} radius={[0, 2, 2, 0]} />

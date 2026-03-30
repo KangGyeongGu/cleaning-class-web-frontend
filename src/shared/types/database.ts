@@ -19,21 +19,27 @@ export type Database = {
           comment: string;
           created_at: string;
           id: string;
+          nickname: string;
           rating: number;
+          service_type: string | null;
           token_id: string;
         };
         Insert: {
           comment: string;
           created_at?: string;
           id?: string;
+          nickname?: string;
           rating: number;
+          service_type?: string | null;
           token_id: string;
         };
         Update: {
           comment?: string;
           created_at?: string;
           id?: string;
+          nickname?: string;
           rating?: number;
+          service_type?: string | null;
           token_id?: string;
         };
         Relationships: [
@@ -209,6 +215,7 @@ export type Database = {
           business_registration_number: string | null;
           daangn_url: string;
           description: string;
+          customer_review_description: string | null;
           email: string;
           faq_description: string | null;
           hero_image_focal_x: number;
@@ -239,6 +246,7 @@ export type Database = {
           business_registration_number?: string | null;
           daangn_url?: string;
           description?: string;
+          customer_review_description?: string | null;
           email?: string;
           faq_description?: string | null;
           hero_image_focal_x?: number;
@@ -267,6 +275,7 @@ export type Database = {
           blog_url?: string;
           business_name?: string;
           business_registration_number?: string | null;
+          customer_review_description?: string | null;
           daangn_url?: string;
           description?: string;
           email?: string;

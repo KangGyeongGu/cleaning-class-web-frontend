@@ -11,7 +11,7 @@ export default async function SiteConfigPage() {
   const config = await getSiteConfig();
 
   return (
-    <div className="mx-auto max-w-4xl p-8">
+    <div className="mx-auto max-w-4xl px-4 py-6 md:p-8">
       <h1 className="mb-8 text-3xl font-black text-slate-900">업체 정보</h1>
       {!config ? (
         <div className="border border-slate-200 p-12 text-center">

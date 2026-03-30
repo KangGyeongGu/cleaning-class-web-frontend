@@ -360,7 +360,7 @@ export function BlogReviews({
             <div className="relative hidden px-2 md:block">
               <Slider ref={sliderRef} {...slickSettings}>
                 {filteredReviews.map((review) => (
-                  <div key={review.id} className="relative px-3 py-4">
+                  <div key={review.id} className="relative h-full px-3 py-4">
                     <ReviewCardWrapper review={review} blogUrl={blogUrl} />
                   </div>
                 ))}

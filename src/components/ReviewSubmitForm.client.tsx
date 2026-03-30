@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { Loader2, Check } from "lucide-react";
 import { submitCustomerReview } from "@/shared/actions/customer-review";
 import { StarRating } from "@/components/StarRating";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
 
 interface ReviewSubmitFormProps {
   token: string;
@@ -22,14 +23,17 @@ function StarRatingInput({
 
   return (
     <div
-      className="flex items-center gap-1"
+      className="flex items-center gap-0.5"
       role="group"
       aria-label="별점 선택"
       onMouseLeave={() => setHovered(0)}
     >
-      {Array.from({ length: 5 }, (_, i) => {
-        const starValue = i + 1;
+      {Array.from({ length: 10 }, (_, i) => {
+        const starValue = (i + 1) * 0.5;
+        const isLeft = i % 2 === 0;
+        const starIndex = Math.floor(i / 2);
         const filled = starValue <= displayRating;
+
         return (
           <button
             key={starValue}
@@ -38,7 +42,13 @@ function StarRatingInput({
             aria-pressed={value === starValue}
             onClick={() => onChange(starValue)}
             onMouseEnter={() => setHovered(starValue)}
-            className="cursor-pointer transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+            className="cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+            style={{
+              width: 14,
+              height: 28,
+              overflow: "hidden",
+              display: "inline-block",
+            }}
           >
             <svg
               width={28}
@@ -47,6 +57,9 @@ function StarRatingInput({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
+              style={{
+                marginLeft: isLeft ? 0 : -14,
+              }}
             >
               <path
                 d="M10 1.667l2.575 5.217 5.758.838-4.166 4.063.983 5.732L10 14.583l-5.15 2.934.983-5.732L1.667 7.722l5.758-.838L10 1.667z"
@@ -77,7 +90,6 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
   return (
     <form action={formAction} className="space-y-6">
       <input type="hidden" name="token" value={token} />
-      {/* rating 값은 StarRatingInput이 시각적으로 제어, hidden input으로 서버에 전달 */}
       <input type="hidden" name="rating" value={rating} />
 
       <div>
@@ -107,6 +119,52 @@ export function ReviewSubmitForm({ token }: ReviewSubmitFormProps) {
         {state?.errors?.rating && (
           <p className="form-error mt-1">{state.errors.rating[0]}</p>
         )}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div>
+          <label
+            htmlFor="nickname"
+            className="mb-2 block text-sm font-medium text-slate-900"
+          >
+            닉네임
+          </label>
+          <input
+            id="nickname"
+            name="nickname"
+            type="text"
+            maxLength={20}
+            placeholder="익명"
+            className="form-input"
+          />
+          <p className="mt-1 text-xs text-slate-400">
+            미입력 시 &quot;익명&quot;으로 표시됩니다
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="service_type"
+            className="mb-2 block text-sm font-medium text-slate-900"
+          >
+            이용 서비스
+          </label>
+          <select
+            id="service_type"
+            name="service_type"
+            className="form-input"
+            defaultValue=""
+          >
+            <option value="" disabled>
+              서비스를 선택해주세요
+            </option>
+            {CLEANING_SERVICE_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div>

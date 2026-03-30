@@ -16,7 +16,7 @@ export default async function DashboardPage(): Promise<React.ReactElement> {
   ]);
 
   return (
-    <div className="p-6 md:p-10">
+    <div className="px-4 py-6 md:p-10">
       <DashboardStats data={dashboardData} />
       <AnalyticsDashboard initialData={analyticsData} />
     </div>

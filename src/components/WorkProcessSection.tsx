@@ -185,7 +185,7 @@ export function WorkProcessSection(): React.ReactElement {
     <section
       ref={sectionRef}
       id="process"
-      className="bg-slate-50 py-16 md:py-32"
+      className="relative bg-slate-50 py-16 md:py-32"
       aria-labelledby="process-heading"
     >
       <div className="container mx-auto max-w-7xl px-4 md:px-8 lg:px-12">
