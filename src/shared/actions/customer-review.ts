@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getUser } from "@/shared/lib/supabase/auth";
-import { customerReviewFormSchema } from "@/shared/lib/schema";
+import {
+  customerReviewFormSchema,
+  publicReviewFormSchema,
+} from "@/shared/lib/schema";
 import type { ReviewTokenRow } from "@/shared/types/database";
 
 /** 통일 에러 메시지 — 토큰 관련 모든 실패에 동일 문구 노출 */
@@ -236,5 +239,52 @@ export async function submitCustomerReview(
       success: false,
       error: TOKEN_ERROR_MESSAGE,
     };
+  }
+}
+
+export async function submitPublicReview(
+  prevState: unknown,
+  formData: FormData,
+): Promise<{
+  success: boolean;
+  error?: string;
+  errors?: Record<string, string[]>;
+}> {
+  try {
+    const rawData = {
+      rating: Number(formData.get("rating")),
+      comment: formData.get("comment"),
+      service_type: formData.get("service_type") || undefined,
+    };
+
+    const validationResult = publicReviewFormSchema.safeParse(rawData);
+    if (!validationResult.success) {
+      return {
+        success: false,
+        errors: validationResult.error.flatten().fieldErrors,
+      };
+    }
+
+    const { rating, comment, service_type } = validationResult.data;
+
+    const supabase = createStaticClient();
+    const { error } = await supabase.rpc("submit_public_review", {
+      p_rating: rating,
+      p_comment: comment,
+      p_nickname: "익명",
+      p_service_type: service_type ?? null,
+    });
+
+    if (error) {
+      console.error("[submitPublicReview] RPC error:", error.message);
+      return { success: false, error: "리뷰 등록 중 오류가 발생했습니다." };
+    }
+
+    revalidateCustomerReviewPaths();
+
+    return { success: true };
+  } catch (err) {
+    console.error("[submitPublicReview] error:", err);
+    return { success: false, error: "리뷰 등록 중 오류가 발생했습니다." };
   }
 }

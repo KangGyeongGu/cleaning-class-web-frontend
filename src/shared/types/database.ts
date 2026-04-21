@@ -313,6 +313,15 @@ export type Database = {
         Args: { p_comment: string; p_rating: number; p_token: string };
         Returns: string;
       };
+      submit_public_review: {
+        Args: {
+          p_rating: number;
+          p_comment: string;
+          p_nickname?: string;
+          p_service_type?: string | null;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       [_ in never]: never;

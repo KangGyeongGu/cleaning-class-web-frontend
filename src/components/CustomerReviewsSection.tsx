@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { getCustomerReviews } from "@/shared/lib/home";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { CustomerReviewsCarousel } from "@/components/CustomerReviewsCarousel.client";
@@ -77,6 +79,13 @@ export async function CustomerReviewsSection(): Promise<React.ReactElement | nul
           </p>
 
           <ReviewRatingHero avgRating={avgRating} totalCount={reviews.length} />
+
+          <Link
+            href="/review/write"
+            className="mt-4 inline-flex items-center gap-0.5 text-sm text-slate-600 underline underline-offset-4 transition-colors hover:text-slate-900"
+          >
+            리뷰 남기러 가기 <ArrowUpRight size={12} aria-hidden="true" />
+          </Link>
         </div>
       </div>
 
