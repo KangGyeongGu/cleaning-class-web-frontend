@@ -44,16 +44,12 @@ next-env.d.ts
 .idea/
 .vscode/
 
-# Claude Code runtime artifacts
-.claude/worktrees/
-.claude/plans/active/
-.claude/plans/workers/
-.claude/plans/archive/
-.claude/reports/
-.claude/memory/
-.claude/known-failures.md
-.claude/status.json
-.claude/settings.local.json
+# AI agent artifacts (Claude Code, Cursor 등)
+# 이미 트래킹된 파일(.claude/CLAUDE.md, .claude/agents/*)은 그대로 유지되고
+# 신규 파일만 무시됨. 모든 AI 에이전트 런타임 산출물은 git에서 제외
+.claude/
+.agents/
+AGENTS.md
 .mcp.json
 .playwright-mcp/
 
