@@ -212,9 +212,7 @@ interface CustomerReviewsListProps {
 
 const REVIEWS_PER_PAGE = 10;
 
-export function CustomerReviewsList({
-  reviews,
-}: CustomerReviewsListProps) {
+export function CustomerReviewsList({ reviews }: CustomerReviewsListProps) {
   const [reviewPage, setReviewPage] = useState(1);
   const reviewTotalPages = Math.ceil(reviews.length / REVIEWS_PER_PAGE);
   const pagedReviews = useMemo(

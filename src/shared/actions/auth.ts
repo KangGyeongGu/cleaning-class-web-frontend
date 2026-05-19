@@ -18,9 +18,7 @@ export async function login(
   const result = loginFormSchema.safeParse({ email, password });
 
   if (!result.success) {
-    return {
-      error: result.error.errors[0]?.message ?? "입력값을 확인해주세요",
-    };
+    return { error: "이메일 또는 비밀번호 형식을 확인해주세요" };
   }
 
   const supabase = await createClient();
