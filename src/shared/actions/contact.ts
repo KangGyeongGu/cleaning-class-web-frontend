@@ -75,7 +75,8 @@ export async function submitContactForm(
       };
     }
 
-    const dotExt = `.${file.name.split(".").pop()?.toLowerCase() ?? ""}`;
+    const lastDot = file.name.lastIndexOf(".");
+    const dotExt = lastDot === -1 ? "" : file.name.slice(lastDot).toLowerCase();
     if (!(ALLOWED_EXTENSIONS as readonly string[]).includes(dotExt)) {
       return {
         success: false,
@@ -88,10 +89,9 @@ export async function submitContactForm(
     const imageAttachments = await Promise.all(
       filteredImageFiles.map(async (file) => {
         const bytes = await file.arrayBuffer();
-        const sanitized =
-          file.name
-            .replace(/[/\\:*?"<>|\r\n]/g, "")
-            .replace(/[^a-zA-Z0-9._-]/g, "_") || "attachment";
+        const sanitized = file.name
+          .replace(/[/\\:*?"<>|\r\n]/g, "")
+          .replace(/[^a-zA-Z0-9._-]/g, "_");
         return { filename: sanitized, content: Buffer.from(bytes) };
       }),
     );
@@ -103,11 +103,9 @@ export async function submitContactForm(
       name: data.name,
       phone: data.phone,
       serviceType: data.serviceType,
-      region: data.inquiryType === "cleaning" ? (data.region ?? "") : undefined,
-      departure:
-        data.inquiryType === "moving" ? (data.departure ?? "") : undefined,
-      destination:
-        data.inquiryType === "moving" ? (data.destination ?? "") : undefined,
+      region: data.inquiryType === "cleaning" ? data.region : undefined,
+      departure: data.inquiryType === "moving" ? data.departure : undefined,
+      destination: data.inquiryType === "moving" ? data.destination : undefined,
       message: data.message,
       images: imageAttachments.length > 0 ? imageAttachments : undefined,
     });
