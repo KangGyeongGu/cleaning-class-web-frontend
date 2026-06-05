@@ -2,6 +2,7 @@
 
 import { trackSnsClick } from "@/shared/lib/analytics";
 import type { SnsClickParams } from "@/shared/lib/analytics";
+import { track } from "@/shared/lib/track";
 
 interface TrackedSnsLinkProps {
   href: string;
@@ -24,6 +25,11 @@ export default function TrackedSnsLink({
     trackSnsClick({
       sns_platform: platform,
       click_location: location,
+    });
+    track({
+      event_type: "sns_click",
+      event_payload: { sns_platform: platform, click_location: location },
+      path: typeof window !== "undefined" ? window.location.pathname : "/",
     });
   }
 

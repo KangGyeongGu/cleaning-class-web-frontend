@@ -2,6 +2,7 @@
 
 import { trackPhoneClick } from "@/shared/lib/analytics";
 import type { PhoneClickLocation } from "@/shared/lib/analytics";
+import { track } from "@/shared/lib/track";
 
 interface TrackedPhoneLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -24,6 +25,11 @@ export default function TrackedPhoneLink({
       lead_source: "phone_click",
       phone_type: phoneType,
       click_location: location,
+    });
+    track({
+      event_type: "phone_click",
+      event_payload: { phone_type: phoneType, click_location: location },
+      path: typeof window !== "undefined" ? window.location.pathname : "/",
     });
   }
 

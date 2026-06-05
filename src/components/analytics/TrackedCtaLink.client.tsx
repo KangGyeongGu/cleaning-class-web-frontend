@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { trackSelectContent } from "@/shared/lib/analytics";
 import type { CtaButtonId } from "@/shared/lib/analytics";
+import { track } from "@/shared/lib/track";
 
 interface TrackedCtaLinkProps {
   href: string;
@@ -21,6 +22,11 @@ export default function TrackedCtaLink({
     trackSelectContent({
       content_type: "cta_button",
       content_id: contentId,
+    });
+    track({
+      event_type: "cta_click",
+      event_payload: { content_id: contentId },
+      path: typeof window !== "undefined" ? window.location.pathname : "/",
     });
   }
 

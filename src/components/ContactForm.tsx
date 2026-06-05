@@ -5,96 +5,16 @@ import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
 import { trackGenerateLead, trackPhoneClick } from "@/shared/lib/analytics";
+import { track } from "@/shared/lib/track";
 import { formatPhoneNumber } from "@/shared/lib/format";
 import {
   CLEANING_INQUIRY_OPTIONS,
+  CLEANING_REGIONS,
   MOVING_INQUIRY_OPTIONS,
 } from "@/shared/lib/constants";
+import { CustomDropdown } from "@/components/CustomDropdown.client";
 
 type InquiryType = "cleaning" | "moving";
-
-interface CustomDropdownProps {
-  label: string;
-  name: string;
-  options: string[];
-  placeholder?: string;
-  required?: boolean;
-  error?: string;
-  value: string;
-  onChange?: (value: string) => void;
-}
-
-function CustomDropdown({
-  label,
-  name,
-  options,
-  placeholder,
-  required,
-  error,
-  value,
-  onChange,
-}: CustomDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: PointerEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener("pointerdown", handleClickOutside);
-    return () => {
-      document.removeEventListener("pointerdown", handleClickOutside);
-    };
-  }, []);
-
-  const handleSelect = (option: string) => {
-    setIsOpen(false);
-    onChange?.(option);
-  };
-
-  return (
-    <div className="group" ref={dropdownRef}>
-      <label className="form-label-sm">
-        {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
-      </label>
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="flex min-h-9 w-full items-center justify-between border-b border-slate-200 bg-transparent py-2 text-left text-sm font-light transition-colors outline-none focus:border-slate-900"
-        >
-          <span className={value ? "text-slate-900" : "text-slate-400"}>
-            {value || placeholder || "선택해주세요"}
-          </span>
-          <ArrowDown size={16} className="text-slate-400" />
-        </button>
-        {isOpen && (
-          <div className="scrollbar-thin absolute z-10 mt-1 max-h-60 w-full overflow-y-auto border border-slate-200 bg-white shadow-lg">
-            {options.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => handleSelect(option)}
-                className="w-full px-3 py-2 text-left text-sm font-light transition-colors hover:bg-slate-50"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        )}
-        <input type="hidden" name={name} value={value} />
-      </div>
-      {error && <p className="form-error">{error}</p>}
-    </div>
-  );
-}
 
 interface ContactFormProps {
   phone?: string;
@@ -158,6 +78,8 @@ export function ContactForm({ phone }: ContactFormProps) {
   }, []);
 
   const hasTrackedLead = useRef(false);
+  const hasTrackedError = useRef(false);
+
   useEffect(() => {
     if (isSuccess && !hasTrackedLead.current) {
       hasTrackedLead.current = true;
@@ -168,11 +90,46 @@ export function ContactForm({ phone }: ContactFormProps) {
         service_type: serviceType,
         inquiry_type: inquiryType,
       });
+      track({
+        event_type: "quote_form_success",
+        event_payload: {
+          inquiry_type: inquiryType,
+          service_type: serviceType,
+          has_images: images.length > 0,
+        },
+        path:
+          typeof window !== "undefined" ? window.location.pathname : "/contact",
+      });
     }
     if (!isSuccess) {
       hasTrackedLead.current = false;
     }
-  }, [isSuccess, serviceType, inquiryType]);
+  }, [isSuccess, serviceType, inquiryType, images.length]);
+
+  const isFailure = state?.success === false;
+  useEffect(() => {
+    if (isFailure && !hasTrackedError.current) {
+      hasTrackedError.current = true;
+      const errorKind = state?.errors
+        ? "validation"
+        : state?.error?.includes("이미지")
+          ? "upload_fail"
+          : state?.error?.includes("이메일") ||
+              state?.error?.includes("발송") ||
+              state?.error?.includes("SMTP")
+            ? "mail_fail"
+            : "unknown";
+      track({
+        event_type: "quote_form_error",
+        event_payload: { inquiry_type: inquiryType, error_kind: errorKind },
+        path:
+          typeof window !== "undefined" ? window.location.pathname : "/contact",
+      });
+    }
+    if (!isFailure) {
+      hasTrackedError.current = false;
+    }
+  }, [isFailure, inquiryType, state]);
 
   useEffect(() => {
     if (!isSuccess || isReset) return;
@@ -399,23 +356,7 @@ export function ContactForm({ phone }: ContactFormProps) {
               <CustomDropdown
                 label="지역"
                 name="region"
-                options={[
-                  "전주시 완산구",
-                  "전주시 덕진구",
-                  "군산시",
-                  "익산시",
-                  "정읍시",
-                  "남원시",
-                  "김제시",
-                  "완주군",
-                  "진안군",
-                  "무주군",
-                  "장수군",
-                  "임실군",
-                  "순창군",
-                  "고창군",
-                  "부안군",
-                ]}
+                options={CLEANING_REGIONS}
                 placeholder="지역을 선택해주세요"
                 required
                 error={state?.errors?.region?.[0]}
@@ -553,6 +494,19 @@ export function ContactForm({ phone }: ContactFormProps) {
               type="submit"
               disabled={isPending || !formValid}
               className="btn-primary px-10 py-3"
+              onClick={() => {
+                track({
+                  event_type: "quote_form_click",
+                  event_payload: {
+                    inquiry_type: inquiryType,
+                    service_type: serviceType,
+                  },
+                  path:
+                    typeof window !== "undefined"
+                      ? window.location.pathname
+                      : "/contact",
+                });
+              }}
             >
               {isPending ? (
                 <span className="flex items-center justify-center gap-2">
@@ -574,24 +528,5 @@ export function ContactForm({ phone }: ContactFormProps) {
         </form>
       </div>
     </section>
-  );
-}
-
-function ArrowDown({ size, className }: { size?: number; className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size ?? 24}
-      height={size ?? 24}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="m6 9 6 6 6-6" />
-    </svg>
   );
 }
