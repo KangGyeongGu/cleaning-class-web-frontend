@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "@/app/globals.css";
 import AnalyticsProvider from "@/components/analytics/AnalyticsProvider.client";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 import {
   generateBreadcrumbListJsonLd,
   generateLocalBusinessJsonLd,

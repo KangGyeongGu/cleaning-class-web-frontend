@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { StarRating } from "@/components/StarRating";
+import { StarRating } from "@/components/review/StarRating";
 
 interface ReviewCardData {
   id: string;

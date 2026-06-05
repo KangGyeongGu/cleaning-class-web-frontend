@@ -6,8 +6,8 @@ import {
 } from "@/shared/lib/json-ld";
 import { getPublishedPriceItems } from "@/shared/lib/queries/price";
 import { getSiteConfig } from "@/shared/lib/site-config";
-import { PriceSection } from "@/components/PriceSection";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { PriceSection } from "@/components/price/PriceSection";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export const revalidate = 3600;
 

@@ -1,7 +1,7 @@
 import { getActiveFaqs } from "@/shared/lib/queries/faq";
 import { generateFaqPageJsonLd } from "@/shared/lib/json-ld";
-import { FaqAccordion } from "@/components/FaqAccordion";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { FaqAccordion } from "@/components/faq/FaqAccordion";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export async function FaqSection() {
   const faqs = await getActiveFaqs();

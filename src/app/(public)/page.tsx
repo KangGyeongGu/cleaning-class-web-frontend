@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Hero } from "@/components/Hero";
-import { PriceBanner } from "@/components/PriceBanner";
-import { Services } from "@/components/Services";
-import { WorkProcessSection } from "@/components/WorkProcessSection";
-import { BlogReviewsSection } from "@/components/BlogReviewsSection";
-import { CustomerReviewsSection } from "@/components/CustomerReviewsSection";
+import { Hero } from "@/components/hero/Hero";
+import { PriceBanner } from "@/components/price/PriceBanner";
+import { Services } from "@/components/service/Services";
+import { WorkProcessSection } from "@/components/process/WorkProcessSection";
+import { BlogReviewsSection } from "@/components/review/BlogReviewsSection";
+import { CustomerReviewsSection } from "@/components/review/CustomerReviewsSection";
 import { buildDescription } from "@/shared/lib/seo-description";
 import {
   ServicesSkeleton,
   ReviewsSkeleton,
   CustomerReviewsSkeleton,
-} from "@/components/HomeSkeletons";
+} from "@/components/common/HomeSkeletons";
 
 export const revalidate = 3600;
 

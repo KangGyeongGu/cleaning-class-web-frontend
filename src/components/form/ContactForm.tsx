@@ -12,7 +12,7 @@ import {
   CLEANING_REGIONS,
   MOVING_INQUIRY_OPTIONS,
 } from "@/shared/lib/constants";
-import { CustomDropdown } from "@/components/CustomDropdown.client";
+import { CustomDropdown } from "@/components/form/CustomDropdown.client";
 import { useInViewport } from "@/shared/lib/hooks/useInViewport";
 import { useImageUpload } from "@/shared/lib/hooks/useImageUpload";
 

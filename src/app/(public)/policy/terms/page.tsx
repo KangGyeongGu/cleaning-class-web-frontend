@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export const revalidate = false;
 

@@ -34,8 +34,12 @@ const eslintConfig = defineConfig([
           default: "disallow",
           rules: [
             { from: "app", allow: ["components", "shared"] },
-            { from: "components", allow: ["shared"] },
-            { from: "shared", allow: ["shared"], disallow: ["app", "components"] },
+            { from: "components", allow: ["components", "shared"] },
+            {
+              from: "shared",
+              allow: ["shared"],
+              disallow: ["app", "components"],
+            },
           ],
         },
       ],
@@ -179,7 +183,7 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["src/components/JsonLdScript.tsx"],
+    files: ["src/components/seo/JsonLdScript.tsx"],
     rules: {
       "@eslint-react/dom/no-dangerously-set-innerhtml": "off",
     },

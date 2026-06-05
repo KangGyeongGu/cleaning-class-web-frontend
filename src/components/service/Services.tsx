@@ -1,8 +1,8 @@
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import { generateServiceJsonLd } from "@/shared/lib/json-ld";
-import { JsonLdScript } from "@/components/JsonLdScript";
-import { ServiceCategorySection } from "@/components/ServiceCategorySection";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
+import { ServiceCategorySection } from "@/components/service/ServiceCategorySection";
 
 export async function Services() {
   const [servicesWithImageUrls, siteConfig] = await Promise.all([

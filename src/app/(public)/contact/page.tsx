@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
-import { ContactForm } from "@/components/ContactForm";
+import { ContactForm } from "@/components/form/ContactForm";
 import {
   NaverBlogIcon,
   InstagramIcon,
@@ -10,7 +10,7 @@ import {
 } from "@/components/icons/SocialIcons";
 import TrackedPhoneLink from "@/components/analytics/TrackedPhoneLink.client";
 import TrackedSnsLink from "@/components/analytics/TrackedSnsLink.client";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export const revalidate = 3600;
 

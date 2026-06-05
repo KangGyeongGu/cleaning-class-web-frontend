@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { HeroCTA } from "@/components/HeroCTA";
+import { HeroCTA } from "@/components/hero/HeroCTA";
 
 describe("HeroCTA (browser)", () => {
   it("should render quote CTA link to /contact", () => {

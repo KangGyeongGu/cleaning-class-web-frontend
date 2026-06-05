@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { StarRating } from "@/components/StarRating";
+import { StarRating } from "@/components/review/StarRating";
 
 describe("StarRating (browser)", () => {
   it("should render container with accessible label reflecting rating", () => {

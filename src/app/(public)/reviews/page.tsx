@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAllPublishedReviews } from "@/shared/lib/home";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 import { ReviewsPageClient } from "@/app/(public)/reviews/ReviewsPageClient.client";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export const revalidate = 3600;
 

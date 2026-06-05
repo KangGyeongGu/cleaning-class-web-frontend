@@ -4,11 +4,11 @@ import Link from "next/link";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
 import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
 import type { ServiceWithImageUrls } from "@/shared/lib/home";
-import { ServiceBeforeAfter } from "@/components/ServiceBeforeAfter.client";
+import { ServiceBeforeAfter } from "@/components/service/ServiceBeforeAfter.client";
 import { HashHighlight } from "@/app/(public)/services/HashHighlight.client";
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
 import TrackedCtaLink from "@/components/analytics/TrackedCtaLink.client";
-import { JsonLdScript } from "@/components/JsonLdScript";
+import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export const revalidate = 3600;
 

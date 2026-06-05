@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getSiteConfig } from "@/shared/lib/site-config";
 import { getHeroImageUrl } from "@/shared/lib/supabase/storage";
 import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
-import { HeroCTA } from "@/components/HeroCTA";
+import { HeroCTA } from "@/components/hero/HeroCTA";
 
 export async function Hero(): Promise<React.JSX.Element> {
   const siteConfig = await getSiteConfig();
