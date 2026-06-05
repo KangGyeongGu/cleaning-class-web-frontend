@@ -12,6 +12,57 @@ export type Database = {
   };
   public: {
     Tables: {
+      analytics_daily: {
+        Row: {
+          count: number;
+          date: string;
+          dimension: string;
+          event_type: string;
+        };
+        Insert: {
+          count?: number;
+          date: string;
+          dimension?: string;
+          event_type: string;
+        };
+        Update: {
+          count?: number;
+          date?: string;
+          dimension?: string;
+          event_type?: string;
+        };
+        Relationships: [];
+      };
+      analytics_events: {
+        Row: {
+          created_at: string;
+          event_payload: Json;
+          event_type: string;
+          id: string;
+          ip_hash: string;
+          path: string;
+          user_agent: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          event_payload?: Json;
+          event_type: string;
+          id?: string;
+          ip_hash: string;
+          path: string;
+          user_agent?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          event_payload?: Json;
+          event_type?: string;
+          id?: string;
+          ip_hash?: string;
+          path?: string;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
       customer_reviews: {
         Row: {
           comment: string;
@@ -302,6 +353,8 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      aggregate_analytics_daily: { Args: never; Returns: undefined };
+      cleanup_analytics_events: { Args: never; Returns: undefined };
       submit_public_review: {
         Args: {
           p_comment: string;
@@ -351,3 +404,10 @@ export type PriceItemInsert =
   Database["public"]["Tables"]["price_items"]["Insert"];
 export type PriceItemUpdate =
   Database["public"]["Tables"]["price_items"]["Update"];
+
+export type AnalyticsEventRow =
+  Database["public"]["Tables"]["analytics_events"]["Row"];
+export type AnalyticsEventInsert =
+  Database["public"]["Tables"]["analytics_events"]["Insert"];
+export type AnalyticsDailyRow =
+  Database["public"]["Tables"]["analytics_daily"]["Row"];
