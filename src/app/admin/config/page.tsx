@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { SiteConfigForm } from "@/app/admin/config/SiteConfigForm.client";
 
 export const metadata: Metadata = {

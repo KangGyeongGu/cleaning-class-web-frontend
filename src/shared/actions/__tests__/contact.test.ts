@@ -4,7 +4,7 @@ const mockSendContactEmail = vi.hoisted(() =>
   vi.fn().mockResolvedValue(undefined),
 );
 
-vi.mock("@/shared/lib/mail", () => ({
+vi.mock("@/shared/lib/infra/mail", () => ({
   sendContactEmail: mockSendContactEmail,
 }));
 

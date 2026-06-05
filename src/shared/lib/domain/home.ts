@@ -1,6 +1,6 @@
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import { getServiceImageUrl } from "@/shared/lib/supabase/storage";
-import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/pure/constants";
 import type {
   CustomerReviewRow,
   Review,

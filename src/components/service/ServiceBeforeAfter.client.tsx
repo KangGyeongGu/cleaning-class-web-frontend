@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "motion/react";
-import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/domain/image";
 
 interface ServiceBeforeAfterProps {
   beforeSrc: string;

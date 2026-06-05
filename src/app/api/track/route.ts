@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/shared/lib/supabase/server";
-import { isSearchBot } from "@/shared/lib/analytics-server";
-import { trackRequestSchema } from "@/shared/lib/analytics-schema";
+import { isSearchBot } from "@/shared/lib/infra/analytics-server";
+import { trackRequestSchema } from "@/shared/lib/schema/analytics";
 
 export async function POST(request: Request): Promise<NextResponse> {
   if (isSearchBot(request.headers.get("user-agent"))) {

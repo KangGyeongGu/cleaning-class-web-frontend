@@ -6,7 +6,7 @@ import { Services } from "@/components/service/Services";
 import { WorkProcessSection } from "@/components/process/WorkProcessSection";
 import { BlogReviewsSection } from "@/components/review/BlogReviewsSection";
 import { CustomerReviewsSection } from "@/components/review/CustomerReviewsSection";
-import { buildDescription } from "@/shared/lib/seo-description";
+import { buildDescription } from "@/shared/lib/domain/seo-description";
 import {
   ServicesSkeleton,
   ReviewsSkeleton,

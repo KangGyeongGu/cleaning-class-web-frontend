@@ -6,7 +6,7 @@ import { updateReview } from "@/shared/actions/review";
 import { Loader2, X, Plus } from "lucide-react";
 import Image from "next/image";
 import type { Review } from "@/shared/types/database";
-import { SERVICE_TYPES } from "@/shared/lib/constants";
+import { SERVICE_TYPES } from "@/shared/lib/pure/constants";
 
 interface EditReviewFormProps {
   review: Review;

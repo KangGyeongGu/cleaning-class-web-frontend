@@ -6,7 +6,7 @@ import { getUser } from "@/shared/lib/supabase/auth";
 import {
   siteConfigFormSchema,
   movingSiteConfigSchema,
-} from "@/shared/lib/schema";
+} from "@/shared/lib/schema/index";
 import type { SiteConfigUpdate } from "@/shared/types/database";
 import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
 

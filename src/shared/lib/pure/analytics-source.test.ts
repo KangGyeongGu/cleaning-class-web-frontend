@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   classifySource,
   extractReferrerHost,
-} from "@/shared/lib/analytics-source";
+} from "@/shared/lib/pure/analytics-source";
 
 const HOST = "www.cleaningclass.co.kr";
 

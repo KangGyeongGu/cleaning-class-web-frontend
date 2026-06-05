@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatPhoneNumber, formatPriceWon } from "@/shared/lib/format";
+import { formatPhoneNumber, formatPriceWon } from "@/shared/lib/pure/format";
 
 describe("formatPhoneNumber", () => {
   it("returns digits as-is when length <= 3", () => {

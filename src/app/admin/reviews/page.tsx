@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus, ArrowDownNarrowWide, ArrowUpWideNarrow } from "lucide-react";
 import { ReviewDescriptionSection } from "@/app/admin/reviews/ReviewDescriptionSection";
 import { ReviewListSection } from "@/app/admin/reviews/ReviewListSection";
-import { reviewListSortSchema } from "@/shared/lib/schema";
+import { reviewListSortSchema } from "@/shared/lib/schema/index";
 
 interface ReviewsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { trackSelectContent, trackPhoneClick } from "@/shared/lib/analytics";
+import {
+  trackSelectContent,
+  trackPhoneClick,
+} from "@/shared/lib/infra/analytics";
 
 export type HeroCTAVariant = "light" | "dark";
 

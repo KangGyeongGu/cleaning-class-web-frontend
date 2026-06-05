@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/shared/lib/supabase/server";
 import { getUser } from "@/shared/lib/supabase/auth";
 import { uploadImage, deleteImage } from "@/shared/lib/supabase/storage-server";
-import { serviceFormSchema } from "@/shared/lib/schema";
+import { serviceFormSchema } from "@/shared/lib/schema/index";
 import type { ServiceInsert, ServiceUpdate } from "@/shared/types/database";
 
 const BUCKET = "service-images";

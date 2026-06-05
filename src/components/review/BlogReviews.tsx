@@ -9,14 +9,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import type { Review } from "@/shared/types/database";
 import { NaverBlogIcon } from "@/components/icons/SocialIcons";
-import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/pure/constants";
 
-import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/domain/image";
 import {
   trackReviewCardClick,
   trackSnsClick,
   trackReviewFilter,
-} from "@/shared/lib/analytics";
+} from "@/shared/lib/infra/analytics";
 
 interface ReviewWithUrl extends Review {
   imageUrl: string;

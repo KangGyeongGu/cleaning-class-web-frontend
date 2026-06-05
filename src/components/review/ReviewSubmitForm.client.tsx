@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { submitPublicReview } from "@/shared/actions/customer-review";
 import { StarRating } from "@/components/review/StarRating";
-import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/pure/constants";
 
 function AnimatedCheckIcon(): React.ReactElement {
   return (

@@ -7,7 +7,7 @@ import {
   updateMovingSiteConfig,
 } from "@/shared/actions/site-config";
 import { Loader2, Upload, Trash2 } from "lucide-react";
-import { formatPhoneNumber } from "@/shared/lib/format";
+import { formatPhoneNumber } from "@/shared/lib/pure/format";
 import { getHeroImageUrl } from "@/shared/lib/supabase/storage";
 import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
 import type { SiteConfig } from "@/shared/types/database";

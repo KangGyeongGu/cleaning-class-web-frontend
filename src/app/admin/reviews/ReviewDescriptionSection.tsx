@@ -1,4 +1,4 @@
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
 import { updateReviewDescription } from "@/shared/actions/site-config";
 

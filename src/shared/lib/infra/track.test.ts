@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { track } from "@/shared/lib/track";
+import { track } from "@/shared/lib/infra/track";
 
 describe("track", () => {
   let fetchSpy: ReturnType<typeof vi.spyOn>;

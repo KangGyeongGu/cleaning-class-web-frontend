@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isSearchBot } from "@/shared/lib/analytics-server";
+import { isSearchBot } from "@/shared/lib/infra/analytics-server";
 
 describe("isSearchBot", () => {
   it("should return false for null UA", () => {

@@ -6,7 +6,7 @@ import {
   generateFaqPageJsonLd,
   generateBreadcrumbListJsonLd,
   generatePriceListJsonLd,
-} from "@/shared/lib/json-ld";
+} from "@/shared/lib/domain/json-ld";
 import type { SiteConfig } from "@/shared/types/database";
 
 const FULL_CONFIG: SiteConfig = {

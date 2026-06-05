@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createReview } from "@/shared/actions/review";
 import { Loader2, X, Plus } from "lucide-react";
 import Image from "next/image";
-import { SERVICE_TYPES } from "@/shared/lib/constants";
+import { SERVICE_TYPES } from "@/shared/lib/pure/constants";
 
 export function NewReviewForm() {
   const router = useRouter();

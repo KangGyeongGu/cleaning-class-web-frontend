@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { trackSelectContent } from "@/shared/lib/analytics";
-import type { CtaButtonId } from "@/shared/lib/analytics";
-import { track } from "@/shared/lib/track";
+import { trackSelectContent } from "@/shared/lib/infra/analytics";
+import type { CtaButtonId } from "@/shared/lib/infra/analytics";
+import { track } from "@/shared/lib/infra/track";
 
 interface TrackedCtaLinkProps {
   href: string;

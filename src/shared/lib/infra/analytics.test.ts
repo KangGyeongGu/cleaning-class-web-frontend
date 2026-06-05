@@ -7,7 +7,7 @@ import {
   trackSnsClick,
   trackFaqOpen,
   trackReviewFilter,
-} from "@/shared/lib/analytics";
+} from "@/shared/lib/infra/analytics";
 
 declare global {
   interface Window {

@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
-import { getPublishedServicesWithImageUrls } from "@/shared/lib/home";
-import type { ServiceWithImageUrls } from "@/shared/lib/home";
+import { generateBreadcrumbListJsonLd } from "@/shared/lib/domain/json-ld";
+import { getPublishedServicesWithImageUrls } from "@/shared/lib/domain/home";
+import type { ServiceWithImageUrls } from "@/shared/lib/domain/home";
 import { ServiceBeforeAfter } from "@/components/service/ServiceBeforeAfter.client";
 import { HashHighlight } from "@/app/(public)/services/HashHighlight.client";
-import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/domain/image";
 import TrackedCtaLink from "@/components/analytics/TrackedCtaLink.client";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";
 

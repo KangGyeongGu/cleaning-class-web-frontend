@@ -1,8 +1,8 @@
 "use client";
 
-import { trackPhoneClick } from "@/shared/lib/analytics";
-import type { PhoneClickLocation } from "@/shared/lib/analytics";
-import { track } from "@/shared/lib/track";
+import { trackPhoneClick } from "@/shared/lib/infra/analytics";
+import type { PhoneClickLocation } from "@/shared/lib/infra/analytics";
+import { track } from "@/shared/lib/infra/track";
 
 interface TrackedPhoneLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;

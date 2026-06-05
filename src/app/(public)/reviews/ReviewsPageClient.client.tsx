@@ -5,13 +5,13 @@ import Image from "next/image";
 import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Review } from "@/shared/types/database";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
-import { CLEANING_SERVICE_TYPES } from "@/shared/lib/constants";
+import { CLEANING_SERVICE_TYPES } from "@/shared/lib/pure/constants";
 
-import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/domain/image";
 import {
   trackReviewCardClick,
   trackReviewFilter,
-} from "@/shared/lib/analytics";
+} from "@/shared/lib/infra/analytics";
 
 interface ReviewsPageClientProps {
   reviews: Review[];

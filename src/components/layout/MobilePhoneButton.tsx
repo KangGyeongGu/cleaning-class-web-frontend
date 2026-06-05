@@ -1,7 +1,7 @@
 "use client";
 
 import { Phone } from "lucide-react";
-import { trackPhoneClick } from "@/shared/lib/analytics";
+import { trackPhoneClick } from "@/shared/lib/infra/analytics";
 
 interface MobilePhoneButtonProps {
   phone: string;

@@ -10,7 +10,7 @@ import {
   siteConfigFormSchema,
   movingSiteConfigSchema,
   serviceFormSchema,
-} from "@/shared/lib/schema";
+} from "@/shared/lib/schema/index";
 
 describe("contactFormSchema", () => {
   it("accepts valid cleaning inquiry", () => {

@@ -1,5 +1,5 @@
 import { getActiveFaqs } from "@/shared/lib/queries/faq";
-import { generateFaqPageJsonLd } from "@/shared/lib/json-ld";
+import { generateFaqPageJsonLd } from "@/shared/lib/domain/json-ld";
 import { FaqAccordion } from "@/components/faq/FaqAccordion";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";
 

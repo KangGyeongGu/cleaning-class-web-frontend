@@ -1,4 +1,4 @@
-import type { TrackRequest } from "@/shared/lib/analytics-schema";
+import type { TrackRequest } from "@/shared/lib/schema/analytics";
 
 export function track(input: TrackRequest): void {
   if (typeof window === "undefined") return;

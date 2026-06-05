@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getCustomerReviews } from "@/shared/lib/home";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getCustomerReviews } from "@/shared/lib/domain/home";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { CustomerReviewsCarousel } from "@/components/review/CustomerReviewsCarousel.client";
 import { ReviewRatingHero } from "@/components/hero/ReviewRatingHero.client";
 import type { CustomerReviewRow } from "@/shared/types/database";

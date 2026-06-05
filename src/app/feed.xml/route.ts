@@ -1,9 +1,9 @@
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import {
   getAllPublishedReviews,
   getPublishedServicesWithImageUrls,
-} from "@/shared/lib/home";
-import type { ServiceWithImageUrls } from "@/shared/lib/home";
+} from "@/shared/lib/domain/home";
+import type { ServiceWithImageUrls } from "@/shared/lib/domain/home";
 import type { Review, SiteConfig } from "@/shared/types/database";
 
 export const revalidate = 3600;

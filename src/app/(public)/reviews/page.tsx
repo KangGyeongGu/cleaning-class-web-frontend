@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getAllPublishedReviews } from "@/shared/lib/home";
-import { generateBreadcrumbListJsonLd } from "@/shared/lib/json-ld";
+import { getAllPublishedReviews } from "@/shared/lib/domain/home";
+import { generateBreadcrumbListJsonLd } from "@/shared/lib/domain/json-ld";
 import { ReviewsPageClient } from "@/app/(public)/reviews/ReviewsPageClient.client";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";
 

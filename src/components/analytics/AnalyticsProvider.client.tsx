@@ -5,8 +5,8 @@ import { useEffect, useRef } from "react";
 import {
   classifySource,
   extractReferrerHost,
-} from "@/shared/lib/analytics-source";
-import { track } from "@/shared/lib/track";
+} from "@/shared/lib/pure/analytics-source";
+import { track } from "@/shared/lib/infra/track";
 
 export default function AnalyticsProvider(): null {
   const pathname = usePathname();

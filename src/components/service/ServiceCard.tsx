@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { BLUR_PLACEHOLDER } from "@/shared/lib/image";
-import { trackSelectContent } from "@/shared/lib/analytics";
+import { BLUR_PLACEHOLDER } from "@/shared/lib/domain/image";
+import { trackSelectContent } from "@/shared/lib/infra/analytics";
 
 export interface ServiceCardProps {
   service: {

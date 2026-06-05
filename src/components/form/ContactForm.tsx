@@ -4,14 +4,17 @@ import { useActionState, useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Plus, Check, Loader2, X } from "lucide-react";
 import { submitContactForm } from "@/shared/actions/contact";
-import { trackGenerateLead, trackPhoneClick } from "@/shared/lib/analytics";
-import { track } from "@/shared/lib/track";
-import { formatPhoneNumber } from "@/shared/lib/format";
+import {
+  trackGenerateLead,
+  trackPhoneClick,
+} from "@/shared/lib/infra/analytics";
+import { track } from "@/shared/lib/infra/track";
+import { formatPhoneNumber } from "@/shared/lib/pure/format";
 import {
   CLEANING_INQUIRY_OPTIONS,
   CLEANING_REGIONS,
   MOVING_INQUIRY_OPTIONS,
-} from "@/shared/lib/constants";
+} from "@/shared/lib/pure/constants";
 import { CustomDropdown } from "@/components/form/CustomDropdown.client";
 import { useInViewport } from "@/shared/lib/hooks/useInViewport";
 import { useImageUpload } from "@/shared/lib/hooks/useImageUpload";

@@ -7,8 +7,8 @@ import {
   generateBreadcrumbListJsonLd,
   generateLocalBusinessJsonLd,
   generateWebSiteJsonLd,
-} from "@/shared/lib/json-ld";
-import { getSiteConfig } from "@/shared/lib/site-config";
+} from "@/shared/lib/domain/json-ld";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 
 const ANALYTICS_ID_PATTERN = /^[A-Za-z0-9-]+$/;
 const GA_ID = ANALYTICS_ID_PATTERN.test(process.env.NEXT_PUBLIC_GA_ID ?? "")

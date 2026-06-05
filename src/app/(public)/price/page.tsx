@@ -3,9 +3,9 @@ import Link from "next/link";
 import {
   generateBreadcrumbListJsonLd,
   generatePriceListJsonLd,
-} from "@/shared/lib/json-ld";
+} from "@/shared/lib/domain/json-ld";
 import { getPublishedPriceItems } from "@/shared/lib/queries/price";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { PriceSection } from "@/components/price/PriceSection";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";
 

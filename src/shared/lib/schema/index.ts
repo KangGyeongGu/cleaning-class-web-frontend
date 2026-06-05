@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   CLEANING_SERVICE_TYPES,
   MOVING_SERVICE_TYPES,
-} from "@/shared/lib/constants";
+} from "@/shared/lib/pure/constants";
 
 const cleaningServiceTypeEnum = z.enum([
   ...CLEANING_SERVICE_TYPES,

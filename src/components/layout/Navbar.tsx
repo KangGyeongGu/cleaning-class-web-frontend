@@ -10,7 +10,10 @@ import {
   InstagramIcon,
   DaangnIcon,
 } from "@/components/icons/SocialIcons";
-import { trackSnsClick, trackSelectContent } from "@/shared/lib/analytics";
+import {
+  trackSnsClick,
+  trackSelectContent,
+} from "@/shared/lib/infra/analytics";
 
 interface NavbarProps {
   businessName?: string;

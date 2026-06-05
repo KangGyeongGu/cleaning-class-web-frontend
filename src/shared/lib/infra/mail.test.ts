@@ -26,7 +26,7 @@ beforeEach(() => {
 
 describe("sendContactEmail — cleaning inquiry", () => {
   it("sends mail with cleaning subject + HTML containing all fields", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "홍길동",
@@ -47,7 +47,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
   });
 
   it("escapes HTML special characters in name/message", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "<script>",
@@ -63,7 +63,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
   });
 
   it("sanitizes CR/LF in subject (header injection prevention)", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "홍\r\n악의적 헤더",
@@ -77,7 +77,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
   });
 
   it("includes attachments when images provided", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "x",
@@ -100,7 +100,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
   });
 
   it("omits attachments when images array is empty", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "x",
@@ -115,7 +115,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
   });
 
   it("uses empty string for missing region in HTML", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "x",
@@ -129,7 +129,7 @@ describe("sendContactEmail — cleaning inquiry", () => {
 
 describe("sendContactEmail — moving inquiry", () => {
   it("uses moving subject + departure/destination fields", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "moving",
       name: "이사남",
@@ -147,7 +147,7 @@ describe("sendContactEmail — moving inquiry", () => {
   });
 
   it("uses '미입력' fallback for missing departure/destination", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "moving",
       name: "x",
@@ -164,7 +164,7 @@ describe("sendContactEmail — moving inquiry", () => {
 describe("sendContactEmail — config validation", () => {
   it("throws when SMTP_HOST missing", async () => {
     delete process.env.SMTP_HOST;
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await expect(
       sendContactEmail({
         inquiryType: "cleaning",
@@ -179,7 +179,7 @@ describe("sendContactEmail — config validation", () => {
 
   it("throws when SMTP_PORT is non-numeric", async () => {
     process.env.SMTP_PORT = "not-a-number";
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await expect(
       sendContactEmail({
         inquiryType: "cleaning",
@@ -194,7 +194,7 @@ describe("sendContactEmail — config validation", () => {
 
   it("throws when SMTP_USER missing", async () => {
     delete process.env.SMTP_USER;
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await expect(
       sendContactEmail({
         inquiryType: "cleaning",
@@ -209,7 +209,7 @@ describe("sendContactEmail — config validation", () => {
 
   it("throws when SMTP_PASS missing", async () => {
     delete process.env.SMTP_PASS;
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await expect(
       sendContactEmail({
         inquiryType: "cleaning",
@@ -224,7 +224,7 @@ describe("sendContactEmail — config validation", () => {
 
   it("throws when ADMIN_EMAIL missing", async () => {
     delete process.env.ADMIN_EMAIL;
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await expect(
       sendContactEmail({
         inquiryType: "cleaning",
@@ -238,7 +238,7 @@ describe("sendContactEmail — config validation", () => {
   });
 
   it("caches transporter across calls (createTransport called once)", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "a",
@@ -259,7 +259,7 @@ describe("sendContactEmail — config validation", () => {
   });
 
   it("uses empty filename fallback when sanitized name becomes empty", async () => {
-    const { sendContactEmail } = await import("@/shared/lib/mail");
+    const { sendContactEmail } = await import("@/shared/lib/infra/mail");
     await sendContactEmail({
       inquiryType: "cleaning",
       name: "x",

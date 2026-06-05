@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildDescription } from "@/shared/lib/seo-description";
+import { buildDescription } from "@/shared/lib/domain/seo-description";
 
 describe("buildDescription", () => {
   it("should return a non-empty marketing description", () => {

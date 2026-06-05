@@ -1,7 +1,7 @@
 "use server";
 
-import { contactFormSchema } from "@/shared/lib/schema";
-import { sendContactEmail } from "@/shared/lib/mail";
+import { contactFormSchema } from "@/shared/lib/schema/index";
+import { sendContactEmail } from "@/shared/lib/infra/mail";
 
 const MAX_IMAGE_COUNT = 15;
 const MAX_IMAGE_SIZE = 10 * 1024 * 1024;

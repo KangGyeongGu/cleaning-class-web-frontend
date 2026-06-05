@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import type { FaqRow } from "@/shared/types/database";
-import { trackFaqOpen } from "@/shared/lib/analytics";
+import { trackFaqOpen } from "@/shared/lib/infra/analytics";
 
 interface FaqAccordionProps {
   faqs: FaqRow[];

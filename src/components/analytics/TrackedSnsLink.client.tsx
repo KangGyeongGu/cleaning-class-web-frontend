@@ -1,8 +1,8 @@
 "use client";
 
-import { trackSnsClick } from "@/shared/lib/analytics";
-import type { SnsClickParams } from "@/shared/lib/analytics";
-import { track } from "@/shared/lib/track";
+import { trackSnsClick } from "@/shared/lib/infra/analytics";
+import type { SnsClickParams } from "@/shared/lib/infra/analytics";
+import { track } from "@/shared/lib/infra/track";
 
 interface TrackedSnsLinkProps {
   href: string;

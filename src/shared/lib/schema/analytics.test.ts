@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { EVENT_TYPES, trackRequestSchema } from "@/shared/lib/analytics-schema";
+import { EVENT_TYPES, trackRequestSchema } from "@/shared/lib/schema/analytics";
 
 describe("EVENT_TYPES", () => {
   it("should contain 10 distinct event types", () => {

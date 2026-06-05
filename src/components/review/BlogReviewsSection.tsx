@@ -1,5 +1,5 @@
-import { getPublishedReviews } from "@/shared/lib/home";
-import { getSiteConfig } from "@/shared/lib/site-config";
+import { getPublishedReviews } from "@/shared/lib/domain/home";
+import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
 import { BlogReviews } from "@/components/review/BlogReviews";
 
