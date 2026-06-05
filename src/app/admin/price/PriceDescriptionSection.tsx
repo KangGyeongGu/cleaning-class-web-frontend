@@ -1,5 +1,5 @@
 import { getSiteConfig } from "@/shared/lib/domain/site-config";
-import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor";
+import { InlineDescriptionEditor } from "@/app/admin/components/InlineDescriptionEditor.client";
 import { updatePriceDescription } from "@/shared/actions/site-config";
 
 export async function PriceDescriptionSection(): Promise<React.ReactElement> {

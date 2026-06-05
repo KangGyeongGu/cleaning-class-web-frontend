@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { updateService } from "@/shared/actions/service";
 import { Loader2, Plus, X } from "lucide-react";
-import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
+import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker.client";
 import type { Service } from "@/shared/types/database";
 
 interface EditServiceFormProps {

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Hero } from "@/components/hero/Hero";
 import { PriceBanner } from "@/components/price/PriceBanner";
 import { Services } from "@/components/service/Services";
-import { WorkProcessSection } from "@/components/process/WorkProcessSection";
+import { WorkProcessSection } from "@/components/process/WorkProcessSection.client";
 import { BlogReviewsSection } from "@/components/review/BlogReviewsSection";
 import { CustomerReviewsSection } from "@/components/review/CustomerReviewsSection";
 import { buildDescription } from "@/shared/lib/domain/seo-description";

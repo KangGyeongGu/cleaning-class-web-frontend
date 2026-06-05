@@ -1,6 +1,6 @@
 import { getActiveFaqs } from "@/shared/lib/queries/faq";
 import { generateFaqPageJsonLd } from "@/shared/lib/domain/json-ld";
-import { FaqAccordion } from "@/components/faq/FaqAccordion";
+import { FaqAccordion } from "@/components/faq/FaqAccordion.client";
 import { JsonLdScript } from "@/components/seo/JsonLdScript";
 
 export async function FaqSection() {

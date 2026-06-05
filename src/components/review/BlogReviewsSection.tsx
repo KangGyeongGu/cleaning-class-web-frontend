@@ -1,7 +1,7 @@
 import { getPublishedReviews } from "@/shared/lib/domain/home";
 import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { getReviewImageUrl } from "@/shared/lib/supabase/storage";
-import { BlogReviews } from "@/components/review/BlogReviews";
+import { BlogReviews } from "@/components/review/BlogReviews.client";
 
 export async function BlogReviewsSection() {
   const [reviews, siteConfig] = await Promise.all([

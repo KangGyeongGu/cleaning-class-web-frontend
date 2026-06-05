@@ -9,7 +9,7 @@ import {
 import { Loader2, Upload, Trash2 } from "lucide-react";
 import { formatPhoneNumber } from "@/shared/lib/pure/format";
 import { getHeroImageUrl } from "@/shared/lib/supabase/storage";
-import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker";
+import { FocalPointPicker } from "@/app/admin/components/FocalPointPicker.client";
 import type { SiteConfig } from "@/shared/types/database";
 
 interface SiteConfigFormProps {

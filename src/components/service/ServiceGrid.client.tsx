@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ServiceCard } from "@/components/service/ServiceCard";
+import { ServiceCard } from "@/components/service/ServiceCard.client";
 
 interface ServiceItem {
   id: string;

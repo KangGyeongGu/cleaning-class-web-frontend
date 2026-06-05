@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
-import { ServiceCard } from "@/components/service/ServiceCard";
+import { ServiceCard } from "@/components/service/ServiceCard.client";
 
 const baseService = {
   id: "svc-1",

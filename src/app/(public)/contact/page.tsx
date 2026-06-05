@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getSiteConfig } from "@/shared/lib/domain/site-config";
 import { generateBreadcrumbListJsonLd } from "@/shared/lib/domain/json-ld";
-import { ContactForm } from "@/components/form/ContactForm";
+import { ContactForm } from "@/components/form/ContactForm.client";
 import {
   NaverBlogIcon,
   InstagramIcon,

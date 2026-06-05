@@ -1,5 +1,5 @@
 import { getReviews } from "@/shared/lib/queries/review";
-import { ReviewListClient } from "@/app/admin/reviews/ReviewListClient";
+import { ReviewListClient } from "@/app/admin/reviews/ReviewListClient.client";
 import type { ReviewListSort } from "@/shared/lib/schema/index";
 
 interface ReviewListSectionProps {
