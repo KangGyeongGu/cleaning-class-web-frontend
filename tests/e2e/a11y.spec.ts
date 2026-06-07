@@ -9,6 +9,10 @@ const pages = [
   { name: "reviews", path: "/reviews" },
   { name: "price", path: "/price" },
   { name: "help", path: "/help" },
+  { name: "privacy", path: "/policy/privacy" },
+  { name: "terms", path: "/policy/terms" },
+  { name: "privacy-archive", path: "/policy/privacy/2026-03-23" },
+  { name: "terms-archive", path: "/policy/terms/2026-03-23" },
 ];
 
 const DISABLED_RULES = ["color-contrast", "aria-hidden-focus"];
